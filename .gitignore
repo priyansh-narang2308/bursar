@@ -28,3 +28,7 @@ spikes/results/*.local.json
 # build / tooling output
 *.tsbuildinfo
 .pnpm-store/
+
+# Claude Code: per-user settings and third-party skills (restore with `pnpm dev:skills`)
+.claude/settings.local.json
+.claude/skills/

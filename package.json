@@ -17,6 +17,8 @@
     "typecheck": "pnpm -r --workspace-concurrency=Infinity typecheck && tsc --noEmit -p tsconfig.json",
     "test": "pnpm -r test",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "dev:doctor": "tsx scripts/dev/verify-tooling.ts",
+    "dev:skills": "tsx scripts/dev/install-skills.ts",
     "prepare": "lefthook install || echo 'lefthook unavailable: skipping git hooks'"
   },
   "devDependencies": {

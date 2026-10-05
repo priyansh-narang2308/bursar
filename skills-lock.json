@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "skills": {
+    "ag-dev": {
+      "source": "ag-grid/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ag-dev/SKILL.md",
+      "computedHash": "c4fffe577cc8b550c2c1d16882fbf325dcb583550cd3d5a7047d24714e15d3ce"
+    },
+    "bryntum": {
+      "source": "bryntum/skills",
+      "sourceType": "github",
+      "skillPath": "bryntum/SKILL.md",
+      "computedHash": "88deea84f2c6c00cecbc962af320eee65a37f554c4f7aa594ad86d44c7d73add"
+    },
+    "bryntum-crud": {
+      "source": "bryntum/skills",
+      "sourceType": "github",
+      "skillPath": "bryntum-crud/SKILL.md",
+      "computedHash": "5e1f5f14d17051776e561c9df06c01907ec08944c80163997ea1f52d949eec0e"
+    },
+    "bryntum-editor": {
+      "source": "bryntum/skills",
+      "sourceType": "github",
+      "skillPath": "bryntum-editor/SKILL.md",
+      "computedHash": "38b7f84c3685340f313db4160e9a2689f1790809abe58ee07cf0739fa0aeaf98"
+    },
+    "bryntum-features": {
+      "source": "bryntum/skills",
+      "sourceType": "github",
+      "skillPath": "bryntum-features/SKILL.md",
+      "computedHash": "4735b3812dfae276cd67ac34e34550e53019ef8cf1246402a61d94e9e81afd91"
+    },
+    "bryntum-react": {
+      "source": "bryntum/skills",
+      "sourceType": "github",
+      "skillPath": "bryntum-react/SKILL.md",
+      "computedHash": "6d5985b03639da7ba6cd8fd2f172fa74ec4809d55485ec5c84b398c4c2a3126d"
+    },
+    "bryntum-theming": {
+      "source": "bryntum/skills",
+      "sourceType": "github",
+      "skillPath": "bryntum-theming/SKILL.md",
+      "computedHash": "badb78d047ad688ba665392a83a9f9703f21f709e1eced4e0a967ac746dcd34e"
+    },
+    "render-blueprints": {
+      "source": "render-oss/skills",
+      "sourceType": "github",
+      "skillPath": "skills/render-blueprints/SKILL.md",
+      "computedHash": "a4242f087c8e4808685e9fcaf04c55a2931b95ddd8a940e5eead5379bf9bb478"
+    },
+    "render-cli": {
+      "source": "render-oss/skills",
+      "sourceType": "github",
+      "skillPath": "skills/render-cli/SKILL.md",
+      "computedHash": "f4c8fe13f48ddc919a7ae6aafca9ccad6f16e4aa886e4455db9ce58692604acd"
+    },
+    "render-postgres": {
+      "source": "render-oss/skills",
+      "sourceType": "github",
+      "skillPath": "skills/render-postgres/SKILL.md",
+      "computedHash": "76f7a7523fa6c4893ea68074178c3e4ec5d492a9260a0399441a67c7f1c734aa"
+    },
+    "render-workflows": {
+      "source": "render-oss/skills",
+      "sourceType": "github",
+      "skillPath": "skills/render-workflows/SKILL.md",
+      "computedHash": "e798bb9be96e7fbd367a3e2a258ab09d7ab47eabbc4767cba3163eb8fcffa0e0"
+    }
+  }
+}

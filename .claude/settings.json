@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "context-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "context-plugins/plugin-marketplace"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "paypal@context-plugins": true
+  }
+}
