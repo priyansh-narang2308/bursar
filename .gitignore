@@ -1,0 +1,26 @@
+# secrets — never commit
+.env
+.env.*
+!.env.example
+
+# planning pack names competitors; remove this line only if the repo stays private
+planning/
+
+# dependencies / builds
+node_modules/
+dist/
+build/
+.turbo/
+.vite/
+coverage/
+
+# tests / tooling output
+playwright-report/
+test-results/
+spikes/results/*.local.json
+*.log
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
