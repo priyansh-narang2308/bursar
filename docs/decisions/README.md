@@ -10,6 +10,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0004](0004-schemas-as-the-shared-contract.md)  | Schemas as the shared contract              | Accepted |
 | [0005](0005-cryptography-and-the-audit-log.md)  | Cryptography and the audit log              | Accepted |
 | [0006](0006-database.md)                        | Database                                    | Accepted |
+| [0007](0007-ledger-and-policy-engine.md)        | Ledger and policy engine as pure functions  | Accepted |
 
 ## Template
 

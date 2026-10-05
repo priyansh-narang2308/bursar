@@ -1,0 +1,28 @@
+{
+  "name": "@bursar/policy",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bursar's policy engine: pure, fail-closed, versioned and replayable.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/crypto": "workspace:*",
+    "@bursar/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fast-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
