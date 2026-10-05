@@ -14,6 +14,9 @@ catalog:
   drizzle-orm: ^0.45.3 # typed queries over Postgres (PayPal docs and the plan both assume Postgres)
   '@electric-sql/pglite': ^0.5.8 # real Postgres in WASM, so database tests need no Docker
   fast-check: ^4.10.0
+  hono: ^4.13.0 # the HTTP framework for the API: small, typed and runs on Node and the edge
+  '@hono/node-server': ^2.1.0 # serves the Hono app on Node
+  pino: ^10.4.0 # structured logging with built-in redaction
   lefthook: ^2.1.0
   pg: ^8.23.1 # the node-postgres driver the API and workers connect with
   tsx: ^4.23.0

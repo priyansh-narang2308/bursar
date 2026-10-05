@@ -19,9 +19,11 @@ provenanceTag
 resealSecret
 sha256Hex
 signApproval
+signSession
 systemRandomBytes
 toBase64Url
 toHex
 verifyApproval
 verifyCartHash
 verifyProvenanceTag
+verifySession

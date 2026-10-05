@@ -11,6 +11,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0005](0005-cryptography-and-the-audit-log.md)  | Cryptography and the audit log              | Accepted |
 | [0006](0006-database.md)                        | Database                                    | Accepted |
 | [0007](0007-ledger-and-policy-engine.md)        | Ledger and policy engine as pure functions  | Accepted |
+| [0008](0008-api-and-paypal-client.md)           | API, sessions and the PayPal client         | Accepted |
 
 ## Template
 

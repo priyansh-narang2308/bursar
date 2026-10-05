@@ -25,6 +25,7 @@ Everything cryptographic in Bursar, in one small package with no I/O: canonical 
 | `provenanceTag`, `verifyProvenanceTag`, `actionIdFromTag` | The tag in PayPal's `custom_id`, its constant-time verification, and a way to find which action a tag claims |
 | `signApproval`, `verifyApproval` | A server-held signature over an approval, and its verification including expiry |
 | `parseKeyring`, `encryptSecret`, `decryptSecret`, `needsRotation`, `resealSecret` | AES-256-GCM sealed secrets with versioned keys and a rotation path |
+| `signSession`, `verifySession` | A signed, stateless token for a browser session (`<payload>.<mac>`); the caller checks expiry |
 | `decodeKey` | Reads a 256-bit key from configuration (64 hex or 43 base64url characters) |
 | `toHex`, `fromHex`, `toBase64Url`, `fromBase64Url`, `constantTimeEqual` | Strict encodings (one value has one spelling) and a constant-time comparison |
 | `systemRandomBytes` | The operating system's random bytes, the default for `encryptSecret` |
@@ -55,6 +56,7 @@ Labels never contain a newline and are fixed, so two different (purpose, value) 
 | Provenance MAC | `bursar.provenance.v1` |
 | Approval MAC | `bursar.approval.v1` |
 | Sealed secret (additional data) | `bursar.secret.v1` |
+| Session token MAC | `bursar.session.v1` |
 
 ### Cart hash
 

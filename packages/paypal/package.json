@@ -1,0 +1,27 @@
+{
+  "name": "@bursar/paypal",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bursar's PayPal client: typed, retrying, idempotent, sandbox-only, with errors classified for the executor.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/money": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
