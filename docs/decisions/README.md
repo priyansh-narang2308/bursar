@@ -5,6 +5,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | ADR | Title | Status |
 | --- | --- | --- |
 | [0001](0001-stack-and-conventions.md) | Technology stack and repository conventions | Accepted |
+| [0002](0002-ai-assisted-development-tooling.md) | AI-assisted development tooling | Accepted |
 
 ## Template
 

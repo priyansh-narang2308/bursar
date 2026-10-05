@@ -4,6 +4,7 @@
  * probing binaries) lives in `scripts/dev/verify-tooling.ts`, so each rule can be tested
  * exhaustively without a machine that has the tools installed.
  */
+import { createHash } from 'node:crypto';
 
 export type CheckStatus = 'pass' | 'warn' | 'fail';
 
@@ -360,25 +361,70 @@ export function groupSkillsBySource(lock: SkillsLock): ReadonlyMap<string, reado
   );
 }
 
-export function checkSkills(lock: SkillsLock, installed: ReadonlySet<string>): CheckResult {
+/** A file inside a skill folder. */
+export interface SkillFile {
+  /** Path relative to the skill folder, with forward slashes. */
+  readonly relativePath: string;
+  readonly content: Uint8Array;
+}
+
+/**
+ * The content hash the `skills` installer records in `skills-lock.json`: SHA-256 over each
+ * file's relative path followed by its bytes, with files ordered by `localeCompare` of the
+ * path. The ordering has to match the installer's, or the same folder hashes differently.
+ */
+export function hashSkillFiles(files: readonly SkillFile[]): string {
+  const hash = createHash('sha256');
+  for (const file of [...files].sort((a, b) => a.relativePath.localeCompare(b.relativePath))) {
+    hash.update(file.relativePath);
+    hash.update(file.content);
+  }
+  return hash.digest('hex');
+}
+
+/** Installed skills whose content differs from the lock file, sorted. Missing skills are not listed. */
+export function findChangedSkills(
+  lock: SkillsLock,
+  installed: ReadonlyMap<string, string>,
+): string[] {
+  return Object.entries(lock.skills)
+    .filter(([name, { computedHash }]) => {
+      const hash = installed.get(name);
+      return hash !== undefined && hash !== computedHash;
+    })
+    .map(([name]) => name)
+    .sort();
+}
+
+/** `installed` maps each skill folder found in `.claude/skills` to its content hash. */
+export function checkSkills(lock: SkillsLock, installed: ReadonlyMap<string, string>): CheckResult {
   const title = 'Sponsor skills';
   const expected = Object.keys(lock.skills).sort();
   const missing = expected.filter((name) => !installed.has(name));
+  const changed = findChangedSkills(lock, installed);
 
-  return missing.length === 0
-    ? result(
-        'skills',
-        title,
-        'pass',
-        `${expected.length} of ${expected.length} installed in .claude/skills`,
-      )
-    : result(
-        'skills',
-        title,
-        'fail',
-        `${expected.length - missing.length} of ${expected.length} installed; missing: ${missing.join(', ')}`,
-        'pnpm dev:skills',
-      );
+  if (missing.length === 0 && changed.length === 0) {
+    return result(
+      'skills',
+      title,
+      'pass',
+      `${expected.length} of ${expected.length} installed, content matches skills-lock.json`,
+    );
+  }
+
+  const problems = [
+    ...(missing.length > 0 ? [`missing: ${missing.join(', ')}`] : []),
+    ...(changed.length > 0 ? [`content differs from the lock: ${changed.join(', ')}`] : []),
+  ];
+  return result(
+    'skills',
+    title,
+    'fail',
+    `${expected.length - missing.length} of ${expected.length} installed; ${problems.join('; ')}`,
+    changed.length > 0
+      ? 'pnpm dev:skills --force (if it still differs, review git diff skills-lock.json)'
+      : 'pnpm dev:skills',
+  );
 }
 
 // ---------------------------------------------------------------------------------------

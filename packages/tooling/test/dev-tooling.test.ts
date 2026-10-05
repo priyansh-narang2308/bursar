@@ -11,19 +11,23 @@ import {
   checkSkills,
   DEV_BINARIES,
   exitCodeFor,
+  findChangedSkills,
   findOverlappingSkills,
   groupSkillsBySource,
+  hashSkillFiles,
   type InstalledPlugin,
   PAYPAL_TOOLKIT_PLUGIN_ID,
   parsePluginList,
   parseRootManifest,
   parseSkillsLock,
   renderReport,
+  type SkillFile,
   summarize,
   supportedNodeMajors,
 } from '../src/dev-tooling';
 
 const HASH = 'a'.repeat(64);
+const OTHER_HASH = 'b'.repeat(64);
 
 const apimatic = (overrides: Partial<InstalledPlugin> = {}): InstalledPlugin => ({
   id: APIMATIC_PLUGIN_ID,
@@ -400,23 +404,108 @@ describe('skills lock', () => {
     );
   });
 
-  it('passes when every locked skill is installed, ignoring extras', () => {
+  describe('against what is installed', () => {
     const lock = parseSkillsLock(lockJson);
-    const check = checkSkills(
-      lock,
-      new Set(['ag-dev', 'render-cli', 'render-blueprints', 'extra']),
-    );
+    const everything = new Map([
+      ['ag-dev', HASH],
+      ['render-cli', HASH],
+      ['render-blueprints', HASH],
+    ]);
 
-    expect(check.status).toBe('pass');
-    expect(check.detail).toBe('3 of 3 installed in .claude/skills');
+    it('passes when every locked skill is installed with the locked content, ignoring extras', () => {
+      const check = checkSkills(lock, new Map([...everything, ['extra', OTHER_HASH]]));
+
+      expect(check.status).toBe('pass');
+      expect(check.detail).toBe('3 of 3 installed, content matches skills-lock.json');
+      expect(check.fix).toBeUndefined();
+    });
+
+    it('fails and lists what is missing, pointing at the installer script', () => {
+      const check = checkSkills(lock, new Map([['ag-dev', HASH]]));
+
+      expect(check.status).toBe('fail');
+      expect(check.detail).toBe('1 of 3 installed; missing: render-blueprints, render-cli');
+      expect(check.fix).toBe('pnpm dev:skills');
+    });
+
+    it('fails when installed content differs from the locked hash', () => {
+      const check = checkSkills(lock, new Map([...everything, ['render-cli', OTHER_HASH]]));
+
+      expect(check.status).toBe('fail');
+      expect(check.detail).toBe('3 of 3 installed; content differs from the lock: render-cli');
+      expect(check.fix).toContain('pnpm dev:skills --force');
+      expect(check.fix).toContain('git diff skills-lock.json');
+    });
+
+    it('reports missing and changed skills together', () => {
+      const check = checkSkills(lock, new Map([['ag-dev', OTHER_HASH]]));
+
+      expect(check.detail).toBe(
+        '1 of 3 installed; missing: render-blueprints, render-cli; content differs from the lock: ag-dev',
+      );
+    });
+
+    it('finds changed skills, sorted, and does not count missing ones as changed', () => {
+      const installed = new Map([
+        ['render-cli', OTHER_HASH],
+        ['ag-dev', OTHER_HASH],
+      ]);
+
+      expect(findChangedSkills(lock, installed)).toEqual(['ag-dev', 'render-cli']);
+      expect(findChangedSkills(lock, new Map())).toEqual([]);
+      expect(findChangedSkills(lock, everything)).toEqual([]);
+    });
+  });
+});
+
+describe('hashSkillFiles', () => {
+  const text = (relativePath: string, content: string): SkillFile => ({
+    relativePath,
+    content: new TextEncoder().encode(content),
   });
 
-  it('fails and lists what is missing, pointing at the installer script', () => {
-    const check = checkSkills(parseSkillsLock(lockJson), new Set(['ag-dev']));
+  it('matches a known digest: SHA-256 over each path then its bytes, in installer order', () => {
+    // `localeCompare` puts references/api.md before SKILL.md; a plain code-unit sort would not.
+    const files = [text('SKILL.md', '# Skill\n'), text('references/api.md', 'api\n')];
 
-    expect(check.status).toBe('fail');
-    expect(check.detail).toBe('1 of 3 installed; missing: render-blueprints, render-cli');
-    expect(check.fix).toBe('pnpm dev:skills');
+    expect(hashSkillFiles(files)).toBe(
+      'f71947b66b29bc67243adec4a152e7b92f3039641f8de3b7e7197f69fc0ce6b4',
+    );
+  });
+
+  it('changes when a file is renamed or edited', () => {
+    const original = hashSkillFiles([text('SKILL.md', 'one')]);
+
+    expect(hashSkillFiles([text('OTHER.md', 'one')])).not.toBe(original);
+    expect(hashSkillFiles([text('SKILL.md', 'two')])).not.toBe(original);
+    expect(hashSkillFiles([text('SKILL.md', 'one'), text('extra.md', '')])).not.toBe(original);
+  });
+
+  it('gives an empty folder the SHA-256 of nothing', () => {
+    expect(hashSkillFiles([])).toBe(
+      'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    );
+  });
+
+  it('does not depend on the order files are listed in', () => {
+    const skillFile = fc.record({
+      relativePath: fc.stringMatching(/^[A-Za-z0-9._-]{1,6}(?:\/[A-Za-z0-9._-]{1,6}){0,2}$/),
+      content: fc.uint8Array({ maxLength: 8 }),
+    });
+    const listings = fc
+      .uniqueArray(skillFile, { selector: (file) => file.relativePath, maxLength: 6 })
+      .chain((files) =>
+        fc.tuple(
+          fc.constant(files),
+          fc.shuffledSubarray(files, { minLength: files.length, maxLength: files.length }),
+        ),
+      );
+
+    fc.assert(
+      fc.property(listings, ([files, shuffled]) => {
+        expect(hashSkillFiles(shuffled)).toBe(hashSkillFiles(files));
+      }),
+    );
   });
 });
 
