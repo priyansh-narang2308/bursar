@@ -27,7 +27,7 @@ import {
   renderReport,
   summarize,
 } from '@bursar/tooling';
-import { installedSkillNames, repoRoot } from './shared';
+import { installedSkillHashes, repoRoot } from './shared';
 
 const execFileAsync = promisify(execFile);
 
@@ -84,7 +84,7 @@ async function pluginResults(): Promise<CheckResult[]> {
 async function skillsResult(): Promise<CheckResult> {
   try {
     const lock = parseSkillsLock(await readFile(join(repoRoot, 'skills-lock.json'), 'utf8'));
-    return checkSkills(lock, await installedSkillNames());
+    return checkSkills(lock, await installedSkillHashes());
   } catch (error) {
     return {
       id: 'skills',

@@ -3,17 +3,18 @@
  *
  * Third-party skill files are deliberately not committed (one pack has no licence), so this
  * is how a fresh clone gets them. The lock file is the single source of truth for which
- * skills come from which repository.
+ * skills come from which repository, and its content hashes are what was reviewed: skills
+ * are instructions an AI assistant will follow, so a change upstream must not slip in silently.
  *
- *   pnpm dev:skills             install whatever is missing
+ *   pnpm dev:skills             install whatever is missing, then verify the content hashes
  *   pnpm dev:skills --dry-run   print the commands without running them
  *   pnpm dev:skills --force     reinstall everything in the lock file
  */
 import { spawn } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { groupSkillsBySource, parseSkillsLock } from '@bursar/tooling';
-import { installedSkillNames, repoRoot } from './shared';
+import { checkSkills, groupSkillsBySource, parseSkillsLock } from '@bursar/tooling';
+import { installedSkillHashes, repoRoot } from './shared';
 
 /** Pinned so everyone installs through the same, reviewed version of the CLI. */
 const SKILLS_CLI = 'skills@1.7.0';
@@ -35,8 +36,9 @@ function runInherited(command: string, args: readonly string[]): Promise<number>
   });
 }
 
+// Read before installing: the installer rewrites the lock with whatever it fetched.
 const lock = parseSkillsLock(await readFile(join(repoRoot, 'skills-lock.json'), 'utf8'));
-const installed = await installedSkillNames();
+const installed = await installedSkillHashes();
 
 for (const [source, names] of groupSkillsBySource(lock)) {
   const wanted = force ? names : names.filter((name) => !installed.has(name));
@@ -66,4 +68,17 @@ for (const [source, names] of groupSkillsBySource(lock)) {
     console.error(`✖ ${source}: the installer exited with code ${code}`);
     process.exit(code);
   }
+}
+
+if (!dryRun) {
+  const check = checkSkills(lock, await installedSkillHashes());
+  if (check.status === 'fail') {
+    console.error(`✖ ${check.detail}`);
+    console.error(
+      '  Skills are instructions your AI assistant will follow: review any change first.',
+    );
+    console.error('  git diff skills-lock.json   (the installer records the hashes it fetched)');
+    process.exit(1);
+  }
+  console.log(`✓ ${check.detail}`);
 }

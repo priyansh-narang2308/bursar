@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { APIMATIC_PLUGIN_ID, PAYPAL_TOOLKIT_PLUGIN_ID, parseSkillsLock } from '../src/dev-tooling';
 
 /**
  * These tests turn repository conventions into executable checks, so the standards that
@@ -25,6 +26,9 @@ interface PackageJson {
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const read = (path: string): string => readFileSync(join(root, path), 'utf8');
 const readPackageJson = (dir: string): PackageJson => JSON.parse(read(join(dir, 'package.json')));
+const gitignoreRules = read('.gitignore')
+  .split('\n')
+  .map((line) => line.trim());
 
 const workspaceDirs = ['apps', 'packages'].flatMap((group) =>
   readdirSync(join(root, group), { withFileTypes: true })
@@ -155,9 +159,122 @@ describe('repository hygiene', () => {
   });
 
   it('never commits local environment files', () => {
-    const rules = read('.gitignore')
-      .split('\n')
-      .map((line) => line.trim());
-    expect(rules).toEqual(expect.arrayContaining(['.env', '.env.*', '!.env.example']));
+    expect(gitignoreRules).toEqual(expect.arrayContaining(['.env', '.env.*', '!.env.example']));
+  });
+});
+
+describe('architecture decision records', () => {
+  const decisions = readdirSync(join(root, 'docs', 'decisions'))
+    .filter((file) => file !== 'README.md')
+    .sort();
+  const index = read('docs/decisions/README.md');
+
+  it('are named NNNN-kebab-case.md and numbered consecutively from 0001', () => {
+    expect(decisions.length).toBeGreaterThan(0);
+    expect(decisions.filter((file) => !/^\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(file))).toEqual(
+      [],
+    );
+    expect(decisions.map((file) => file.slice(0, 4))).toEqual(
+      decisions.map((_, position) => String(position + 1).padStart(4, '0')),
+    );
+  });
+
+  it.each(decisions)('%s has a status, a date and an entry in the index', (file) => {
+    const text = read(join('docs', 'decisions', file));
+    expect(text).toMatch(/^# ADR-\d{4}: \S/m);
+    expect(text).toMatch(/^- \*\*Status:\*\* (?:Proposed|Accepted|Superseded by ADR-\d{4})$/m);
+    expect(text).toMatch(/^- \*\*Date:\*\* \d{4}-\d{2}-\d{2}$/m);
+    expect(index).toContain(`(${file})`);
+  });
+});
+
+describe('Claude Code project settings', () => {
+  interface ProjectSettings {
+    extraKnownMarketplaces?: Record<string, { source?: { source?: string; repo?: string } }>;
+    enabledPlugins?: Record<string, boolean>;
+  }
+  const settings: ProjectSettings = JSON.parse(read('.claude/settings.json'));
+
+  it('only declares marketplaces and plugins, so it cannot run code or carry secrets', () => {
+    // Hooks, env values, permissions, MCP servers and helper commands would take effect on every
+    // contributor's machine. Personal choices belong in the git-ignored settings.local.json.
+    const allowed = ['extraKnownMarketplaces', 'enabledPlugins'];
+    expect(Object.keys(settings).filter((key) => !allowed.includes(key))).toEqual([]);
+  });
+
+  it('trusts only marketplaces hosted on GitHub', () => {
+    const sources = Object.values(settings.extraKnownMarketplaces ?? {}).map(
+      (marketplace) => marketplace.source,
+    );
+    expect(sources.length).toBeGreaterThan(0);
+    for (const source of sources) {
+      expect(source?.source).toBe('github');
+      expect(source?.repo).toMatch(/^[\w.-]+\/[\w.-]+$/);
+    }
+  });
+
+  it('enables the APIMatic plugin and only plugins from a declared marketplace', () => {
+    const marketplaces = Object.keys(settings.extraKnownMarketplaces ?? {});
+    const enabled = Object.entries(settings.enabledPlugins ?? {})
+      .filter(([, on]) => on)
+      .map(([id]) => id);
+
+    expect(enabled).toContain(APIMATIC_PLUGIN_ID);
+    expect(enabled.filter((id) => !marketplaces.includes(id.slice(id.indexOf('@') + 1)))).toEqual(
+      [],
+    );
+  });
+
+  it('keeps the PayPal AI Toolkit opt-in per developer', () => {
+    // Its hook is a model call on every edit and its MCP server needs a token (see ADR-0002).
+    expect(settings.enabledPlugins?.[PAYPAL_TOOLKIT_PLUGIN_ID]).not.toBe(true);
+  });
+});
+
+describe('sponsor skills', () => {
+  const approvedSources = ['ag-grid/skills', 'bryntum/skills', 'render-oss/skills'];
+  const readLock = () => parseSkillsLock(read('skills-lock.json'));
+
+  it('are pinned by content hash in a valid lock file', () => {
+    expect(Object.keys(readLock().skills).length).toBeGreaterThan(0);
+  });
+
+  it('come only from the approved sponsor repositories on GitHub', () => {
+    const entries = Object.values(readLock().skills);
+    expect(entries.filter(({ sourceType }) => sourceType !== 'github')).toEqual([]);
+    expect(entries.filter(({ source }) => !approvedSources.includes(source))).toEqual([]);
+  });
+
+  it('are restored locally rather than committed', () => {
+    // One of the packs ships without a licence, so the files stay out of git (see ADR-0002).
+    expect(gitignoreRules).toEqual(
+      expect.arrayContaining(['.claude/skills/', '.claude/settings.local.json']),
+    );
+  });
+});
+
+describe('developer scripts', () => {
+  const scripts = readPackageJson('.').scripts ?? {};
+
+  it('run files that exist', () => {
+    const targets = Object.values(scripts).flatMap((command) => {
+      const target = /^tsx (\S+)/.exec(command)?.[1];
+      return target === undefined ? [] : [target];
+    });
+
+    expect(targets).toEqual(
+      expect.arrayContaining(['scripts/dev/verify-tooling.ts', 'scripts/dev/install-skills.ts']),
+    );
+    expect(targets.filter((target) => !existsSync(join(root, target)))).toEqual([]);
+  });
+
+  it('are all documented in AGENTS.md', () => {
+    const documented = new Set(
+      [...read('AGENTS.md').matchAll(/pnpm ([\w:-]+)/g)].map((match) => match[1]),
+    );
+    const undocumented = Object.keys(scripts).filter(
+      (name) => name !== 'prepare' && !documented.has(name),
+    );
+    expect(undocumented).toEqual([]);
   });
 });
