@@ -1,0 +1,582 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "cart": {
+      "$ref": "#/$defs/Cart"
+    },
+    "action": {
+      "$ref": "#/$defs/Action"
+    },
+    "decision": {
+      "$ref": "#/$defs/Decision"
+    }
+  },
+  "required": [
+    "cart",
+    "action",
+    "decision"
+  ],
+  "additionalProperties": false,
+  "description": "A proposed cart, its action and the policy decision on it.",
+  "$defs": {
+    "Cart": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^crt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A cart id: \"crt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "missionId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A mission id: \"mis_\" followed by a ULID."
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "lines": {
+          "minItems": 1,
+          "maxItems": 50,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CartLine"
+          }
+        },
+        "total": {
+          "$ref": "#/$defs/Amount"
+        },
+        "cartHash": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The SHA-256 of the canonical cart: what an approval signs."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "PROPOSED",
+            "APPROVED",
+            "SUPERSEDED",
+            "REJECTED"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "missionId",
+        "version",
+        "lines",
+        "total",
+        "cartHash",
+        "status",
+        "createdAt"
+      ],
+      "additionalProperties": false,
+      "description": "What an approval signs: lines, a server-computed total, and its hash."
+    },
+    "CartLine": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^cln_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A cartLine id: \"cln_\" followed by a ULID."
+        },
+        "offerId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A offer id: \"ofr_\" followed by a ULID."
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "unitPrice": {
+          "$ref": "#/$defs/Amount"
+        },
+        "lineTotal": {
+          "$ref": "#/$defs/Amount"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "offerId",
+        "quantity",
+        "unitPrice",
+        "lineTotal",
+        "rationale"
+      ],
+      "additionalProperties": false,
+      "description": "One offer and a quantity, with the price the server worked out."
+    },
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    },
+    "Action": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A action id: \"act_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "missionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A mission id: \"mis_\" followed by a ULID."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mandateId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^mnd_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A mandate id: \"mnd_\" followed by a ULID."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "AUTHORIZE",
+            "CAPTURE",
+            "VOID",
+            "REFUND",
+            "REAUTHORIZE",
+            "PAYOUT",
+            "FREEZE",
+            "REVOKE"
+          ]
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Amount"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "supplierId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^sup_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A supplier id: \"sup_\" followed by a ULID."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cartId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^crt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A cart id: \"crt_\" followed by a ULID."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cartHash": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "description": "The SHA-256 of the canonical cart: what an approval signs."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "proposedBy": {
+          "type": "string",
+          "enum": [
+            "USER",
+            "AGENT",
+            "VERIFIER",
+            "SYSTEM"
+          ]
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The idempotency key of an action: a SHA-256, unique per action."
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "PROPOSED",
+            "DENIED",
+            "AWAITING_APPROVAL",
+            "APPROVED",
+            "REJECTED",
+            "EXPIRED",
+            "SUBMITTING",
+            "SUBMITTED",
+            "FAILED",
+            "UNKNOWN",
+            "CONFIRMED",
+            "INCIDENT"
+          ]
+        },
+        "compensatesActionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A action id: \"act_\" followed by a ULID."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "updatedAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "missionId",
+        "mandateId",
+        "type",
+        "amount",
+        "supplierId",
+        "cartId",
+        "cartHash",
+        "proposedBy",
+        "idempotencyKey",
+        "state",
+        "compensatesActionId",
+        "createdAt",
+        "updatedAt"
+      ],
+      "additionalProperties": false,
+      "description": "One thing Bursar does with money, and where it is in its life."
+    },
+    "Decision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^dec_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A decision id: \"dec_\" followed by a ULID."
+        },
+        "actionId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A action id: \"act_\" followed by a ULID."
+        },
+        "policyVersionId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^plv_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A policyVersion id: \"plv_\" followed by a ULID."
+        },
+        "policyHash": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The SHA-256 of the policy version a decision was made under."
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "PROPOSE",
+            "EXECUTE"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "ALLOW",
+            "REQUIRE_APPROVAL",
+            "DENY"
+          ]
+        },
+        "requiredApprovals": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "trace": {
+          "minItems": 1,
+          "maxItems": 64,
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuleResult"
+          }
+        },
+        "inputsHash": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "The SHA-256 of the inputs a decision was evaluated on."
+        },
+        "evaluatedAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        }
+      },
+      "required": [
+        "id",
+        "actionId",
+        "policyVersionId",
+        "policyHash",
+        "phase",
+        "outcome",
+        "requiredApprovals",
+        "trace",
+        "inputsHash",
+        "evaluatedAt"
+      ],
+      "additionalProperties": false,
+      "description": "The policy engine's ruling on an action, with the rules behind it."
+    },
+    "RuleResult": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string",
+          "enum": [
+            "R-MANDATE",
+            "R-ENVELOPE",
+            "R-ITEM-CAP",
+            "R-ORDER-CAP",
+            "R-CATEGORY",
+            "R-VENDOR",
+            "R-NEW-VENDOR",
+            "R-QTY",
+            "R-PRICE-DRIFT",
+            "R-DUPLICATE",
+            "R-VELOCITY",
+            "R-DELIVERY",
+            "R-DUAL",
+            "R-REFUND-AUTH",
+            "R-PAYOUT-GATE",
+            "R-PROVENANCE",
+            "R-TENANT"
+          ]
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "ALLOW",
+            "REQUIRE_APPROVAL",
+            "DENY"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "pattern": "\\S"
+        },
+        "inputs": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "A JSON object."
+        },
+        "threshold": {
+          "$ref": "#/$defs/JsonValue"
+        }
+      },
+      "required": [
+        "rule",
+        "outcome",
+        "message",
+        "inputs",
+        "threshold"
+      ],
+      "additionalProperties": false,
+      "description": "What one policy rule concluded, and what it looked at."
+    },
+    "JsonValue": {
+      "description": "Any JSON value.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          }
+        }
+      ]
+    }
+  }
+}

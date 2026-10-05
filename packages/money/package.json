@@ -1,0 +1,24 @@
+{
+  "name": "@bursar/money",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Exact money for Bursar: bigint minor units, PayPal's currencies, explicit rounding and lossless allocation.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fast-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

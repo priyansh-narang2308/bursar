@@ -24,8 +24,9 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 
 ### Money
 - Amounts are integers in minor units (`bigint`) plus a currency code. Never use `number` or floating point for money, and never `parseFloat` an amount.
+- Every amount is a `Money` from `@bursar/money`. Do no arithmetic on raw `bigint` amounts or decimal strings elsewhere, and always pick a rounding mode explicitly (there is no default).
 - Never trust an amount from a client or an LLM. Totals are recomputed server-side from stored snapshots.
-- Tools exposed to LLMs contain no amount, payee or currency fields.
+- Tools exposed to LLMs contain no amount, payee or currency fields. `inspectTools()` in `@bursar/schemas` enforces this in a test; give an LLM a new field only by adding it to that guard's allow-list in a reviewed change.
 
 ### PayPal
 - Sandbox only. The base URL is asserted at startup, and `ALLOW_LIVE` must stay `false`.
@@ -52,4 +53,5 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - Internal packages export TypeScript source (`exports` point at `./src/*.ts`); there is no per-package build step.
 - Tests live in each package's `test/` directory. Invariants get property tests (fast-check). Coverage thresholds are set per package, at 95% or higher for critical packages.
 - Conventional Commits, enforced by a git hook: `<type>(<scope>)!: <subject>`.
+- Every type that crosses a package boundary or the wire is defined once in `@bursar/schemas`: strict Zod objects, prefixed and branded ids from `newId`, no transforms. Never edit `packages/schemas/json-schema/` by hand; change the schema and review the regenerated diff.
 - Decisions that shape the architecture are recorded in `docs/decisions/` as ADRs.

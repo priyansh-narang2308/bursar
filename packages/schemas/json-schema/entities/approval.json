@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^apv_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A approval id: \"apv_\" followed by a ULID."
+    },
+    "decisionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^dec_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A decision id: \"dec_\" followed by a ULID."
+    },
+    "approverId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^usr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A user id: \"usr_\" followed by a ULID."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED",
+        "EXPIRED"
+      ]
+    },
+    "cartHash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The SHA-256 of the canonical cart: what an approval signs."
+    },
+    "policyHash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The SHA-256 of the policy version a decision was made under."
+    },
+    "signature": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 512,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expiresAt": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    },
+    "decidedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "decisionId",
+    "approverId",
+    "status",
+    "cartHash",
+    "policyHash",
+    "signature",
+    "expiresAt",
+    "decidedAt"
+  ],
+  "additionalProperties": false,
+  "description": "A person's signed yes or no, bound to a cart hash and a policy hash."
+}

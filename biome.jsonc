@@ -3,7 +3,15 @@
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!pnpm-lock.yaml", "!**/coverage", "!**/dist"]
+    // Generated files that tests compare byte for byte (JSON Schema, snapshots) are never reformatted.
+    "includes": [
+      "**",
+      "!pnpm-lock.yaml",
+      "!**/coverage",
+      "!**/dist",
+      "!**/__snapshots__",
+      "!packages/schemas/json-schema"
+    ]
   },
   "formatter": {
     "enabled": true,

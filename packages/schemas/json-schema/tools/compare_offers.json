@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "needId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ned_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The need this is about, such as \"10 desks\"."
+    },
+    "offerIds": {
+      "minItems": 2,
+      "maxItems": 5,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 30,
+        "maxLength": 30,
+        "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+        "description": "An offer id taken from a search, a shortlist or a comparison."
+      }
+    }
+  },
+  "required": [
+    "needId",
+    "offerIds"
+  ],
+  "additionalProperties": false
+}

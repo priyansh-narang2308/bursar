@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ppe_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A paypalEvent id: \"ppe_\" followed by a ULID."
+    },
+    "eventId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "eventType": {
+      "type": "string",
+      "maxLength": 100,
+      "pattern": "^[A-Z][A-Z0-9_]*(?:\\.[A-Z0-9_-]+)+$"
+    },
+    "resourceType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "resourceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "customId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "invoiceId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 127
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "verificationStatus": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "SUCCESS",
+        "FAILURE"
+      ]
+    },
+    "matchStatus": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "MATCHED",
+        "UNMATCHED",
+        "EARLY",
+        "MISMATCH"
+      ]
+    },
+    "matchedActionId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A action id: \"act_\" followed by a ULID."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "latencyMs": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "receivedAt": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    }
+  },
+  "required": [
+    "id",
+    "eventId",
+    "eventType",
+    "resourceType",
+    "resourceId",
+    "customId",
+    "invoiceId",
+    "verificationStatus",
+    "matchStatus",
+    "matchedActionId",
+    "latencyMs",
+    "receivedAt"
+  ],
+  "additionalProperties": false,
+  "description": "A verified, matched webhook delivery from PayPal."
+}

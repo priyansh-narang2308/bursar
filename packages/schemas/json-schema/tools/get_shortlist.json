@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "needId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ned_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The need this is about, such as \"10 desks\"."
+    }
+  },
+  "required": [
+    "needId"
+  ],
+  "additionalProperties": false
+}

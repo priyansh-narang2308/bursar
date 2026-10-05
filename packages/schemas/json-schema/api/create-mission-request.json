@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "pattern": "\\S"
+    },
+    "deadline": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "budget": {
+      "$ref": "#/$defs/Amount"
+    }
+  },
+  "required": [
+    "goal",
+    "deadline",
+    "budget"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}

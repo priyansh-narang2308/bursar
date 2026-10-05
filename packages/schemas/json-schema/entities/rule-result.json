@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "rule": {
+      "type": "string",
+      "enum": [
+        "R-MANDATE",
+        "R-ENVELOPE",
+        "R-ITEM-CAP",
+        "R-ORDER-CAP",
+        "R-CATEGORY",
+        "R-VENDOR",
+        "R-NEW-VENDOR",
+        "R-QTY",
+        "R-PRICE-DRIFT",
+        "R-DUPLICATE",
+        "R-VELOCITY",
+        "R-DELIVERY",
+        "R-DUAL",
+        "R-REFUND-AUTH",
+        "R-PAYOUT-GATE",
+        "R-PROVENANCE",
+        "R-TENANT"
+      ]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "REQUIRE_APPROVAL",
+        "DENY"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "pattern": "\\S"
+    },
+    "inputs": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "description": "A JSON object."
+    },
+    "threshold": {
+      "$ref": "#/$defs/JsonValue"
+    }
+  },
+  "required": [
+    "rule",
+    "outcome",
+    "message",
+    "inputs",
+    "threshold"
+  ],
+  "additionalProperties": false,
+  "description": "What one policy rule concluded, and what it looked at.",
+  "$defs": {
+    "JsonValue": {
+      "description": "Any JSON value.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          }
+        }
+      ]
+    }
+  }
+}

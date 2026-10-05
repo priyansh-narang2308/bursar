@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "decisionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^dec_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A decision id: \"dec_\" followed by a ULID."
+    },
+    "cartHash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The SHA-256 of the canonical cart: what an approval signs."
+    },
+    "policyHash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The SHA-256 of the policy version a decision was made under."
+    }
+  },
+  "required": [
+    "decisionId",
+    "cartHash",
+    "policyHash"
+  ],
+  "additionalProperties": false
+}

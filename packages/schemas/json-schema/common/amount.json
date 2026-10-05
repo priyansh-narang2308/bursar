@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "currency": {
+      "type": "string",
+      "enum": [
+        "AUD",
+        "BRL",
+        "CAD",
+        "CHF",
+        "CNY",
+        "CZK",
+        "DKK",
+        "EUR",
+        "GBP",
+        "HKD",
+        "HUF",
+        "ILS",
+        "JPY",
+        "MXN",
+        "MYR",
+        "NOK",
+        "NZD",
+        "PHP",
+        "PLN",
+        "RUB",
+        "SEK",
+        "SGD",
+        "THB",
+        "TWD",
+        "USD"
+      ],
+      "description": "A currency PayPal accepts."
+    },
+    "minor": {
+      "type": "string",
+      "maxLength": 20,
+      "pattern": "^(?:0|[1-9][0-9]*)$",
+      "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+    }
+  },
+  "required": [
+    "currency",
+    "minor"
+  ],
+  "additionalProperties": false,
+  "description": "A non-negative amount of money in whole minor units."
+}

@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A offer id: \"ofr_\" followed by a ULID."
+    },
+    "supplierId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^sup_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A supplier id: \"sup_\" followed by a ULID."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300,
+      "pattern": "\\S"
+    },
+    "brand": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "\\S"
+    },
+    "imageUrl": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000,
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "url": {
+      "type": "string",
+      "maxLength": 2000,
+      "format": "uri",
+      "pattern": "^https?://"
+    },
+    "price": {
+      "$ref": "#/$defs/Amount"
+    },
+    "availability": {
+      "type": "string",
+      "enum": [
+        "IN_STOCK",
+        "LIMITED",
+        "OUT_OF_STOCK",
+        "UNKNOWN"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "SEARCH",
+        "DETAIL"
+      ]
+    },
+    "quoteId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observedAt": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    }
+  },
+  "required": [
+    "id",
+    "supplierId",
+    "title",
+    "brand",
+    "category",
+    "imageUrl",
+    "url",
+    "price",
+    "availability",
+    "source",
+    "quoteId",
+    "observedAt"
+  ],
+  "additionalProperties": false,
+  "description": "A price quote for a product from a supplier, frozen when it was read.",
+  "$defs": {
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}
