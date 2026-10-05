@@ -1,0 +1,37 @@
+[
+  {
+    "scenario": "a routine order",
+    "outcome": "ALLOW",
+    "requiredApprovals": 0,
+    "explanation": "Allowed: every rule passed.",
+    "notAllowed": []
+  },
+  {
+    "scenario": "a large order from a new supplier",
+    "outcome": "REQUIRE_APPROVAL",
+    "requiredApprovals": 2,
+    "explanation": "Needs approval from two different people: First time paying sup_01ARZ3NDEKTSV4RRFFQ69G5FAV. Above 1000.00 USD, 2 different people must approve.",
+    "notAllowed": [
+      "R-NEW-VENDOR: REQUIRE_APPROVAL",
+      "R-DUAL: REQUIRE_APPROVAL"
+    ]
+  },
+  {
+    "scenario": "structuring across suppliers that share a payee",
+    "outcome": "REQUIRE_APPROVAL",
+    "requiredApprovals": 1,
+    "explanation": "Needs approval from one person: Too much buying in 24 hours for payee:a@pay.example.",
+    "notAllowed": [
+      "R-VELOCITY: REQUIRE_APPROVAL"
+    ]
+  },
+  {
+    "scenario": "a frozen mandate",
+    "outcome": "DENY",
+    "requiredApprovals": 0,
+    "explanation": "Denied: The mandate is frozen.",
+    "notAllowed": [
+      "R-MANDATE: DENY"
+    ]
+  }
+]

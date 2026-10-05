@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@bursar/crypto": "workspace:*",
-    "@bursar/schemas": "workspace:*"
+    "@bursar/money": "workspace:*",
+    "@bursar/schemas": "workspace:*",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@bursar/tooling": "workspace:*",
