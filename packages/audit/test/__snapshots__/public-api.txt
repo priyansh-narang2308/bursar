@@ -1,0 +1,11 @@
+AuditError
+CHAIN_FAILURES
+MAX_AUDIT_PAYLOAD_BYTES
+appendEvent
+auditDraftSchema
+chainHeadSchema
+entryHash
+genesisHash
+genesisHead
+headOf
+verifyChain

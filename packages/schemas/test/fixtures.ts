@@ -209,6 +209,19 @@ export const paypalEvent = (overrides: Fixture = {}): Fixture => ({
   ...overrides,
 });
 
+export const auditEvent = (overrides: Fixture = {}): Fixture => ({
+  id: id('auditEvent'),
+  orgId: id('organization'),
+  seq: 7,
+  ts: T1,
+  actor: { kind: 'USER', id: id('user') },
+  type: 'approval.granted',
+  payload: { decisionId: id('decision'), cartHash: HASH_A },
+  prevHash: HASH_B,
+  hash: HASH_C,
+  ...overrides,
+});
+
 // ---------------------------------------------------------------------------------------
 // LLM tool inputs, API bodies and stream events
 // ---------------------------------------------------------------------------------------

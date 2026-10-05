@@ -8,6 +8,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0002](0002-ai-assisted-development-tooling.md) | AI-assisted development tooling             | Accepted |
 | [0003](0003-money-representation.md)            | Money representation                        | Accepted |
 | [0004](0004-schemas-as-the-shared-contract.md)  | Schemas as the shared contract              | Accepted |
+| [0005](0005-cryptography-and-the-audit-log.md)  | Cryptography and the audit log              | Accepted |
 
 ## Template
 

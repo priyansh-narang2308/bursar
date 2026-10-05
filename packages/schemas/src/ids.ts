@@ -38,6 +38,7 @@ export const ID_PREFIXES = {
   incident: 'inc',
   paypalEvent: 'ppe',
   event: 'evt',
+  auditEvent: 'aud',
 } as const;
 
 export type IdKind = keyof typeof ID_PREFIXES;
@@ -158,6 +159,7 @@ export const idSchemas = {
   incident: idSchema('incident'),
   paypalEvent: idSchema('paypalEvent'),
   event: idSchema('event'),
+  auditEvent: idSchema('auditEvent'),
 } as const satisfies { readonly [K in IdKind]: ReturnType<typeof idSchema<K>> };
 
 export type OrganizationId = Id<'organization'>;
@@ -181,6 +183,7 @@ export type EnvelopeId = Id<'envelope'>;
 export type IncidentId = Id<'incident'>;
 export type PayPalEventId = Id<'paypalEvent'>;
 export type EventId = Id<'event'>;
+export type AuditEventId = Id<'auditEvent'>;
 
 /** A new id of the given kind, time-ordered and unique. */
 export function newId<K extends IdKind>(kind: K): Id<K> {

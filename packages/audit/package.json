@@ -1,0 +1,29 @@
+{
+  "name": "@bursar/audit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bursar's tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/crypto": "workspace:*",
+    "@bursar/schemas": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fast-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
