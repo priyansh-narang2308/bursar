@@ -1,0 +1,57 @@
+# Bursar
+
+**Spend authority for AI agents.**
+A policy-enforced, PayPal-verified control plane that lets an AI agent research, plan and pay, without being able to overspend, be talked into it, or move money unnoticed.
+
+> **Status: under construction** for the PayPal AI Hackathon (October to November 2026). The repository foundations are in place; features land in small, reviewed steps. Everything is designed for the PayPal **sandbox** only.
+
+## Why
+
+AI agents can already move money. PayPal ships an MCP server and an Agent Toolkit for exactly that, and its documentation leaves verifying the agent's output to the developer. Bursar is the missing layer between an agent and the money.
+
+## Four locks
+
+| Lock | What it means |
+| --- | --- |
+| **Govern** | The model proposes; a pure, versioned, fail-closed policy engine decides. Tools exposed to the model never carry amounts, payees or currencies. |
+| **Bind** | A mandate is a PayPal Vault token and a mission's envelope is a PayPal authorization, so PayPal itself caps the spend and revocation is real. |
+| **Verify** | Every movement of money must match an approved decision through a signature-verified webhook. Anything unexplained freezes the mandate. |
+| **Prove** | An AI red team attacks the policy before the agent runs, and every finding becomes a regression test. |
+
+## Quick start
+
+Requirements: Node.js 24 LTS (26 also works) and [pnpm 11](https://pnpm.io/installation).
+
+```bash
+pnpm install   # installs dependencies and git hooks
+pnpm check     # lint, typecheck and test
+```
+
+## Repository layout
+
+| Path | Purpose | State |
+| --- | --- | --- |
+| `apps/api` | Hono API, webhook receiver and MCP gateway | planned |
+| `apps/web` | React and Vite app with the AG Studio cockpit and Bryntum Gantt | planned |
+| `apps/workflows` | Render Workflows tasks | planned |
+| `packages/tooling` | Shared test configuration and repository-quality checks | ready |
+| `docs/decisions` | Architecture decision records | ready |
+
+## Stack
+
+TypeScript 7 · Node.js 24 LTS · React 19 and Vite · Hono · Postgres and Drizzle · Render · PayPal Server SDK and JS SDK v6 · AG Studio · Bryntum Gantt · Channel3. The reasoning is recorded in [ADR-0001](docs/decisions/0001-stack-and-conventions.md).
+
+## Quality gates
+
+`pnpm check` is the single gate, and CI runs the same commands.
+
+- **Lint and format:** [Biome](https://biomejs.dev), with `any`, non-null assertions and unused code treated as errors.
+- **Types:** TypeScript 7 in its strictest practical configuration (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, erasable syntax only).
+- **Tests:** Vitest with per-package coverage thresholds, and fast-check property tests for invariants.
+- **Repository conventions as tests:** pinned runtimes, safe dependency specifiers, a secret-free `.env.example` and sandbox-only defaults are all checked by `packages/tooling`.
+- **Git hooks:** Biome on staged files, a secret scan, and Conventional Commits validation.
+- **CI:** GitHub Actions pinned to commit SHAs, plus a full-history secret scan.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).

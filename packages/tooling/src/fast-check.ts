@@ -6,7 +6,12 @@ export type Env = Readonly<Record<string, string | undefined>>;
 const DEFAULT_RUNS_LOCAL = 200;
 const DEFAULT_RUNS_CI = 500;
 
-function readInteger(env: Env, key: string, pattern: RegExp, description: string): number | undefined {
+function readInteger(
+  env: Env,
+  key: string,
+  pattern: RegExp,
+  description: string,
+): number | undefined {
   const raw = env[key];
   if (raw === undefined || raw === '') {
     return undefined;

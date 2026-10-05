@@ -65,7 +65,9 @@ export function validateCommitMessage(raw: string): CommitMessageResult {
     );
   }
   if (header.length > MAX_HEADER_LENGTH) {
-    errors.push(`The header is ${header.length} characters long; the limit is ${MAX_HEADER_LENGTH}.`);
+    errors.push(
+      `The header is ${header.length} characters long; the limit is ${MAX_HEADER_LENGTH}.`,
+    );
   }
   if (header.trimEnd().endsWith('.')) {
     errors.push('The subject must not end with a period.');

@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "allowJs": false,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,

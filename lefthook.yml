@@ -1,0 +1,17 @@
+# Git hooks (installed automatically by `pnpm install` via the `prepare` script).
+# CI re-runs every check, so hooks are a fast local safety net, not the only gate.
+min_version: 2.0.0
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome
+      glob: '*.{js,mjs,cjs,ts,tsx,json,jsonc}'
+      run: pnpm exec biome check --staged --no-errors-on-unmatched
+    - name: secret-scan
+      run: sh scripts/hooks/secret-scan.sh
+
+commit-msg:
+  jobs:
+    - name: conventional-commit
+      run: pnpm exec tsx scripts/hooks/commit-msg.ts {1}
