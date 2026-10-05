@@ -35,4 +35,5 @@ export {
   parseKeyring,
   resealSecret,
 } from './secretbox';
+export { signSession, verifySession } from './session';
 export { payPalRequestId } from './uuid';

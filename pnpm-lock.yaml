@@ -12,6 +12,9 @@ catalogs:
     '@electric-sql/pglite':
       specifier: ^0.5.8
       version: 0.5.8
+    '@hono/node-server':
+      specifier: ^2.1.0
+      version: 2.1.3
     '@types/node':
       specifier: ^24.0.0
       version: 24.19.1
@@ -36,12 +39,18 @@ catalogs:
     fast-check:
       specifier: ^4.10.0
       version: 4.10.2
+    hono:
+      specifier: ^4.13.0
+      version: 4.13.13
     lefthook:
       specifier: ^2.1.0
       version: 2.1.16
     pg:
       specifier: ^8.23.1
       version: 8.23.1
+    pino:
+      specifier: ^10.4.0
+      version: 10.4.0
     tsx:
       specifier: ^4.23.0
       version: 4.23.15
@@ -77,6 +86,55 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
+
+  apps/api:
+    dependencies:
+      '@bursar/crypto':
+        specifier: workspace:*
+        version: link:../../packages/crypto
+      '@bursar/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@bursar/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
+      '@hono/node-server':
+        specifier: 'catalog:'
+        version: 2.1.3(hono@4.13.13)
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.1)
+      hono:
+        specifier: 'catalog:'
+        version: 4.13.13
+      pino:
+        specifier: 'catalog:'
+        version: 10.4.0
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
+    devDependencies:
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../../packages/tooling
+      '@electric-sql/pglite':
+        specifier: 'catalog:'
+        version: 0.5.8
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
 
   packages/audit:
     dependencies:
@@ -219,6 +277,59 @@ importers:
       fast-check:
         specifier: 'catalog:'
         version: 4.10.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/paypal:
+    dependencies:
+      '@bursar/money':
+        specifier: workspace:*
+        version: link:../money
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
+    devDependencies:
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../tooling
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/paypal-fake:
+    dependencies:
+      '@bursar/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@bursar/money':
+        specifier: workspace:*
+        version: link:../money
+    devDependencies:
+      '@bursar/paypal':
+        specifier: workspace:*
+        version: link:../paypal
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../tooling
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -851,6 +962,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@hono/node-server@2.1.3':
+    resolution: {integrity: sha512-TA//nWMqPhbfdfneACk6t5a9eqbS9lABEPyKn0/xZTah3H3U2XaVg85rJFl0/Fyit0I552YDHgXGVSf3GwqbUw==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: ^4
+
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
@@ -863,6 +980,9 @@ packages:
 
   '@oxc-project/types@0.152.0':
     resolution: {integrity: sha512-oM/5rLBm2tPkg0iBgkH/FOeR3PCDpY19GTgAZjMFM8h9WI9VW7cLgzp6nwtarYKmovavIQZ+Fe/RKX/8C8O/Rw==}
+
+  '@pinojs/redact@0.4.0':
+    resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
 
   '@rolldown/binding-android-arm-eabi@1.2.12':
     resolution: {integrity: sha512-dB/a1214qKfHMXCpgqR4OZT+jS4kTyEXbQGJPqzobt5EwH5rX080pxE37alt3RzvR1bf1Yz/yGqRfrYAxuPw0A==}
@@ -1147,6 +1267,10 @@ packages:
   ast-v8-to-istanbul@1.0.7:
     resolution: {integrity: sha512-kFL68AG6ajd8fg248zwM9GQrUWEp79gsmjum34OEXjs4yHuUMZfYKwOLW9GMmB4oNvVrj+EAGxsP7ye2UR9UlA==}
 
+  atomic-sleep@1.0.0:
+    resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
+    engines: {node: '>=8.0.0'}
+
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
@@ -1309,6 +1433,10 @@ packages:
   get-tsconfig@4.14.3:
     resolution: {integrity: sha512-++QEw4DIY7WGoukz+/+A/8dGYPT9l9yIadnmSgZ8Rjr3YVSVDipQSO9CdnJo9ePqFqUUqh+wk9uIaoiAwsiPkA==}
 
+  hono@4.13.13:
+    resolution: {integrity: sha512-CQ46U0ZkAGmbT/4UxdzzGJpacP2IeKgY4a5/tOI9AABbpOMfK739wfDXmv1usCk+3RkKj1hQy4/fjhiwa2xlrA==}
+    engines: {node: '>=16.9.0'}
+
   js-tokens@10.0.0:
     resolution: {integrity: sha512-lM/UBzQmfJRo9ABXbPWemivdCW8V2G8FHaHdypQaIy523snUjog0W71ayWXTjiR+ixeMyVHN2XcpnTd/liPg/Q==}
 
@@ -1458,6 +1586,10 @@ packages:
     resolution: {integrity: sha512-XrsrhT5sybtKI6wakr2SPOlGZWWYbUXZ7a0jT8/QOeAPau+1X/bSegNe5YR75oJmEZQbKningirmGOEJCIk61Q==}
     engines: {node: '>=12.20.0'}
 
+  on-exit-leak-free@2.1.2:
+    resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
+    engines: {node: '>=14.0.0'}
+
   pg-cloudflare@1.4.1:
     resolution: {integrity: sha512-6PQbsFWZcp9EmJEwy5cGQ2La+AMWpP46lgbb8X+U/XsHIUweYDNCpeuKck5RxL2MdVFi7krbbEi5nX4Zh7JhrQ==}
 
@@ -1499,6 +1631,16 @@ packages:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
 
+  pino-abstract-transport@3.0.0:
+    resolution: {integrity: sha512-wlfUczU+n7Hy/Ha5j9a/gZNy7We5+cXp8YL+X+PG8S0KXxw7n/JXA3c46Y0zQznIJ83URJiwy7Lh56WLokNuxg==}
+
+  pino-std-serializers@7.1.0:
+    resolution: {integrity: sha512-BndPH67/JxGExRgiX1dX0w1FvZck5Wa4aal9198SrRhZjH3GxKQUKIBnYJTdj2HDN3UQAS06HlfcSbQj2OHmaw==}
+
+  pino@10.4.0:
+    resolution: {integrity: sha512-bk1ZMTwG/Vymx+zPoa28MhNzucFvXJWp3csrSuxuHPSMeUettaCoQ5Jvg07mtC4JGNpcfTwz41oVCnNgBK9+vA==}
+    hasBin: true
+
   postcss@8.5.28:
     resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
     engines: {node: ^10 || ^12 || >=14}
@@ -1519,8 +1661,17 @@ packages:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
 
+  process-warning@5.1.0:
+    resolution: {integrity: sha512-jQSaVHsPgtyw60e1rQ/A+/ArPEj/S8pS/vFnyGa/gYFXrKk/6RuDkoqVDQ5NI5MmS01698ltlAk0NoDBNLujRw==}
+
   pure-rand@8.4.2:
     resolution: {integrity: sha512-vvuOGgcuPJAirlHvuQw1TrOiw7ptaIXXmIbNuiNOY6lNGJJH49PQ1Kj4nd783nPdQhQdicgOjVI2yI/9BD6/Ng==}
+
+  quick-format-unescaped@4.0.4:
+    resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
+
+  real-require@1.0.0:
+    resolution: {integrity: sha512-P4nbQYQfePJxRSmY+v/KINxVucm4NF3p3s7pJveMTtom52FR4YGltUQLB8idDXwDDWW+eYrWDFbuzUnjoWHF7g==}
 
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
@@ -1533,6 +1684,13 @@ packages:
     resolution: {integrity: sha512-8wafseiaG80xmXSfqidUNqZcylTlhmPZZt+za2m+js2sFZ8dTNlhIOV2WcbIPx2hgwPBJpEUGFAMZ9bgBBLTSQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
+
+  safe-stable-stringify@2.5.0:
+    resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==}
+    engines: {node: '>=10'}
+
+  sonic-boom@4.2.1:
+    resolution: {integrity: sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==}
 
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
@@ -1551,6 +1709,10 @@ packages:
 
   std-env@4.3.0:
     resolution: {integrity: sha512-OtU/EgQ1kIm5KwqQpBC6ZEMXrZRui11w8zgfTWp8cdO9B8OaPsbA8bTHO2P+HNo1VlUTGMVBwPhydu6poeXiag==}
+
+  thread-stream@4.2.0:
+    resolution: {integrity: sha512-e2zZ96wSChazBsbENf/Pcm/4swHt2cEKQ92rhUjkL9GCKiTDJIaTBenjE/m9DXi0QBmTMDkFDdOomUy20A1tDQ==}
+    engines: {node: '>=20'}
 
   tinybench@6.2.0:
     resolution: {integrity: sha512-78U2TlB2CnVenajOFzf3BKSm0J6oz5L0NV7g32LCPccvYc0lbWvys4d3uUUCS2B1N8PAf2+aekR8i1KbC3HO7Q==}
@@ -1965,6 +2127,10 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
+  '@hono/node-server@2.1.3(hono@4.13.13)':
+    dependencies:
+      hono: 4.13.13
+
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
@@ -1975,6 +2141,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.6.0
 
   '@oxc-project/types@0.152.0': {}
+
+  '@pinojs/redact@0.4.0': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.12':
     optional: true
@@ -2150,6 +2318,8 @@ snapshots:
       estree-walker: 3.0.3
       js-tokens: 10.0.0
 
+  atomic-sleep@1.0.0: {}
+
   buffer-from@1.1.2: {}
 
   chai@6.3.0: {}
@@ -2279,6 +2449,8 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  hono@4.13.13: {}
+
   js-tokens@10.0.0: {}
 
   json-schema-traverse@1.0.0: {}
@@ -2389,6 +2561,8 @@ snapshots:
 
   obug@2.2.1: {}
 
+  on-exit-leak-free@2.1.2: {}
+
   pg-cloudflare@1.4.1:
     optional: true
 
@@ -2428,6 +2602,26 @@ snapshots:
 
   picomatch@4.0.7: {}
 
+  pino-abstract-transport@3.0.0:
+    dependencies:
+      split2: 4.2.0
+
+  pino-std-serializers@7.1.0: {}
+
+  pino@10.4.0:
+    dependencies:
+      '@pinojs/redact': 0.4.0
+      atomic-sleep: 1.0.0
+      on-exit-leak-free: 2.1.2
+      pino-abstract-transport: 3.0.0
+      pino-std-serializers: 7.1.0
+      process-warning: 5.1.0
+      quick-format-unescaped: 4.0.4
+      real-require: 1.0.0
+      safe-stable-stringify: 2.5.0
+      sonic-boom: 4.2.1
+      thread-stream: 4.2.0
+
   postcss@8.5.28:
     dependencies:
       nanoid: 3.3.19
@@ -2444,7 +2638,13 @@ snapshots:
     dependencies:
       xtend: 4.0.2
 
+  process-warning@5.1.0: {}
+
   pure-rand@8.4.2: {}
+
+  quick-format-unescaped@4.0.4: {}
+
+  real-require@1.0.0: {}
 
   require-from-string@2.0.2: {}
 
@@ -2471,6 +2671,12 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.12
       '@rolldown/binding-win32-x64-msvc': 1.2.12
 
+  safe-stable-stringify@2.5.0: {}
+
+  sonic-boom@4.2.1:
+    dependencies:
+      atomic-sleep: 1.0.0
+
   source-map-js@1.2.2: {}
 
   source-map-support@0.5.21:
@@ -2483,6 +2689,10 @@ snapshots:
   split2@4.2.0: {}
 
   std-env@4.3.0: {}
+
+  thread-stream@4.2.0:
+    dependencies:
+      real-require: 1.0.0
 
   tinybench@6.2.0: {}
 

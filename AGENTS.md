@@ -33,9 +33,8 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 
 ### PayPal
 - Sandbox only. The base URL is asserted at startup, and `ALLOW_LIVE` must stay `false`.
-- Use the Server SDK for money paths; use thin typed REST only where the SDK lacks the API (Payouts, webhook verification).
-- The only SDK is the published `@paypal/paypal-server-sdk`. Some third-party skills describe a different, unpublished SDK with other names, so check every name, option and default against the installed typings.
-- The SDK's defaults are no timeout and no retries. Configure both explicitly (`docs/development-with-ai.md` has the verified details).
+- Every PayPal call goes through `@bursar/paypal`, a thin typed REST client with explicit timeouts and retries (ADR-0008). If the official SDK is ever used, the only one is the published `@paypal/paypal-server-sdk`: some third-party skills describe a different, unpublished SDK, so check every name against the installed typings, and note that its defaults are no timeout and no retries.
+- Test against `@bursar/paypal-fake`; keep its fidelity table honest and run the live smoke test (`PAYPAL_LIVE_TESTS=1`) once sandbox keys exist.
 - Every POST carries a `PayPal-Request-Id` derived from the action's idempotency key. Log PayPal's `debug_id` on every error; the SDK exposes it as `error.result?.debug_id` (raw snake_case JSON, absent when the body is not JSON).
 - Verify webhook signatures before trusting an event, and de-duplicate on the event id.
 
@@ -52,6 +51,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 
 ### Database
 - Tenant data is reached only through `withOrg` from `@bursar/db`, which applies row-level security. Code that uses the pool directly (migrations, the Verifier, webhook ingest, cron) is cross-tenant: keep it small and say so where it is.
+- API handlers reach tenant data only through `asTenant`.
 - Every table with an `org_id` has RLS (a test fails otherwise). Change the schema in `packages/db/src/schema/`, run `pnpm --filter @bursar/db generate`, and review the SQL. Never edit a migration that has been applied.
 - Rules that must hold (idempotency, legal transitions, envelope ceilings, a balanced ledger) are constraints or triggers, not only application checks.
 

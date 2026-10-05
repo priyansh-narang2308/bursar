@@ -1,0 +1,152 @@
+import { z } from 'zod';
+import type { Permission } from './auth/permissions';
+
+interface Operation {
+  readonly method: 'get' | 'post' | 'delete';
+  /** The Hono path, `:id` style. */
+  readonly path: string;
+  readonly summary: string;
+  readonly permission?: Permission | 'signed-in' | 'public';
+  readonly body?: z.ZodType;
+  readonly status: number;
+}
+
+const role = z.enum(['OWNER', 'APPROVER', 'OPERATOR', 'AUDITOR', 'AGENT', 'VERIFIER']);
+
+/** Every route the API serves. A test fails if this list and the app disagree. */
+export const OPERATIONS: readonly Operation[] = [
+  { method: 'get', path: '/healthz', summary: 'Liveness', permission: 'public', status: 200 },
+  {
+    method: 'get',
+    path: '/readyz',
+    summary: 'Readiness: the database answers',
+    permission: 'public',
+    status: 200,
+  },
+  {
+    method: 'get',
+    path: '/openapi.json',
+    summary: 'This document',
+    permission: 'public',
+    status: 200,
+  },
+  {
+    method: 'post',
+    path: '/v1/demo/workspace',
+    summary: 'Open a demo workspace (demo mode only)',
+    permission: 'public',
+    body: z.object({ name: z.string().optional() }),
+    status: 201,
+  },
+  {
+    method: 'post',
+    path: '/v1/demo/role',
+    summary: 'Switch role in the demo',
+    permission: 'signed-in',
+    body: z.object({ role }),
+    status: 200,
+  },
+  { method: 'get', path: '/v1/me', summary: 'Who am I', permission: 'signed-in', status: 200 },
+  {
+    method: 'get',
+    path: '/v1/workspace',
+    summary: 'The current workspace',
+    permission: 'workspace:read',
+    status: 200,
+  },
+  {
+    method: 'get',
+    path: '/v1/audit-events',
+    summary: 'The audit log, oldest first',
+    permission: 'audit:read',
+    status: 200,
+  },
+  {
+    method: 'get',
+    path: '/v1/agents',
+    summary: 'Agents and their keys',
+    permission: 'workspace:read',
+    status: 200,
+  },
+  {
+    method: 'post',
+    path: '/v1/agents',
+    summary: 'Create an agent',
+    permission: 'agents:manage',
+    body: z.object({ name: z.string() }),
+    status: 201,
+  },
+  {
+    method: 'post',
+    path: '/v1/agents/:id/keys',
+    summary: 'Create a key, shown once',
+    permission: 'agents:manage',
+    body: z.object({ scopes: z.array(z.string()).optional() }),
+    status: 201,
+  },
+  {
+    method: 'post',
+    path: '/v1/agents/:id/keys/:keyId/rotate',
+    summary: 'Replace a key with a new one',
+    permission: 'agents:manage',
+    status: 201,
+  },
+  {
+    method: 'delete',
+    path: '/v1/agents/:id/keys/:keyId',
+    summary: 'Revoke a key',
+    permission: 'agents:manage',
+    status: 204,
+  },
+];
+
+const toOpenApiPath = (path: string) => path.replace(/:(\w+)/g, '{$1}');
+
+export function openApiDocument() {
+  const paths: Record<string, Record<string, unknown>> = {};
+  for (const op of OPERATIONS) {
+    const parameters = [...op.path.matchAll(/:(\w+)/g)].map(([, name]) => ({
+      name,
+      in: 'path',
+      required: true,
+      schema: { type: 'string' },
+    }));
+    const item = paths[toOpenApiPath(op.path)] ?? {};
+    item[op.method] = {
+      summary: op.summary,
+      'x-permission': op.permission ?? 'signed-in',
+      ...(parameters.length > 0 ? { parameters } : {}),
+      ...(op.body === undefined
+        ? {}
+        : {
+            requestBody: {
+              required: true,
+              content: { 'application/json': { schema: z.toJSONSchema(op.body) } },
+            },
+          }),
+      responses: {
+        [op.status]: { description: 'Success' },
+        default: {
+          description: 'An error',
+          content: {
+            'application/problem+json': { schema: { $ref: '#/components/schemas/ProblemDetails' } },
+          },
+        },
+      },
+    };
+    paths[toOpenApiPath(op.path)] = item;
+  }
+  return {
+    openapi: '3.1.0',
+    info: { title: 'Bursar API', version: '0.0.0' },
+    paths,
+    components: {
+      schemas: {
+        ProblemDetails: {
+          type: 'object',
+          description: 'RFC 9457 problem details with a stable `code`; see @bursar/schemas.',
+        },
+      },
+    },
+  };
+}

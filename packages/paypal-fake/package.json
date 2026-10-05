@@ -1,0 +1,28 @@
+{
+  "name": "@bursar/paypal-fake",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A fake PayPal for tests: the rules of the sandbox we depend on, with a table of how faithful each one is.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/crypto": "workspace:*",
+    "@bursar/money": "workspace:*"
+  },
+  "devDependencies": {
+    "@bursar/paypal": "workspace:*",
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

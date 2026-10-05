@@ -14,6 +14,7 @@ export const DOMAINS = {
   provenance: 'bursar.provenance.v1',
   approval: 'bursar.approval.v1',
   secret: 'bursar.secret.v1',
+  session: 'bursar.session.v1',
 } as const;
 
 export type Domain = keyof typeof DOMAINS;
@@ -25,4 +26,4 @@ export type HashDomain = Extract<
 >;
 
 /** The purposes of a keyed MAC. */
-export type MacDomain = Extract<Domain, 'provenance' | 'approval'>;
+export type MacDomain = Extract<Domain, 'provenance' | 'approval' | 'session'>;

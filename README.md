@@ -33,7 +33,7 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 
 | Path | Purpose | State |
 | --- | --- | --- |
-| `apps/api` | Hono API, webhook receiver and MCP gateway | planned |
+| `apps/api` | Hono API with sessions, roles, agent keys, health checks and OpenAPI; the money routes, webhook receiver and MCP gateway are next | in progress |
 | `apps/web` | React and Vite app with the AG Studio cockpit and Bryntum Gantt | planned |
 | `apps/workflows` | Render Workflows tasks | planned |
 | `packages/money` | Exact money: `bigint` minor units, PayPal's currencies, explicit rounding, lossless splitting | ready |
@@ -42,6 +42,8 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `packages/db` | Postgres schema and migrations, tenant isolation by row-level security, and the rules the database enforces itself | ready |
 | `packages/ledger` | Double-entry posting rules for each PayPal action and the envelope figures they imply | ready |
 | `packages/policy` | The policy engine: pure, fail-closed, versioned and replayable | ready |
+| `packages/paypal` | A typed, retrying, idempotent, sandbox-only PayPal client with classified errors | ready |
+| `packages/paypal-fake` | A fake PayPal for tests, with a fidelity table and a contract suite | ready |
 | `packages/audit` | The tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |
