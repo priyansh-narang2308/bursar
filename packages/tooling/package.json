@@ -1,0 +1,27 @@
+{
+  "name": "@bursar/tooling",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared test configuration and repository-quality utilities.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vitest": "./src/vitest.ts",
+    "./fast-check-setup": "./src/fast-check.setup.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "fast-check": "catalog:",
+    "vitest": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:"
+  }
+}

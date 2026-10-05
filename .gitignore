@@ -24,3 +24,7 @@ spikes/results/*.local.json
 .DS_Store
 .idea/
 .vscode/
+
+# build / tooling output
+*.tsbuildinfo
+.pnpm-store/

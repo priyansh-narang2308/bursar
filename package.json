@@ -1,0 +1,30 @@
+{
+  "name": "bursar",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Spend authority for AI agents: a policy-enforced, PayPal-verified control plane.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "packageManager": "pnpm@11.8.0",
+  "engines": {
+    "node": "^24.0.0 || ^26.0.0",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "pnpm -r --workspace-concurrency=Infinity typecheck && tsc --noEmit -p tsconfig.json",
+    "test": "pnpm -r test",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "prepare": "lefthook install || echo 'lefthook unavailable: skipping git hooks'"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "lefthook": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

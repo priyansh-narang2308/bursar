@@ -1,0 +1,22 @@
+packages:
+  - apps/*
+  - packages/*
+
+# One place for every shared dependency version. Packages reference these as `catalog:`.
+catalog:
+  '@biomejs/biome': ^2.5.0
+  '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)
+  '@vitest/coverage-v8': ^5.0.0
+  fast-check: ^4.10.0
+  lefthook: ^2.1.0
+  tsx: ^4.23.0
+  typescript: ^7.0.0
+  vitest: ^5.0.0
+
+# Supply-chain hygiene: lifecycle scripts are denied unless a package is listed here.
+allowBuilds:
+  esbuild: true
+  lefthook: true
+
+# Refuse to install on a Node version outside `engines`.
+engineStrict: true
