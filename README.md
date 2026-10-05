@@ -55,7 +55,7 @@ TypeScript 7 · Node.js 24 LTS · React 19 and Vite · Hono · Postgres and Driz
 - **Repository conventions as tests:** pinned runtimes, safe dependency specifiers, a secret-free `.env.example`, sandbox-only defaults, numbered decision records and a locked-down Claude Code configuration are all checked by `packages/tooling`.
 - **AI tooling you can verify:** sponsor plugins and skills are configured in git, third-party skill content is pinned by hash, and findings about the tools are logged with evidence in [Developing with AI assistance](docs/development-with-ai.md).
 - **Git hooks:** Biome on staged files, a secret scan, and Conventional Commits validation.
-- **CI:** GitHub Actions pinned to commit SHAs, plus a full-history secret scan.
+- **CI:** GitHub Actions pinned to commit SHAs, plus a gitleaks scan of every commit in a push or pull request.
 
 ## License
 
