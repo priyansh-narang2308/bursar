@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mnd_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A mandate id: \"mnd_\" followed by a ULID."
+    },
+    "orgId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A organization id: \"org_\" followed by a ULID."
+    },
+    "payerId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^pyr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A payer id: \"pyr_\" followed by a ULID."
+    },
+    "policySetId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^pls_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A policySet id: \"pls_\" followed by a ULID."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "ACTIVE",
+        "FROZEN",
+        "REVOKED",
+        "EXPIRED"
+      ]
+    },
+    "cap": {
+      "$ref": "#/$defs/Amount"
+    },
+    "perMissionCap": {
+      "$ref": "#/$defs/Amount"
+    },
+    "validFrom": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    },
+    "validTo": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    },
+    "signedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "revokedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "orgId",
+    "payerId",
+    "policySetId",
+    "status",
+    "cap",
+    "perMissionCap",
+    "validFrom",
+    "validTo",
+    "signedAt",
+    "revokedAt"
+  ],
+  "additionalProperties": false,
+  "description": "A payer's signed permission for Bursar to spend, within caps and a window.",
+  "$defs": {
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}

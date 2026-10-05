@@ -37,6 +37,7 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `apps/web` | React and Vite app with the AG Studio cockpit and Bryntum Gantt | planned |
 | `apps/workflows` | Render Workflows tasks | planned |
 | `packages/money` | Exact money: `bigint` minor units, PayPal's currencies, explicit rounding, lossless splitting | ready |
+| `packages/schemas` | The shared contract: branded ids, the action state machine, entities, API and event shapes, error catalog, and the guarded LLM tool contracts | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |
 | `docs/decisions` | Architecture decision records | ready |

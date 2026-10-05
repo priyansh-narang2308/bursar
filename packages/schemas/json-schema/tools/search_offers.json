@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "needId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ned_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The need this is about, such as \"10 desks\"."
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "\\S",
+      "description": "What to search for, in plain words."
+    },
+    "maxResults": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10,
+      "description": "How many offers to return at most."
+    }
+  },
+  "required": [
+    "needId",
+    "query",
+    "maxResults"
+  ],
+  "additionalProperties": false
+}

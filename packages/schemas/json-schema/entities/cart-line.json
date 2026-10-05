@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^cln_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A cartLine id: \"cln_\" followed by a ULID."
+    },
+    "offerId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A offer id: \"ofr_\" followed by a ULID."
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99
+    },
+    "unitPrice": {
+      "$ref": "#/$defs/Amount"
+    },
+    "lineTotal": {
+      "$ref": "#/$defs/Amount"
+    },
+    "rationale": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "offerId",
+    "quantity",
+    "unitPrice",
+    "lineTotal",
+    "rationale"
+  ],
+  "additionalProperties": false,
+  "description": "One offer and a quantity, with the price the server worked out.",
+  "$defs": {
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}

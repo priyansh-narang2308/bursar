@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "missionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The mission this is about."
+    },
+    "lineId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^cln_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The cart line to replace."
+    },
+    "replacementOfferId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "An offer id taken from a search, a shortlist or a comparison."
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "OUT_OF_STOCK",
+        "PRICE_INCREASE",
+        "DELIVERY_DELAY",
+        "QUALITY_ISSUE",
+        "OTHER"
+      ]
+    }
+  },
+  "required": [
+    "missionId",
+    "lineId",
+    "replacementOfferId",
+    "reason"
+  ],
+  "additionalProperties": false
+}

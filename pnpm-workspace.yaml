@@ -7,11 +7,14 @@ catalog:
   '@biomejs/biome': ^2.5.0
   '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)
   '@vitest/coverage-v8': ^5.0.0
+  ajv: ^8.20.0 # validates the exported JSON Schemas against real documents in @bursar/schemas tests
+  ajv-formats: ^3.0.1 # the date-time and uri formats those schemas use
   fast-check: ^4.10.0
   lefthook: ^2.1.0
   tsx: ^4.23.0
   typescript: ^7.0.0
   vitest: ^5.0.0
+  zod: ^4.6.0 # runtime validation and JSON Schema for @bursar/schemas
 
 # Supply-chain hygiene: lifecycle scripts are denied unless a package is listed here.
 allowBuilds:

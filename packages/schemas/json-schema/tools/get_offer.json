@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "offerId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "An offer id taken from a search, a shortlist or a comparison."
+    }
+  },
+  "required": [
+    "offerId"
+  ],
+  "additionalProperties": false
+}

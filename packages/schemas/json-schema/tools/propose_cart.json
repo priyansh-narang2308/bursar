@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "missionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The mission this is about."
+    },
+    "lines": {
+      "minItems": 1,
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "offerId": {
+            "type": "string",
+            "minLength": 30,
+            "maxLength": 30,
+            "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+            "description": "An offer id taken from a search, a shortlist or a comparison."
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 99,
+            "description": "How many to buy, as a whole number."
+          }
+        },
+        "required": [
+          "offerId",
+          "quantity"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "\\S",
+      "description": "Why this selection meets the need. A person may read it when approving."
+    }
+  },
+  "required": [
+    "missionId",
+    "lines",
+    "rationale"
+  ],
+  "additionalProperties": false
+}

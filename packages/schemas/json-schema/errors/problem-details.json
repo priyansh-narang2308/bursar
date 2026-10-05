@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "pattern": "^urn:bursar:error:[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "status": {
+      "type": "integer",
+      "minimum": 400,
+      "maximum": 599
+    },
+    "detail": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "instance": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "VALIDATION_FAILED",
+        "UNAUTHENTICATED",
+        "FORBIDDEN",
+        "NOT_FOUND",
+        "CONFLICT",
+        "IDEMPOTENCY_KEY_REUSED",
+        "RATE_LIMITED",
+        "INTERNAL_ERROR",
+        "SERVICE_UNAVAILABLE",
+        "POLICY_DENIED",
+        "APPROVAL_REQUIRED",
+        "APPROVAL_EXPIRED",
+        "APPROVAL_MISMATCH",
+        "SEPARATION_OF_DUTIES",
+        "ENVELOPE_EXCEEDED",
+        "MANDATE_INACTIVE",
+        "ILLEGAL_STATE_TRANSITION",
+        "CURRENCY_MISMATCH",
+        "PRICE_CHANGED",
+        "OFFER_UNAVAILABLE",
+        "PAYPAL_DECLINED",
+        "PAYPAL_UNAVAILABLE",
+        "PAYPAL_OUTCOME_UNKNOWN",
+        "TOOL_NOT_ALLOWED",
+        "UNKNOWN_REFERENCE"
+      ]
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "retryAfterSeconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 86400
+    },
+    "paypalDebugId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "errors": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "path",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "type",
+    "title",
+    "status",
+    "code",
+    "retryable"
+  ],
+  "additionalProperties": false,
+  "description": "An error response: RFC 9457 problem details with a stable code."
+}

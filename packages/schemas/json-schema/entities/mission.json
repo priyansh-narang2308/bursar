@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A mission id: \"mis_\" followed by a ULID."
+    },
+    "orgId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A organization id: \"org_\" followed by a ULID."
+    },
+    "mandateId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^mnd_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A mandate id: \"mnd_\" followed by a ULID."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "envelopeId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^env_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A envelope id: \"env_\" followed by a ULID."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "pattern": "\\S"
+    },
+    "deadline": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "budget": {
+      "$ref": "#/$defs/Amount"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PLANNING",
+        "AWAITING_APPROVAL",
+        "ACTIVE",
+        "PARTIALLY_COMPLETED",
+        "COMPLETED",
+        "CANCELLED",
+        "FAILED"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    },
+    "updatedAt": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    }
+  },
+  "required": [
+    "id",
+    "orgId",
+    "mandateId",
+    "envelopeId",
+    "goal",
+    "deadline",
+    "budget",
+    "status",
+    "createdAt",
+    "updatedAt"
+  ],
+  "additionalProperties": false,
+  "description": "A goal to achieve with a budget and a deadline.",
+  "$defs": {
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}

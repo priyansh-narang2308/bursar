@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "missionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "The mission this is about."
+    }
+  },
+  "required": [
+    "missionId"
+  ],
+  "additionalProperties": false
+}

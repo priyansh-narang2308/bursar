@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "cursor": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "limit": {
+      "default": 25,
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "missionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A mission id: \"mis_\" followed by a ULID."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "REQUIRE_APPROVAL",
+        "DENY"
+      ]
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "PROPOSE",
+        "EXECUTE"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

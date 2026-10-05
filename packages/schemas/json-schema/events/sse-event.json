@@ -1,0 +1,909 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "action.state_changed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "actionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A action id: \"act_\" followed by a ULID."
+            },
+            "missionId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 30,
+                  "maxLength": 30,
+                  "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+                  "description": "A mission id: \"mis_\" followed by a ULID."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "from": {
+              "type": "string",
+              "enum": [
+                "PROPOSED",
+                "DENIED",
+                "AWAITING_APPROVAL",
+                "APPROVED",
+                "REJECTED",
+                "EXPIRED",
+                "SUBMITTING",
+                "SUBMITTED",
+                "FAILED",
+                "UNKNOWN",
+                "CONFIRMED",
+                "INCIDENT"
+              ]
+            },
+            "to": {
+              "type": "string",
+              "enum": [
+                "PROPOSED",
+                "DENIED",
+                "AWAITING_APPROVAL",
+                "APPROVED",
+                "REJECTED",
+                "EXPIRED",
+                "SUBMITTING",
+                "SUBMITTED",
+                "FAILED",
+                "UNKNOWN",
+                "CONFIRMED",
+                "INCIDENT"
+              ]
+            }
+          },
+          "required": [
+            "actionId",
+            "missionId",
+            "from",
+            "to"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "decision.recorded"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "decisionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^dec_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A decision id: \"dec_\" followed by a ULID."
+            },
+            "actionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A action id: \"act_\" followed by a ULID."
+            },
+            "phase": {
+              "type": "string",
+              "enum": [
+                "PROPOSE",
+                "EXECUTE"
+              ]
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "ALLOW",
+                "REQUIRE_APPROVAL",
+                "DENY"
+              ]
+            }
+          },
+          "required": [
+            "decisionId",
+            "actionId",
+            "phase",
+            "outcome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "approval.requested"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "approvalId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^apv_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A approval id: \"apv_\" followed by a ULID."
+            },
+            "decisionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^dec_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A decision id: \"dec_\" followed by a ULID."
+            },
+            "actionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^act_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A action id: \"act_\" followed by a ULID."
+            },
+            "expiresAt": {
+              "type": "string",
+              "maxLength": 35,
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+              "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+            }
+          },
+          "required": [
+            "approvalId",
+            "decisionId",
+            "actionId",
+            "expiresAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "approval.decided"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "approvalId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^apv_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A approval id: \"apv_\" followed by a ULID."
+            },
+            "decisionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^dec_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A decision id: \"dec_\" followed by a ULID."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "APPROVED",
+                "REJECTED",
+                "EXPIRED"
+              ]
+            }
+          },
+          "required": [
+            "approvalId",
+            "decisionId",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "envelope.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "envelope": {
+              "$ref": "#/$defs/Envelope"
+            }
+          },
+          "required": [
+            "envelope"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "mandate.status_changed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "mandateId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^mnd_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A mandate id: \"mnd_\" followed by a ULID."
+            },
+            "from": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "ACTIVE",
+                "FROZEN",
+                "REVOKED",
+                "EXPIRED"
+              ]
+            },
+            "to": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "ACTIVE",
+                "FROZEN",
+                "REVOKED",
+                "EXPIRED"
+              ]
+            }
+          },
+          "required": [
+            "mandateId",
+            "from",
+            "to"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "mission.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "missionId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A mission id: \"mis_\" followed by a ULID."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "PLANNING",
+                "AWAITING_APPROVAL",
+                "ACTIVE",
+                "PARTIALLY_COMPLETED",
+                "COMPLETED",
+                "CANCELLED",
+                "FAILED"
+              ]
+            }
+          },
+          "required": [
+            "missionId",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "incident.opened"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "incidentId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^inc_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A incident id: \"inc_\" followed by a ULID."
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "UNEXPLAINED_MOVEMENT",
+                "AMOUNT_MISMATCH",
+                "RECONCILIATION_GAP",
+                "WEBHOOK_VERIFICATION_FAILED",
+                "DISPUTE_OPENED",
+                "UNKNOWN_OUTCOME",
+                "HASH_CHAIN_BROKEN"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            }
+          },
+          "required": [
+            "incidentId",
+            "type",
+            "severity"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "incident.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "incidentId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^inc_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A incident id: \"inc_\" followed by a ULID."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "CONTAINED",
+                "RESOLVED"
+              ]
+            }
+          },
+          "required": [
+            "incidentId",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^evt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A event id: \"evt_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "occurredAt": {
+          "type": "string",
+          "maxLength": 35,
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+          "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+        },
+        "type": {
+          "type": "string",
+          "const": "paypal.event.verified"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "paypalEventId": {
+              "type": "string",
+              "minLength": 30,
+              "maxLength": 30,
+              "pattern": "^ppe_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+              "description": "A paypalEvent id: \"ppe_\" followed by a ULID."
+            },
+            "eventType": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "matchStatus": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "MATCHED",
+                "UNMATCHED",
+                "EARLY",
+                "MISMATCH"
+              ]
+            },
+            "latencyMs": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 86400000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "paypalEventId",
+            "eventType",
+            "matchStatus",
+            "latencyMs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "occurredAt",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "description": "One message on the live event stream.",
+  "$defs": {
+    "Envelope": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^env_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A envelope id: \"env_\" followed by a ULID."
+        },
+        "orgId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A organization id: \"org_\" followed by a ULID."
+        },
+        "missionId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A mission id: \"mis_\" followed by a ULID."
+        },
+        "mandateId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^mnd_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A mandate id: \"mnd_\" followed by a ULID."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "ACTIVE",
+            "CLOSED",
+            "VOIDED",
+            "EXPIRED"
+          ]
+        },
+        "ceiling": {
+          "$ref": "#/$defs/Amount"
+        },
+        "held": {
+          "$ref": "#/$defs/Amount"
+        },
+        "captured": {
+          "$ref": "#/$defs/Amount"
+        },
+        "refunded": {
+          "$ref": "#/$defs/Amount"
+        },
+        "settled": {
+          "$ref": "#/$defs/Amount"
+        },
+        "authorizationExpiresAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 35,
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+              "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reauthorizedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 35,
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+              "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "orgId",
+        "missionId",
+        "mandateId",
+        "status",
+        "ceiling",
+        "held",
+        "captured",
+        "refunded",
+        "settled",
+        "authorizationExpiresAt",
+        "reauthorizedAt"
+      ],
+      "additionalProperties": false,
+      "description": "The PayPal authorization that caps a mission's spend, and how much of it is used."
+    },
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}

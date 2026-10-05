@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^crt_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A cart id: \"crt_\" followed by a ULID."
+    },
+    "orgId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^org_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A organization id: \"org_\" followed by a ULID."
+    },
+    "missionId": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 30,
+      "pattern": "^mis_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+      "description": "A mission id: \"mis_\" followed by a ULID."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "lines": {
+      "minItems": 1,
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CartLine"
+      }
+    },
+    "total": {
+      "$ref": "#/$defs/Amount"
+    },
+    "cartHash": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The SHA-256 of the canonical cart: what an approval signs."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "PROPOSED",
+        "APPROVED",
+        "SUPERSEDED",
+        "REJECTED"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+      "description": "An instant in UTC, as RFC 3339 with a trailing Z."
+    }
+  },
+  "required": [
+    "id",
+    "orgId",
+    "missionId",
+    "version",
+    "lines",
+    "total",
+    "cartHash",
+    "status",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "description": "What an approval signs: lines, a server-computed total, and its hash.",
+  "$defs": {
+    "CartLine": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^cln_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A cartLine id: \"cln_\" followed by a ULID."
+        },
+        "offerId": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 30,
+          "pattern": "^ofr_[0-7][0-9A-HJKMNP-TV-Z]{25}$",
+          "description": "A offer id: \"ofr_\" followed by a ULID."
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "unitPrice": {
+          "$ref": "#/$defs/Amount"
+        },
+        "lineTotal": {
+          "$ref": "#/$defs/Amount"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "offerId",
+        "quantity",
+        "unitPrice",
+        "lineTotal",
+        "rationale"
+      ],
+      "additionalProperties": false,
+      "description": "One offer and a quantity, with the price the server worked out."
+    },
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CNY",
+            "CZK",
+            "DKK",
+            "EUR",
+            "GBP",
+            "HKD",
+            "HUF",
+            "ILS",
+            "JPY",
+            "MXN",
+            "MYR",
+            "NOK",
+            "NZD",
+            "PHP",
+            "PLN",
+            "RUB",
+            "SEK",
+            "SGD",
+            "THB",
+            "TWD",
+            "USD"
+          ],
+          "description": "A currency PayPal accepts."
+        },
+        "minor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^(?:0|[1-9][0-9]*)$",
+          "description": "Whole minor units (cents for USD) as a string, since JSON numbers cannot hold a bigint."
+        }
+      },
+      "required": [
+        "currency",
+        "minor"
+      ],
+      "additionalProperties": false,
+      "description": "A non-negative amount of money in whole minor units."
+    }
+  }
+}
