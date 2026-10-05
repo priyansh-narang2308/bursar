@@ -1,0 +1,37 @@
+{
+  "name": "@bursar/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bursar's database: the Postgres schema, migrations, tenant isolation and the invariants the database itself enforces.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "migrate": "tsx --env-file-if-exists=../../.env src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/money": "workspace:*",
+    "@bursar/schemas": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/audit": "workspace:*",
+    "@bursar/tooling": "workspace:*",
+    "@electric-sql/pglite": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "drizzle-kit": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
