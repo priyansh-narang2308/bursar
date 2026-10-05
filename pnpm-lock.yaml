@@ -231,9 +231,15 @@ importers:
       '@bursar/crypto':
         specifier: workspace:*
         version: link:../crypto
+      '@bursar/money':
+        specifier: workspace:*
+        version: link:../money
       '@bursar/schemas':
         specifier: workspace:*
         version: link:../schemas
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
     devDependencies:
       '@bursar/tooling':
         specifier: workspace:*

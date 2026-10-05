@@ -9,7 +9,7 @@ import {
   type PolicyRule,
   type Rule,
   replay,
-} from '../src';
+} from '../src/engine';
 
 /** A toy cap rule, enough to exercise the engine. The real rules arrive in the next tasks. */
 const cap: Rule<{ max: number }> = {
