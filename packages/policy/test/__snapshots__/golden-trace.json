@@ -1,0 +1,38 @@
+{
+  "outcome": "REQUIRE_APPROVAL",
+  "requiredApprovals": 1,
+  "trace": [
+    {
+      "rule": "R-ITEM-CAP",
+      "outcome": "ALLOW",
+      "message": "Within the cap.",
+      "inputs": {
+        "amount": 2000
+      },
+      "threshold": 5000
+    },
+    {
+      "rule": "R-DUAL",
+      "outcome": "REQUIRE_APPROVAL",
+      "message": "A large amount needs a second look.",
+      "inputs": {},
+      "threshold": null
+    },
+    {
+      "rule": "R-VENDOR",
+      "outcome": "ALLOW",
+      "message": "R-VENDOR says ALLOW.",
+      "inputs": {},
+      "threshold": null
+    },
+    {
+      "rule": "R-TENANT",
+      "outcome": "ALLOW",
+      "message": "R-TENANT says ALLOW.",
+      "inputs": {},
+      "threshold": null
+    }
+  ],
+  "policyHash": "85ae8907f5e8d237afcc1aaebef8484ace948543015a3532f293206b630c7330",
+  "inputsHash": "b6417d82dc110a6eb28960fd22c3b2b1006436fb734986f86497bff52b16aedd"
+}
