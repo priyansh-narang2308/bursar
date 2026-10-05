@@ -24,6 +24,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 
 ### Money
 - Amounts are integers in minor units (`bigint`) plus a currency code. Never use `number` or floating point for money, and never `parseFloat` an amount.
+- Every amount is a `Money` from `@bursar/money`. Do no arithmetic on raw `bigint` amounts or decimal strings elsewhere, and always pick a rounding mode explicitly (there is no default).
 - Never trust an amount from a client or an LLM. Totals are recomputed server-side from stored snapshots.
 - Tools exposed to LLMs contain no amount, payee or currency fields.
 
