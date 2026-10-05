@@ -63,6 +63,8 @@ export const actions = pgTable(
     cartId: idCol('cart').references(() => carts.id),
     cartHash: text(),
     proposedBy: text().notNull(),
+    /** Who proposed it: the person or agent. A maker is never their own checker. */
+    proposerId: text(),
     /** Unique, so a retry finds the action it already made instead of making another. */
     idempotencyKey: text().notNull().unique('actions_idempotency_key_unique'),
     state: text().notNull().default('PROPOSED'),

@@ -15,6 +15,13 @@
       "when": 1791215462694,
       "tag": "0001_rls_and_invariants",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791218656997,
+      "tag": "0002_mandate_setup_token_and_proposer",
+      "breakpoints": true
     }
   ]
 }

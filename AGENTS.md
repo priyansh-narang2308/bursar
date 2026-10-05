@@ -55,6 +55,11 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - Every table with an `org_id` has RLS (a test fails otherwise). Change the schema in `packages/db/src/schema/`, run `pnpm --filter @bursar/db generate`, and review the SQL. Never edit a migration that has been applied.
 - Rules that must hold (idempotency, legal transitions, envelope ceilings, a balanced ledger) are constraints or triggers, not only application checks.
 
+### The money loop
+- A caller names what, never how much or who is paid: the amount comes from the cart or the confirmed action it follows, and the payee from the supplier registry. Request bodies stay strict.
+- An action moves money only through `execute` (claim, call, record), with the request id derived from the action. Confirmation of a capture or refund comes from a verified webhook or a poll, never from the caller.
+- Anything that moves money for no approved action is an incident. Add to the incident path, not around it.
+
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).
 - PayPal credentials exist only in the executor and workflow service.

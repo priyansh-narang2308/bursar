@@ -44,6 +44,7 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `packages/policy` | The policy engine: pure, fail-closed, versioned and replayable | ready |
 | `packages/paypal` | A typed, retrying, idempotent, sandbox-only PayPal client with classified errors | ready |
 | `packages/paypal-fake` | A fake PayPal for tests, with a fidelity table and a contract suite | ready |
+| `packages/core` | The money loop: mandates, carts, the decision pipeline, the executor and webhook verification | ready |
 | `packages/audit` | The tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |
