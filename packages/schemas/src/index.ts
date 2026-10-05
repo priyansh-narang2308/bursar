@@ -1,5 +1,6 @@
 export * from './api';
 export * from './common';
+export * from './entities/audit';
 export * from './entities/commerce';
 export * from './entities/decision';
 export * from './entities/funding';

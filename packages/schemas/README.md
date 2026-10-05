@@ -51,6 +51,7 @@ inspectTools(); // [] while no LLM tool can name an amount, a currency or a paye
 | incident | inc | something that does not add up |
 | paypalEvent | ppe | a verified webhook delivery |
 | event | evt | one message on the live stream |
+| auditEvent | aud | one entry in an organisation's audit log |
 
 ## Action lifecycle
 
@@ -91,6 +92,7 @@ The executor claims an action (`APPROVED` to `SUBMITTING`) before it re-checks p
 | `Approval` | a decision time exactly when approved or rejected; a signature exactly when approved |
 | `Incident` | a closing time and a resolution exactly when resolved |
 | `PayPalEvent` | an event that did not pass verification is never matched to an action |
+| `AuditEvent` | an entry cannot be its own predecessor; `@bursar/audit` verifies the whole chain |
 
 PayPal's event names are an open set, so a stored event's type is a pattern; `SUBSCRIBED_PAYPAL_EVENTS` is the list Bursar registers for, each name checked against PayPal's documentation.
 

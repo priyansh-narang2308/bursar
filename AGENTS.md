@@ -40,6 +40,13 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - The policy engine is pure, fail-closed, versioned and replayable. No I/O inside rules.
 - Execution is claim, call, record; policy is re-evaluated at execution time.
 
+### Cryptography
+- Hash, sign, encrypt and compare secrets only through `@bursar/crypto`. Never call `createHash`, `createHmac` or `createCipheriv` elsewhere.
+- Never `JSON.stringify` data that is hashed or signed: use `canonicalize`. Never compare a tag, signature or key with `===`: use the `verify*` functions or `constantTimeEqual`.
+- One key per purpose (`PROVENANCE_HMAC_KEY`, `APPROVAL_HMAC_KEY`, `VAULT_ENC_KEY`), read with `decodeKey` or `parseKeyring`. Never log a key, a secret or a signature; `CryptoError` messages are safe to log.
+- Audit entries are built only with `appendEvent` from `@bursar/audit`, and the log is append-only. A chain proves integrity only against heads recorded outside the database, so record them.
+- Changing what a hash covers (the cart hash above all) changes what existing approvals mean: bump the label version and record the decision in an ADR.
+
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).
 - PayPal credentials exist only in the executor and workflow service.

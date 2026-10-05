@@ -9,6 +9,7 @@ import {
   rejectActionRequestSchema,
 } from './api';
 import { amountSchema, moneySchema } from './common';
+import { auditEventSchema } from './entities/audit';
 import { cartLineSchema, cartSchema, offerSchema } from './entities/commerce';
 import {
   actionSchema,
@@ -105,6 +106,7 @@ export const SCHEMA_CATALOG: Readonly<Record<string, CatalogEntry>> = {
   'entities/approval': out(approvalSchema),
   'entities/incident': out(incidentSchema),
   'entities/paypal-event': out(paypalEventSchema),
+  'entities/audit-event': out(auditEventSchema),
 
   'api/create-mission-request': inn(createMissionRequestSchema),
   'api/proposal-result': out(proposalResultSchema),

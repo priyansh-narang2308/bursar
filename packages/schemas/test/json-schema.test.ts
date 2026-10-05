@@ -19,6 +19,7 @@ import {
   action,
   approval,
   approveActionRequest,
+  auditEvent,
   cart,
   cartLine,
   createMissionRequest,
@@ -56,6 +57,7 @@ const EXAMPLES: Record<string, unknown> = {
   'entities/approval': approval(),
   'entities/incident': incident(),
   'entities/paypal-event': paypalEvent(),
+  'entities/audit-event': auditEvent(),
   'api/create-mission-request': createMissionRequest(),
   'api/proposal-result': proposalResult(),
   'api/approve-action-request': approveActionRequest(),
@@ -167,7 +169,7 @@ describe('exportJsonSchemas', () => {
 
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     expect(names.sort()).toEqual(Object.keys(SCHEMA_CATALOG).sort());
-    expect(names).toHaveLength(23 + LLM_TOOL_NAMES.length);
+    expect(names).toHaveLength(24 + LLM_TOOL_NAMES.length);
   });
 
   it('has an example for every published schema', () => {

@@ -1,0 +1,27 @@
+{
+  "name": "@bursar/crypto",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bursar's cryptography: canonical JSON, domain-separated hashes, provenance tags, approval signatures and sealed secrets.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fast-check": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
