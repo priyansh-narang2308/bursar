@@ -89,12 +89,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@bursar/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@bursar/crypto':
         specifier: workspace:*
         version: link:../../packages/crypto
       '@bursar/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@bursar/paypal':
+        specifier: workspace:*
+        version: link:../../packages/paypal
       '@bursar/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas
@@ -117,6 +123,9 @@ importers:
         specifier: 'catalog:'
         version: 4.6.5
     devDependencies:
+      '@bursar/paypal-fake':
+        specifier: workspace:*
+        version: link:../../packages/paypal-fake
       '@bursar/tooling':
         specifier: workspace:*
         version: link:../../packages/tooling
@@ -160,6 +169,58 @@ importers:
       fast-check:
         specifier: 'catalog:'
         version: 4.10.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/core:
+    dependencies:
+      '@bursar/audit':
+        specifier: workspace:*
+        version: link:../audit
+      '@bursar/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@bursar/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bursar/ledger':
+        specifier: workspace:*
+        version: link:../ledger
+      '@bursar/money':
+        specifier: workspace:*
+        version: link:../money
+      '@bursar/paypal':
+        specifier: workspace:*
+        version: link:../paypal
+      '@bursar/policy':
+        specifier: workspace:*
+        version: link:../policy
+      '@bursar/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.1)
+    devDependencies:
+      '@bursar/paypal-fake':
+        specifier: workspace:*
+        version: link:../paypal-fake
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../tooling
+      '@electric-sql/pglite':
+        specifier: 'catalog:'
+        version: 0.5.8
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2

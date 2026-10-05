@@ -176,6 +176,8 @@ export const mandates = pgTable(
     signedAt: timestamptz(),
     revokedAt: timestamptz(),
     vaultTokenSealed: text(),
+    /** The PayPal Vault setup token while the payer has not approved yet. */
+    setupTokenId: text(),
     createdAt: createdAt(),
   },
   (t) => [

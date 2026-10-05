@@ -1,6 +1,10 @@
 import { Writable } from 'node:stream';
+import { createCore, WEBHOOK_EVENT_TYPES } from '@bursar/core';
+import { parseKeyring } from '@bursar/crypto';
 import type { Db } from '@bursar/db';
 import { createTestDb } from '@bursar/db/testing';
+import { createPayPalClient } from '@bursar/paypal';
+import { createFakePayPal } from '@bursar/paypal-fake';
 import { createApp } from '../src/app';
 import { type Config, loadConfig } from '../src/config';
 import { createLogger } from '../src/logger';
@@ -31,7 +35,31 @@ export async function createTestApp(
       done();
     },
   });
-  const app = createApp({ config, db, logger: createLogger('info', sink), now: clock });
+  const fake = createFakePayPal();
+  const paypal = createPayPalClient({
+    clientId: fake.config.clientId,
+    clientSecret: fake.config.clientSecret,
+    baseUrl: 'https://fake.paypal.test',
+    fetch: fake.fetch,
+    sleep: async () => undefined,
+    maxRetries: 0,
+  });
+  const key = (seed: number) => Uint8Array.from({ length: 32 }, (_, i) => seed + i);
+  const core = createCore({
+    db,
+    paypal,
+    vaultKeys: parseKeyring(Buffer.from(key(1)).toString('hex')),
+    approvalKey: key(40),
+    provenanceKeys: [key(80)],
+    webhookId: 'WH-0001',
+    now: clock,
+  });
+  await paypal.webhooks.register({
+    requestId: 'hook',
+    url: 'https://app.test/webhooks/paypal',
+    eventTypes: WEBHOOK_EVENT_TYPES,
+  });
+  const app = createApp({ config, db, logger: createLogger('info', sink), now: clock, core });
 
   /** A client with its own cookie jar, like one browser or one agent. */
   function client(initialCookie?: string) {
@@ -64,7 +92,20 @@ export async function createTestApp(
       },
     };
   }
-  return { app, db, logs, client, close, config };
+  /** Posts to the webhook door every event the fake PayPal has signed, as PayPal would. */
+  async function deliver(): Promise<string[]> {
+    const statuses: string[] = [];
+    for (const { headers, event } of fake.events.splice(0)) {
+      const response = await app.request('/webhooks/paypal', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(event),
+      });
+      statuses.push(((await response.json()) as { status: string }).status);
+    }
+    return statuses;
+  }
+  return { app, db, logs, client, close, config, fake, deliver };
 }
 
 export type TestApp = Awaited<ReturnType<typeof createTestApp>>;

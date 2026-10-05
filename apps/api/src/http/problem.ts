@@ -1,3 +1,4 @@
+import { CoreError } from '@bursar/core';
 import { ERROR_CATALOG, type ErrorCode, type FieldError, problem } from '@bursar/schemas';
 import type { Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
@@ -33,6 +34,7 @@ export function fieldErrors(error: ZodError): FieldError[] {
 
 function toApiError(error: unknown): ApiError | undefined {
   if (error instanceof ApiError) return error;
+  if (error instanceof CoreError) return new ApiError(error.code, { detail: error.detail });
   if (error instanceof ZodError)
     return new ApiError('VALIDATION_FAILED', { errors: fieldErrors(error) });
   if (error instanceof HTTPException) {

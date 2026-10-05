@@ -1,3 +1,4 @@
+import type { Core } from '@bursar/core';
 import type { Db } from '@bursar/db';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
@@ -11,6 +12,8 @@ import { openApiDocument } from './openapi';
 import { agentRoutes } from './routes/agents';
 import { demoRoutes } from './routes/demo';
 import { healthRoutes } from './routes/health';
+import { moneyRoutes } from './routes/money';
+import { webhookRoutes } from './routes/webhooks';
 import { workspaceRoutes } from './routes/workspace';
 import type { AppEnv } from './types';
 
@@ -19,6 +22,8 @@ export interface AppDeps {
   readonly db: Db;
   readonly logger: Logger;
   readonly now?: () => Date;
+  /** The money loop. Without it the money routes are not served. */
+  readonly core?: Core;
 }
 
 /** The whole API as a value, so tests and the server build it the same way. */
@@ -45,6 +50,8 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
   v1.route('/', demoRoutes({ db, config, now }));
   v1.route('/', workspaceRoutes(db));
   v1.route('/', agentRoutes(db));
+  if (deps.core !== undefined) v1.route('/', moneyRoutes(db, deps.core));
   app.route('/v1', v1);
+  if (deps.core !== undefined) app.route('/', webhookRoutes(deps.core));
   return app;
 }
