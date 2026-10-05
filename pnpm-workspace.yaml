@@ -6,11 +6,16 @@ packages:
 catalog:
   '@biomejs/biome': ^2.5.0
   '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)
+  '@types/pg': ^8.23.1
   '@vitest/coverage-v8': ^5.0.0
   ajv: ^8.20.0 # validates the exported JSON Schemas against real documents in @bursar/schemas tests
   ajv-formats: ^3.0.1 # the date-time and uri formats those schemas use
+  drizzle-kit: ^0.31.11 # generates the SQL migrations for @bursar/db from its schema
+  drizzle-orm: ^0.45.3 # typed queries over Postgres (PayPal docs and the plan both assume Postgres)
+  '@electric-sql/pglite': ^0.5.8 # real Postgres in WASM, so database tests need no Docker
   fast-check: ^4.10.0
   lefthook: ^2.1.0
+  pg: ^8.23.1 # the node-postgres driver the API and workers connect with
   tsx: ^4.23.0
   typescript: ^7.0.0
   vitest: ^5.0.0

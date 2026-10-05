@@ -1,0 +1,21 @@
+# A local Postgres for development, matching DATABASE_URL in .env.example. Tests do not need it: they
+# use PGlite (see packages/db). Start it with `pnpm db:up`, migrate with `pnpm db:migrate`.
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bursar
+      POSTGRES_PASSWORD: bursar
+      POSTGRES_DB: bursar
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U bursar']
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  pgdata:

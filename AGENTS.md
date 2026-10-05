@@ -17,6 +17,9 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 | `pnpm typecheck` | `tsc --noEmit` in every package (TypeScript 7) |
 | `pnpm test` | Vitest with enforced coverage thresholds, per package |
 | `pnpm --filter @bursar/<name> test:watch` | Watch one package |
+| `pnpm db:up` / `pnpm db:down` | Start or stop the local Postgres (Docker Compose). Tests do not need it: they use PGlite |
+| `pnpm db:migrate` | Apply the migrations to `DATABASE_URL` (safe to repeat) |
+| `pnpm db:reset` | Wipe the local database and migrate it again |
 | `pnpm dev:doctor` | Check the developer environment: Node, pnpm, Claude Code plugins, sponsor skills, optional tools (`--strict` fails on warnings, `--json` for machines) |
 | `pnpm dev:skills` | Restore the sponsor skills pinned in `skills-lock.json` into `.claude/skills` (`--dry-run`, `--force`) |
 
@@ -46,6 +49,11 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - One key per purpose (`PROVENANCE_HMAC_KEY`, `APPROVAL_HMAC_KEY`, `VAULT_ENC_KEY`), read with `decodeKey` or `parseKeyring`. Never log a key, a secret or a signature; `CryptoError` messages are safe to log.
 - Audit entries are built only with `appendEvent` from `@bursar/audit`, and the log is append-only. A chain proves integrity only against heads recorded outside the database, so record them.
 - Changing what a hash covers (the cart hash above all) changes what existing approvals mean: bump the label version and record the decision in an ADR.
+
+### Database
+- Tenant data is reached only through `withOrg` from `@bursar/db`, which applies row-level security. Code that uses the pool directly (migrations, the Verifier, webhook ingest, cron) is cross-tenant: keep it small and say so where it is.
+- Every table with an `org_id` has RLS (a test fails otherwise). Change the schema in `packages/db/src/schema/`, run `pnpm --filter @bursar/db generate`, and review the SQL. Never edit a migration that has been applied.
+- Rules that must hold (idempotency, legal transitions, envelope ceilings, a balanced ledger) are constraints or triggers, not only application checks.
 
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).
