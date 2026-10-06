@@ -1,4 +1,6 @@
 import { randomBytes } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { type AgentRole, createToolbox, type ToolCallLog } from '@bursar/agent-tools';
 import { runMission } from '@bursar/agents';
 import { demoModel } from '@bursar/agents/demo';
@@ -11,9 +13,15 @@ import {
   naiveTools,
   PAYLOADS,
 } from '@bursar/agents/injection';
-import { createCatalog, createFixtureApi } from '@bursar/channel3';
+import {
+  createCatalog,
+  createFixtureApi,
+  createLiveApi,
+  type ProductApi,
+  RECORDED_PRODUCTS,
+} from '@bursar/channel3';
 import { type Actor, CoreError, createCore, WEBHOOK_EVENT_TYPES } from '@bursar/core';
-import { parseKeyring } from '@bursar/crypto';
+import { decodeKey, decryptSecret, parseKeyring } from '@bursar/crypto';
 import {
   cartLines,
   carts,
@@ -59,44 +67,117 @@ const config = loadConfig({
 });
 const logger = createLogger(config.logLevel);
 const { db } = await createTestDb();
-const fake = createFakePayPal();
+
+// `BURSAR_PAYPAL=sandbox` uses PayPal's real sandbox with the keys in `.env` and the buyers in the payer pool
+// (`pnpm dev:payer`). Without it, everything runs against an in-process fake and needs no keys.
+const sandbox = process.env['BURSAR_PAYPAL'] === 'sandbox';
+const need = (name: string): string => {
+  const value = process.env[name];
+  if (!value) throw new Error(`BURSAR_PAYPAL=sandbox needs ${name} in the environment.`);
+  return value;
+};
+const fake = sandbox ? undefined : createFakePayPal();
 
 /** Every call that reaches PayPal (not counting its sign-in), so a test of the guard can say "none". */
 let paypalCalls = 0;
 const countingFetch: typeof fetch = (input, init) => {
   const url = typeof input === 'string' || input instanceof URL ? String(input) : input.url;
   if (!url.includes('oauth')) paypalCalls++;
-  return fake.fetch(input, init);
+  return (fake?.fetch ?? fetch)(input, init);
 };
-const paypal = createPayPalClient({
-  clientId: fake.config.clientId,
-  clientSecret: fake.config.clientSecret,
-  baseUrl: 'https://fake.paypal.test',
-  fetch: countingFetch,
-  sleep: async () => undefined,
-  maxRetries: 0,
-});
+const paypal = createPayPalClient(
+  fake === undefined
+    ? {
+        clientId: need('PAYPAL_CLIENT_ID'),
+        clientSecret: need('PAYPAL_CLIENT_SECRET'),
+        baseUrl: 'https://api-m.sandbox.paypal.com',
+        fetch: countingFetch,
+      }
+    : {
+        clientId: fake.config.clientId,
+        clientSecret: fake.config.clientSecret,
+        baseUrl: 'https://fake.paypal.test',
+        fetch: countingFetch,
+        sleep: async () => undefined,
+        maxRetries: 0,
+      },
+);
+const vaultKeys = parseKeyring(
+  sandbox ? need('VAULT_ENC_KEY') : Buffer.from(bytes(1)).toString('hex'),
+);
 const core = createCore({
   db,
   paypal,
-  vaultKeys: parseKeyring(Buffer.from(bytes(1)).toString('hex')),
-  approvalKey: bytes(40),
-  provenanceKeys: [bytes(80)],
-  webhookId: 'WH-0001',
+  vaultKeys,
+  approvalKey:
+    sandbox && process.env['APPROVAL_HMAC_KEY']
+      ? decodeKey(process.env['APPROVAL_HMAC_KEY'])
+      : sandbox
+        ? randomBytes(32)
+        : bytes(40),
+  provenanceKeys: [sandbox ? decodeKey(need('PROVENANCE_HMAC_KEY')) : bytes(80)],
+  webhookId: sandbox ? (process.env['PAYPAL_WEBHOOK_ID'] ?? 'unset') : 'WH-0001',
+  // A pooled buyer's token is shared by every workspace, so one workspace revoking must not delete it.
+  keepVaultTokens: sandbox,
 });
-await paypal.webhooks.register({
-  requestId: 'hook',
-  url: 'https://demo.test/webhooks/paypal',
-  eventTypes: WEBHOOK_EVENT_TYPES,
-});
-const catalog = createCatalog({ api: createFixtureApi(EVAL_CATALOG) });
-fake.fund(Money.of(100_000_000n, 'USD'));
+if (fake !== undefined)
+  await paypal.webhooks.register({
+    requestId: 'hook',
+    url: 'https://demo.test/webhooks/paypal',
+    eventTypes: WEBHOOK_EVENT_TYPES,
+  });
 
-// PayPal's webhooks reach the money loop as they would over HTTP, a moment after they happen.
+/** Buyers who approved once, with `pnpm dev:payer`, whose approval each workspace borrows. */
+const POOL_FILE = fileURLToPath(new URL('../../../.bursar/payers.json', import.meta.url));
+const payerPool: string[] =
+  sandbox && existsSync(POOL_FILE)
+    ? (JSON.parse(readFileSync(POOL_FILE, 'utf8')) as { sealed: string }[]).map((p) =>
+        decryptSecret(vaultKeys, p.sealed, 'payer-pool'),
+      )
+    : [];
+let nextPayer = 0;
+// Which products agents search: real ones recorded from Channel3 (the default, no key or credits needed),
+// Channel3 itself (`BURSAR_CATALOG=live`, spends credits within a budget), or the small synthetic set.
+const catalogMode = (process.env['BURSAR_CATALOG'] ?? 'recorded') as
+  | 'recorded'
+  | 'live'
+  | 'synthetic';
+const channel3Key = process.env['CHANNEL3_API_KEY'];
+if (catalogMode === 'live' && !channel3Key)
+  throw new Error('BURSAR_CATALOG=live needs CHANNEL3_API_KEY.');
+const catalogProducts = catalogMode === 'synthetic' ? EVAL_CATALOG : RECORDED_PRODUCTS;
+const productApi: ProductApi =
+  catalogMode === 'live'
+    ? createLiveApi({ apiKey: channel3Key ?? '' })
+    : createFixtureApi(catalogProducts);
+const catalog = createCatalog({ api: productApi });
+/** The retailers an owner has approved: the ones in the recorded or synthetic set. A live search is held to the same list. */
+const approvedDomains = [
+  ...new Set(
+    [...RECORDED_PRODUCTS, ...EVAL_CATALOG].flatMap((p) =>
+      (p.offers ?? []).map((o) => o.domain.toLowerCase()),
+    ),
+  ),
+];
+const supplierEmail = process.env['PAYPAL_SUPPLIER_1_EMAIL'];
+fake?.fund(Money.of(100_000_000n, 'USD'));
+
+// PayPal's webhooks reach the money loop as they would over HTTP, a moment after they happen. The sandbox has
+// no public address here, so there the loop asks PayPal instead (the fallback the product has for lost webhooks).
 setInterval(() => {
-  for (const { headers, event } of fake.events.splice(0))
-    void core.webhooks.ingest(JSON.stringify(event), headers).catch(() => undefined);
+  if (fake !== undefined)
+    for (const { headers, event } of fake.events.splice(0))
+      void core.webhooks.ingest(JSON.stringify(event), headers).catch(() => undefined);
 }, 400).unref();
+if (sandbox)
+  setInterval(() => {
+    void db
+      .select()
+      .from(organizations)
+      .then((orgs) =>
+        Promise.all(orgs.map((o) => core.webhooks.pollSubmitted(o.id, 4_000).catch(() => 0))),
+      );
+  }, 5_000).unref();
 
 const owner = (id: string): Actor => ({ kind: 'USER', id });
 const replanner: Actor = { kind: 'AGENT', id: 'agt_replanner' };
@@ -127,7 +208,10 @@ const LEAD: Record<string, number> = {
   h1: 2,
   w2: 2,
 };
-const leadOf = (quoteId: string | null) => LEAD[quoteId ?? ''] ?? 2;
+/** Real products have no lead time in the catalog, so the demo gives each a stable one from its id. */
+const leadOf = (quoteId: string | null) =>
+  LEAD[quoteId ?? ''] ??
+  1 + ([...(quoteId ?? '')].reduce((n, ch) => (n * 31 + ch.charCodeAt(0)) % 997, 7) % 5);
 const startOfToday = () => new Date(Math.floor(Date.now() / DAY) * DAY);
 
 const asTimings = (s: Schedule) => ({
@@ -178,29 +262,58 @@ const names = (list: { id: string; title: string }[]) =>
       .concat([['handover', 'Handover']]),
   );
 
-async function seedWorkspace(orgId: string, ownerId: string) {
+async function seedWorkspace(
+  orgId: string,
+  ownerId: string,
+  domains: readonly string[] = approvedDomains,
+) {
   const id = orgId as OrganizationId;
   const now = Date.now();
-  const started = await core.mandates.start(id, owner(ownerId), {
-    payerName: 'Sample buyer',
+  const caps = {
     cap: usd(1_000_000),
     perMissionCap: usd(200_000),
     validFrom: new Date(now - DAY),
     validTo: new Date(now + 90 * DAY),
-    returnUrl: 'https://demo.test/return',
-    cancelUrl: 'https://demo.test/cancel',
-  });
-  fake.approveSetupToken(started.setupTokenId);
-  await core.mandates.complete(id, owner(ownerId), started.mandateId as never);
-  await core.catalog.createSupplier(id, owner(ownerId), {
-    name: 'shop.example',
-    payoutEmail: 'sales@shop.example',
-  });
+  };
+  let mandateId: string;
+  if (sandbox) {
+    const token = payerPool[nextPayer++ % Math.max(payerPool.length, 1)];
+    if (token === undefined)
+      throw new CoreError(
+        'VALIDATION_FAILED',
+        'The payer pool is empty. Run `pnpm dev:payer` once to approve a sandbox buyer.',
+      );
+    mandateId = (
+      await core.mandates.adopt(id, owner(ownerId), {
+        payerName: 'Sandbox buyer',
+        ...caps,
+        paymentTokenId: token,
+      })
+    ).mandateId;
+  } else {
+    const started = await core.mandates.start(id, owner(ownerId), {
+      payerName: 'Sample buyer',
+      ...caps,
+      returnUrl: 'https://demo.test/return',
+      cancelUrl: 'https://demo.test/cancel',
+    });
+    fake?.approveSetupToken(started.setupTokenId);
+    await core.mandates.complete(id, owner(ownerId), started.mandateId as never);
+    mandateId = started.mandateId;
+  }
+  for (const domain of domains)
+    await core.catalog.createSupplier(id, owner(ownerId), {
+      name: domain,
+      payoutEmail: supplierEmail ?? `sales@${domain}`,
+    });
   await core.catalog.createMission(id, owner(ownerId), {
-    goal: 'Set up a workstation: a standing desk, an office chair, a monitor and a keyboard',
+    goal:
+      catalogMode === 'synthetic'
+        ? 'Set up a workstation: a standing desk, an office chair, a monitor and a keyboard'
+        : 'Equip a workstation: a monitor, a keyboard, a webcam and a headset',
     budget: usd(100_000),
     deadline: new Date(now + 6 * DAY),
-    mandateId: started.mandateId,
+    mandateId: mandateId as never,
   });
 }
 
@@ -216,7 +329,7 @@ async function runGauntlet() {
     email: `${userId.toLowerCase()}@demo.bursar.dev`,
     displayName: 'Gauntlet',
   });
-  await seedWorkspace(orgId, userId);
+  await seedWorkspace(orgId, userId, ['shop.example']);
   const [mission] = await withOrg(db, orgId, (tx) => tx.select().from(missions));
   const missionId = mission?.id as MissionId;
   const rows = [];
@@ -297,6 +410,11 @@ const demo: DemoHooks = {
         .where(eq(mandates.id, mandateId as never)),
     );
     if (row?.setupTokenId == null) throw new Error('That mandate is not waiting for the buyer.');
+    if (fake === undefined)
+      throw new CoreError(
+        'VALIDATION_FAILED',
+        'On PayPal’s sandbox the buyer approves on PayPal’s own page.',
+      );
     fake.approveSetupToken(row.setupTokenId);
     await core.mandates.complete(orgId as OrganizationId, owner(ownerId), mandateId as never);
   },
@@ -406,12 +524,11 @@ const demo: DemoHooks = {
     // The longest delivery is the one a delay hurts most.
     const target = [...found.offers].sort((a, b) => leadOf(b.quoteId) - leadOf(a.quoteId))[0];
     if (!target) throw new CoreError('NOT_FOUND', 'That mission has no cart to plan.');
-    const stem = target.title.split(' ').slice(0, 2).join(' ');
     const alternatives = found.all
       .filter(
         (o) =>
           o.id !== target.id &&
-          o.title.startsWith(stem) &&
+          o.category === target.category &&
           leadOf(o.quoteId) < leadOf(target.quoteId),
       )
       .map((o) => ({
@@ -469,15 +586,30 @@ const app = createApp({
   demo,
   agentTools: { catalog, policy: standardPolicy() },
   integrations: {
-    paypal: {
-      mode: 'fake',
-      detail:
-        'An in-process stand-in for PayPal’s APIs, checked by the same contract suite as the real client.',
-    },
-    catalog: {
-      mode: 'offline',
-      detail: 'A 16-product offline catalog. The Channel3 adapter is written but not connected.',
-    },
+    paypal: sandbox
+      ? {
+          mode: 'sandbox',
+          detail:
+            'PayPal’s real sandbox: holds, captures and refunds are real calls, with sandbox money.',
+        }
+      : {
+          mode: 'fake',
+          detail:
+            'An in-process stand-in for PayPal’s APIs, checked by the same contract suite as the real client.',
+        },
+    catalog:
+      catalogMode === 'live'
+        ? {
+            mode: 'live',
+            detail:
+              'Channel3, searched live within a credit budget. Only retailers an owner has approved can be bought from.',
+          }
+        : catalogMode === 'recorded'
+          ? {
+              mode: 'recorded',
+              detail: `${RECORDED_PRODUCTS.length} real products from Channel3, recorded once, so the demo needs no key. Set BURSAR_CATALOG=live to search live.`,
+            }
+          : { mode: 'offline', detail: 'A small synthetic catalog.' },
     model: {
       mode: 'scripted',
       detail:

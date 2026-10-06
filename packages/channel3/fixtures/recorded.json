@@ -1,0 +1,2667 @@
+{
+  "recordedAt": "2026-10-06T07:09:29.170Z",
+  "queries": [
+    "standing desk",
+    "office chair",
+    "monitor",
+    "keyboard",
+    "desk lamp",
+    "webcam",
+    "headset",
+    "whiteboard",
+    "printer paper",
+    "pens"
+  ],
+  "products": [
+    {
+      "id": "JJyMrku",
+      "title": "Electric Standing Desk",
+      "brands": [
+        {
+          "id": "mj8z",
+          "name": "VARI"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/c18306dd-9536-4180-a99c-b4c4515b399b?aid=01M480Q2RG84CATDGGE1F013B8&mid=sTZ9"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/JJyMrku-sTZ9-8T4ytQ?o=01KR8BZVG8MDZ8B2S7JDSY30CV&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "vari.com",
+          "price": {
+            "price": 829,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "23lQN5u",
+      "title": "Electric Standing Desk",
+      "brands": [
+        {
+          "id": "mj8z",
+          "name": "VARI"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/473cfa32-280e-4b73-b6e2-875e1dc967d2?aid=01M480Q2RG84CATDGGE1F013B8&mid=sTZ9"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/23lQN5u-sTZ9-8T4ytQ?o=01KR8HQ8YR2KJETMS6FBDHA47X&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "vari.com",
+          "price": {
+            "price": 929,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "NvRBogs",
+      "title": "Efloat Quattro Standing Desk",
+      "brands": [
+        {
+          "id": "Rqu5",
+          "name": "Humanscale"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/993407a4-ec6e-4700-a6e4-082ded9e3121?aid=01M480Q2RG84CATDGGE1F013B8&mid=Bqzv"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/NvRBogs-Bqzv-8T4ytQ?o=01M0SYK9D9FM601G5PBS3SCGX9&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "relaxtheback.com",
+          "price": {
+            "price": 1746,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "7ThN0Wz",
+      "title": "Uplift Standing Desk",
+      "brands": [
+        {
+          "id": "Rtp7",
+          "name": "UPLIFT Desk"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/afedb52c-3ab2-46c4-98cc-654348570dfa?aid=01M480Q2RG84CATDGGE1F013B8&mid=Il9l"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/7ThN0Wz-Il9l-8T4ytQ?o=01KRGM38R3E5H6HHPADFTQN6P1&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "upliftdesk.com",
+          "price": {
+            "price": 959,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "nMuusbX",
+      "title": "Jarvis Laminate Standing Desk",
+      "brands": [
+        {
+          "id": "6r6G",
+          "name": "Herman Miller"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/5d2fc3c5-6c0d-42c7-86c1-4dd91c76a192?aid=01M480Q2RG84CATDGGE1F013B8&mid=tFkI"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/nMuusbX-tFkI-8T4ytQ?o=01M1FS5QXKTCEXKMG61E791FPN&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "store.hermanmiller.com",
+          "price": {
+            "price": 1095,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "0ZaLNim",
+      "title": "Jarvis Laminate Standing Desk",
+      "brands": [
+        {
+          "id": "yX6w",
+          "name": "Herman Studio"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/c21740bd-8b9a-4191-a302-897ab43de3de?aid=01M480Q2RG84CATDGGE1F013B8&mid=tFkI"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/0ZaLNim-tFkI-8T4ytQ?o=01KBP7RTVJZP6SHTYQHVCH2B89&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "store.hermanmiller.com",
+          "price": {
+            "price": 1545,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "r1nxcNj",
+      "title": "Standard Standing Desk (E5)",
+      "brands": [
+        {
+          "id": "UFca",
+          "name": "FlexiSpot"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/48c40de3-c5d3-4d11-8bef-1bb9d1438500?aid=01M480Q2RG84CATDGGE1F013B8&mid=yjNP"
+        }
+      ],
+      "category": {
+        "title": "Desks"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/r1nxcNj-yjNP-8T4ytQ?o=01M28ZRZQ1VMK56KWWPQJBT7KH&aid=01M480Q2RG84CATDGGE1F013B8",
+          "domain": "flexispot.com",
+          "price": {
+            "price": 209.99,
+            "compare_at_price": 359.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "19ZmBOQ",
+      "title": "Office Chair",
+      "brands": [
+        {
+          "id": "o4P9",
+          "name": "Linon"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/7481fa38-8eeb-41be-8b36-b7bcfaa452b2?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=QP55"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/19ZmBOQ-QP55-8T4ytQ?o=01KW20E69BRM3FFMZHECT34A8G&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "overstock.com",
+          "price": {
+            "price": 190.49,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "aq6Utns",
+      "title": "Beasley Office Chair",
+      "brands": [
+        {
+          "id": "Uyew",
+          "name": "West Elm"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/5ad7cbbd-638a-4cdc-863a-2093928ce568?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=VGou"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/aq6Utns-VGou-8T4ytQ?o=01M1H39WRVAMNCYBP2ZPVW9VN0&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "westelm.com",
+          "price": {
+            "price": 349,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "TuwQOUK",
+      "title": "Fern Office Chair",
+      "brands": [
+        {
+          "id": "PmIi",
+          "name": "Haworth"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e03e48fb-3198-4dca-8cf2-7ae4d3950400?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=xGf0"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/TuwQOUK-xGf0-8T4ytQ?o=01M377ZHCP5EBY95VP2JJBT3BJ&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "store.haworth.com",
+          "price": {
+            "price": 1428,
+            "compare_at_price": 1680,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "H7iFfFn",
+      "title": "Proctor Office Chair",
+      "brands": [
+        {
+          "id": "5wzb",
+          "name": "Lulu and Georgia"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/5414949f-9d79-4d4b-9ef1-35f45ca48613?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=VCoB"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/H7iFfFn-VCoB-8T4ytQ?o=01KZS00YH9YZEZKFG1D8XSE0XE&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "luluandgeorgia.com",
+          "price": {
+            "price": 1399,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "zxgSyeB",
+      "title": "Office Chair",
+      "brands": [
+        {
+          "id": "TEMp",
+          "name": "Bernhardt"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/da7d67d0-79ae-49b3-a233-792f9c2d65eb?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=NVt9"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/zxgSyeB-NVt9-8T4ytQ?o=01KRFQKPNQS3PGB2AYCHDMKFNE&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "colemanfurniture.com",
+          "price": {
+            "price": 1264,
+            "compare_at_price": 2075,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "nn1bJbN",
+      "title": "Oxford Office Chair",
+      "brands": [
+        {
+          "id": "jmoG",
+          "name": "Fritz Hansen"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e0a40f3f-5dfa-4f5d-8c62-2573a16f2aee?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=Di1Q"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/nn1bJbN-Di1Q-8T4ytQ?o=01M1QNEFC5VFQ7ED0FV7JQWH7W&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "dwr.com",
+          "price": {
+            "price": 3462.4,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "wIzMagT",
+      "title": "Maker Adjustable Office Chair",
+      "brands": [
+        {
+          "id": "0lbk",
+          "name": "Zuo"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/c9fa43f7-f077-4be2-a400-c72a4a7a2d89?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=vyVK"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/wIzMagT-vyVK-8T4ytQ?o=01M2K4K44NRPSWZ83FXJGGFS8H&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "ashleyfurniture.com",
+          "price": {
+            "price": 247.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/wIzMagT-Q1hs-8T4ytQ?o=01M31H0HPW96NJYZ2M1HG2ZWSF&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "lampsplus.com",
+          "price": {
+            "price": 264,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/wIzMagT-zaO3-8T4ytQ?o=01M3EWXBGVTXMBZFR7Z5ZRT7VN&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "1stopbedrooms.com",
+          "price": {
+            "price": 272.24,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "PvmAdqc",
+      "title": "RAYNA Office Chair",
+      "brands": [
+        {
+          "id": "fZnU",
+          "name": "Martha Stewart"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/78f785ab-9278-404d-a560-efb928111b2d?aid=01M480Q5J4EK82DK51XPHRT9BS&mid=FP7n"
+        }
+      ],
+      "category": {
+        "title": "Office Chairs"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/PvmAdqc-FP7n-8T4ytQ?o=01KY57371PMR4EC2VV18N55P0M&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "homedepot.com",
+          "price": {
+            "price": 154.76,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/PvmAdqc-Qoqa-8T4ytQ?o=01M0ZN26NKB5SPJP9Z2SDKZ0BS&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "jcpenney.com",
+          "price": {
+            "price": 279.99,
+            "compare_at_price": 480,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/PvmAdqc-6Uzl-8T4ytQ?o=01M2Q52SJNWTTZ4ZFH394QWD8M&aid=01M480Q5J4EK82DK51XPHRT9BS",
+          "domain": "officedepot.com",
+          "price": {
+            "price": 309.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "pbWYSI2",
+      "title": "E22 G4 computer monitor",
+      "brands": [
+        {
+          "id": "NdmC",
+          "name": "HP"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e8f49842-8202-41df-994b-2d1e2561f298?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/pbWYSI2-p1PB-8T4ytQ?o=01KXQ2ZZAV161XG4V6TSYJHXJF&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 149.99,
+            "compare_at_price": 156.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "6WVCayq",
+      "title": "1080P Full HD Touch Monitor",
+      "brands": [
+        {
+          "id": "93q8",
+          "name": "ASUS"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/99d911fd-d223-4676-b124-459bbeb233aa?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=LWYJ"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/6WVCayq-LWYJ-8T4ytQ?o=01M2VPGRDCNGQNM0W49G9WBFJT&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "asus.com",
+          "price": {
+            "price": 159,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/6WVCayq-p1PB-8T4ytQ?o=01KY7AAZR2P4FBXVF9YQBFXGMS&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 186.59,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "XsHdTcH",
+      "title": "GW2790TC Monitor",
+      "brands": [
+        {
+          "id": "H7Q8",
+          "name": "BenQ"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/10fc30af-1590-437a-9529-bb8ba42b0cb9?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=S5BM"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/XsHdTcH-S5BM-8T4ytQ?o=01M0FMKVHQ6HHMWQ50NG9X7P4F&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "benq.com",
+          "price": {
+            "price": 149.99,
+            "compare_at_price": 179.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/XsHdTcH-T9Fg-8T4ytQ?o=01KNKWTH8DTM5MG7VXVGSE1Q5D&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "adorama.com",
+          "price": {
+            "price": 149.99,
+            "compare_at_price": 179.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/XsHdTcH-LPzf-8T4ytQ?o=01M1P457YNR8MCXXQMRVG34Z68&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "newegg.com",
+          "price": {
+            "price": 149.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "40EYJgr",
+      "title": "PD Series Monitor",
+      "brands": [
+        {
+          "id": "H7Q8",
+          "name": "BenQ"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/318ccf15-8b84-4811-a881-04ad976e753f?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=S5BM"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/40EYJgr-S5BM-8T4ytQ?o=01KC8PA7F1TXNBHKE4YVB6TEZM&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "benq.com",
+          "price": {
+            "price": 699.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "Qzpy78f",
+      "title": "LG Smart Monitor Ai U5S",
+      "brands": [
+        {
+          "id": "WmyR",
+          "name": "LG"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/31f0aa56-e225-4b14-8464-fd2af3a0891b?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=g0qz"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/Qzpy78f-g0qz-8T4ytQ?o=01KSGSMA99GF84J97HXCWV2WST&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "lg.com",
+          "price": {
+            "price": 165.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/Qzpy78f-T9Fg-8T4ytQ?o=01KNMK02EGMBRD3MK6A5ZNVD71&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "adorama.com",
+          "price": {
+            "price": 169.99,
+            "compare_at_price": 199.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "snOoNV9",
+      "title": "Dell Pro P 27\" Full HD IPS Monitor & Monitor Arm Kit",
+      "brands": [
+        {
+          "id": "4fnY",
+          "name": "Dell"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/457765c1-0b1e-47d1-863c-88372a62d579?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=oHaU"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/snOoNV9-oHaU-8T4ytQ?o=01M3KDM0SB5JWPEH5X7CWCERC0&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "bhphotovideo.com",
+          "price": {
+            "price": 373.99,
+            "compare_at_price": 423.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "aigmQt5",
+      "title": "FHD IPS Smart Monitor",
+      "brands": [
+        {
+          "id": "WmyR",
+          "name": "LG"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/d6378742-c68d-44c4-870a-09f7b60ff080?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=g0qz"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/aigmQt5-g0qz-8T4ytQ?o=01KR7TWB1HDJ0NZ58E075QCHH4&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "lg.com",
+          "price": {
+            "price": 279.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "grY0MVf",
+      "title": "Hp E14 G4 Portable Monitor",
+      "brands": [
+        {
+          "id": "NdmC",
+          "name": "HP"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/c951dd8c-9ebb-495e-a594-00a84bce5a75?aid=01M480Q7ZC5M8S41RK6NJ1BQ3X&mid=KRXv"
+        }
+      ],
+      "category": {
+        "title": "Computer Monitors"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/grY0MVf-KRXv-8T4ytQ?o=01KRCK0GZ4RF99HE8HC0XYYVT2&aid=01M480Q7ZC5M8S41RK6NJ1BQ3X",
+          "domain": "hp.com",
+          "price": {
+            "price": 598,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "KgvpD2T",
+      "title": "POS QWERTY USB Keyboard",
+      "brands": [
+        {
+          "id": "NdmC",
+          "name": "HP"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/3a53bb69-451e-4f61-8ff5-39c482468561?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/KgvpD2T-p1PB-8T4ytQ?o=01M0EE8WHKF863YKG8YQC0H3HG&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 211.07,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "PwkMrjY",
+      "title": "Keyboard",
+      "brands": [
+        {
+          "id": "PTdM",
+          "name": "Adesso"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/47565eed-40d9-4b18-bc45-a778f2d4c60f?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/PwkMrjY-p1PB-8T4ytQ?o=01KY78EVR2MVNM03KSE41AHXKK&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 88.17,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "T8Wrhin",
+      "title": "Verbatim Keyboard QWERTY Backlit Keyboard 99789",
+      "brands": [
+        {
+          "id": "9m4c",
+          "name": "Verbatim"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/5b3b381a-83d1-47f7-8895-6826384c8314?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=6Uzl"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/T8Wrhin-6Uzl-8T4ytQ?o=01KBPD9NGG6Y59R9995TYRMXQ1&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "officedepot.com",
+          "price": {
+            "price": 36.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/T8Wrhin-p1PB-8T4ytQ?o=01KYH08CT878S049S8V3NQN4VP&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 41.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/T8Wrhin-n0yg-8T4ytQ?o=01M38H2NJNB4JSEV3A5Y4F2P0N&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "backmarket.com",
+          "price": {
+            "price": 75,
+            "compare_at_price": 144.96,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "eYnAI2Z",
+      "title": "21Y-00001 Bluetooth Compact Keyboard",
+      "brands": [
+        {
+          "id": "IAno",
+          "name": "Microsoft"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/44efc6c4-d6c1-46f3-a068-5f43e4ef0b98?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=K6RA"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/eYnAI2Z-K6RA-8T4ytQ?o=01M38NBB526TTVA6CYKW59DYBP&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "macys.com",
+          "price": {
+            "price": 196.67,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/eYnAI2Z-p1PB-8T4ytQ?o=01KXPZQ6G6JM4V23PKBBJTCH4C&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 229.27,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "BWRk2SU",
+      "title": "Wired USB Keyboard",
+      "brands": [
+        {
+          "id": "4fnY",
+          "name": "Dell"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/869eb12d-6b8b-48d5-847d-e599ff4a22aa?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=n0yg"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/BWRk2SU-n0yg-8T4ytQ?o=01M37Q9D8TWTSGHC745H0R8QM7&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "backmarket.com",
+          "price": {
+            "price": 23.99,
+            "compare_at_price": 45,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/BWRk2SU-LPzf-8T4ytQ?o=01M210AMTJ0WHSAEWNBTZ3C1WZ&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "newegg.com",
+          "price": {
+            "price": 58.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "nhHGLjD",
+      "title": "Microsoft 600 USB Multimedia 104-Key Keyboard",
+      "brands": [
+        {
+          "id": "IAno",
+          "name": "Microsoft"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/b0ee538b-6fb5-4f55-84cd-824b514bdd59?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=ZQQu"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/nhHGLjD-ZQQu-8T4ytQ?o=01M3WDE6KVYHCRX7ZXBJVAYJW5&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "focuscamera.com",
+          "price": {
+            "price": 15.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "rjf8z06",
+      "title": "Wired Keyboard",
+      "brands": [
+        {
+          "id": "9m4c",
+          "name": "Verbatim"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/32d015f2-3fae-4b2d-b3bc-adaa9f561eaf?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=oHaU"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/rjf8z06-oHaU-8T4ytQ?o=01M3H1GJV260BQGGPJM6VBR5BR&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "bhphotovideo.com",
+          "price": {
+            "price": 11.98,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/rjf8z06-LFnL-8T4ytQ?o=01KR156ZD6Q04ZPJM3DVK6K1Z9&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "staples.com",
+          "price": {
+            "price": 12.8,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/rjf8z06-K6RA-8T4ytQ?o=01M34Z79VN98933RG4VF8X2NE5&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "macys.com",
+          "price": {
+            "price": 18.27,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "PO7Dccd",
+      "title": "300 Wireless Keyboard",
+      "brands": [
+        {
+          "id": "NKbC",
+          "name": "Lenovo"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/d0a1d707-37a8-463c-8de5-523994874b50?aid=01M480Q97KD7KTTHE2M5TZDF9G&mid=hl1t"
+        }
+      ],
+      "category": {
+        "title": "Keyboards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/PO7Dccd-hl1t-8T4ytQ?o=01KBPBCCC7RC8BDTY5XFPJQ9QM&aid=01M480Q97KD7KTTHE2M5TZDF9G",
+          "domain": "lenovo.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "SjC0Drf",
+      "title": "Tolomeo Classic Desk Lamp",
+      "brands": [
+        {
+          "id": "qsGb",
+          "name": "Artemide"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/3534b9b7-abc9-4b52-b020-f87b67302e60?aid=01M480QABW61RAA180A935547S&mid=UiS4"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/SjC0Drf-UiS4-8T4ytQ?o=01KCFZGX0D003BZNRPV6AHS3NY&aid=01M480QABW61RAA180A935547S",
+          "domain": "lightopia.com",
+          "price": {
+            "price": 340,
+            "compare_at_price": 425,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "JjU4CZt",
+      "title": "Tolomeo Desk Lamp",
+      "brands": [
+        {
+          "id": "qsGb",
+          "name": "Artemide"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/2de962a6-72be-442a-893a-cfd65deb70e4?aid=01M480QABW61RAA180A935547S&mid=8E6I"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/JjU4CZt-8E6I-8T4ytQ?o=01KCK6T64EH8HJ7X4Q4CEFWTFR&aid=01M480QABW61RAA180A935547S",
+          "domain": "1800lighting.com",
+          "price": {
+            "price": 424,
+            "compare_at_price": 530,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "29L5f4a",
+      "title": "Mavis Desk Lamp",
+      "brands": [
+        {
+          "id": "HKuF",
+          "name": "Safavieh"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/63901809-dd34-4c90-af67-5096bdbb869f?aid=01M480QABW61RAA180A935547S&mid=8E6I"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/29L5f4a-8E6I-8T4ytQ?o=01KCM1S32GET9JSYFSECP3T2D0&aid=01M480QABW61RAA180A935547S",
+          "domain": "1800lighting.com",
+          "price": {
+            "price": 174.6,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "l4H0xOc",
+      "title": "Oblique Desk Lamp",
+      "brands": [
+        {
+          "id": "mNv3",
+          "name": "Flos"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/l4H0xOc?aid=01M480QABW61RAA180A935547S&mid=1iOb"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/l4H0xOc-1iOb-8T4ytQ?o=01KBPA8P55P69G91RCBGZRBS9G&aid=01M480QABW61RAA180A935547S",
+          "domain": "trnk-nyc.com",
+          "price": {
+            "price": 625,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "bMrEL5u",
+      "title": "Stria Led Desk Lamp",
+      "brands": [
+        {
+          "id": "PTdM",
+          "name": "Adesso"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/72bbea7f-223f-41fb-b2be-d15ced1954d3?aid=01M480QABW61RAA180A935547S&mid=8Vpl"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/bMrEL5u-8Vpl-8T4ytQ?o=01M0J48R3WQDZBZV1E7E9JGHW3&aid=01M480QABW61RAA180A935547S",
+          "domain": "modani.com",
+          "price": {
+            "price": 215,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "J0t9H8w",
+      "title": "Type 75 Mini 18 Inch Desk Lamp",
+      "brands": [
+        {
+          "id": "Dvgp",
+          "name": "Anglepoise"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/4c69841b-84f4-4e8a-aa28-aa5d4ec71d7b?aid=01M480QABW61RAA180A935547S&mid=lCZ3"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/J0t9H8w-lCZ3-8T4ytQ?o=01M2YDM8G1K4Q3A6Y5ADXPGFMY&aid=01M480QABW61RAA180A935547S",
+          "domain": "luxedecor.com",
+          "price": {
+            "price": 200,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/J0t9H8w-KYFO-8T4ytQ?o=01M2V59ACWGTJJH23PRWT8TQ6N&aid=01M480QABW61RAA180A935547S",
+          "domain": "shophorne.com",
+          "price": {
+            "price": 200,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/J0t9H8w-8E6I-8T4ytQ?o=01KRDX18AX3QFJS2QXSDDV3ZJN&aid=01M480QABW61RAA180A935547S",
+          "domain": "1800lighting.com",
+          "price": {
+            "price": 200,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "czuFt0X",
+      "title": "Elih Desk Lamp",
+      "brands": [
+        {
+          "id": "WSeo",
+          "name": "Arhaus"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/05ab16bc-fc22-403a-96ab-c246e06c036d?aid=01M480QABW61RAA180A935547S&mid=HiGg"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/czuFt0X-HiGg-8T4ytQ?o=01KBP7RX1GEVDMT36D725DJH52&aid=01M480QABW61RAA180A935547S",
+          "domain": "arhaus.com",
+          "price": {
+            "price": 639,
+            "compare_at_price": 900,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "vwkuBAD",
+      "title": "Amari Cordless LED Desk Lamp",
+      "brands": [
+        {
+          "id": "PTdM",
+          "name": "Adesso"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/ff452188-43d5-4e33-b554-d5968e41303b?aid=01M480QABW61RAA180A935547S&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Lamps"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/vwkuBAD-LFnL-8T4ytQ?o=01KZBJGQNQ2QSZ2ZXQYB849KKM&aid=01M480QABW61RAA180A935547S",
+          "domain": "staples.com",
+          "price": {
+            "price": 59.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/vwkuBAD-Q1hs-8T4ytQ?o=01M3NVRJ7XX12QC80R0JDBBB1Y&aid=01M480QABW61RAA180A935547S",
+          "domain": "lampsplus.com",
+          "price": {
+            "price": 60,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "0AYQbMM",
+      "title": "PRO HD webcam 1920 x",
+      "brands": [
+        {
+          "id": "BJcR",
+          "name": "Logitech"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/99be1bbc-32c6-482e-8be6-9d4c8a896c8b?aid=01M480QBJ040JNP8G77KCG7WN9&mid=p3xj"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/0AYQbMM-p3xj-8T4ytQ?o=01KYSH6ZV98HMSRRS1R24ZTCX2&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "sweetwater.com",
+          "price": {
+            "price": 69.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "vFnUEyz",
+      "title": "Business Webcam",
+      "brands": [
+        {
+          "id": "BJcR",
+          "name": "Logitech"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/de7314b9-e24a-4ce3-8aef-e0d770a0f59c?aid=01M480QBJ040JNP8G77KCG7WN9&mid=n0yg"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/vFnUEyz-n0yg-8T4ytQ?o=01M38T0JEAHT2WAMR7D8J16N6V&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "backmarket.com",
+          "price": {
+            "price": 83,
+            "compare_at_price": 161.68,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/vFnUEyz-DO3T-8T4ytQ?o=01KRS24NWBRE2EZZC8ZEVNYWAA&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "abt.com",
+          "price": {
+            "price": 119.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/vFnUEyz-JOeA-8T4ytQ?o=01KR1APY450TV4VMNCSSKJYYE9&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "logitech.com",
+          "price": {
+            "price": 119.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "jfuy1Ly",
+      "title": "Acer ACR100 W501 Full HD Webcam",
+      "brands": [
+        {
+          "id": "oLNv",
+          "name": "Acer"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/a1faef98-c0af-40e9-89b1-f1ad9d1682b3?aid=01M480QBJ040JNP8G77KCG7WN9&mid=oHaU"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/jfuy1Ly-oHaU-8T4ytQ?o=01M3QW4VRBF7PFQY3333MH5WF5&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "bhphotovideo.com",
+          "price": {
+            "price": 39.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "H66JLcy",
+      "title": "Webcam",
+      "brands": [
+        {
+          "id": "NKbC",
+          "name": "Lenovo"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/f835950d-f371-41f6-aed3-22bdf7e4cf73?aid=01M480QBJ040JNP8G77KCG7WN9&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/H66JLcy-p1PB-8T4ytQ?o=01KYC6QTF576DF4W86SAH8AXSM&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 102.5,
+            "compare_at_price": 129.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "wnBUbqR",
+      "title": "Lenovo 300 FHD Webcam",
+      "brands": [
+        {
+          "id": "NKbC",
+          "name": "Lenovo"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/bc541c84-a26c-4bc4-948a-7e5469114ebc?aid=01M480QBJ040JNP8G77KCG7WN9&mid=mn23"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/wnBUbqR-mn23-8T4ytQ?o=01M3BB8DAPHGTMPD66Z07VZ95D&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "qvc.com",
+          "price": {
+            "price": 49.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "UO6kCn8",
+      "title": "Logitech C920s HD Pro Webcam with WebCamArm 2 Camera Arm Kit",
+      "brands": [
+        {
+          "id": "BJcR",
+          "name": "Logitech"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/5225fb00-690d-49b9-9fd6-a54dad33c322?aid=01M480QBJ040JNP8G77KCG7WN9&mid=oHaU"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/UO6kCn8-oHaU-8T4ytQ?o=01M3CQX25STS5B577PHTBX53GF&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "bhphotovideo.com",
+          "price": {
+            "price": 89.98,
+            "compare_at_price": 99.98,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "r8W2xTE",
+      "title": "CyberTrack K1 Webcam",
+      "brands": [
+        {
+          "id": "PTdM",
+          "name": "Adesso"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/b527b039-c7cd-44e9-bd16-3373d2d096be?aid=01M480QBJ040JNP8G77KCG7WN9&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/r8W2xTE-p1PB-8T4ytQ?o=01KY78FZMJ8P2GXRCE3ZZD2SG3&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 70.08,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/r8W2xTE-Z87s-8T4ytQ?o=01KKFHQ16W7VEGR59A9F44537D&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "kohls.com",
+          "price": {
+            "price": 79.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/r8W2xTE-LFnL-8T4ytQ?o=01KR4F19C115H8AC0GCPY1FY4G&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "staples.ca",
+          "price": {
+            "price": 121.29,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "0LK7peO",
+      "title": "HP 320 FHD Webcam",
+      "brands": [
+        {
+          "id": "NdmC",
+          "name": "HP"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/b46fb30b-c67b-4791-ad89-2963e9114925?aid=01M480QBJ040JNP8G77KCG7WN9&mid=Pu5r"
+        }
+      ],
+      "category": {
+        "title": "Webcams"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/0LK7peO-Pu5r-8T4ytQ?o=01KRBD3V64Y7XYN4PX7E917YYZ&aid=01M480QBJ040JNP8G77KCG7WN9",
+          "domain": "pcrichard.com",
+          "price": {
+            "price": 28.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "r14inJz",
+      "title": "Gaming Headset",
+      "brands": [
+        {
+          "id": "7ju5",
+          "name": "Philips"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/80ad2f96-6aea-4921-ad00-ba9916477a7a?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=K6RA"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/r14inJz-K6RA-8T4ytQ?o=01M19ENV4MXGX5VFXY2AZBCN48&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "macys.com",
+          "price": {
+            "price": 89.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "PsOoduA",
+      "title": "Logitech ClearChat Comfort USB Headset",
+      "brands": [
+        {
+          "id": "BJcR",
+          "name": "Logitech"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/b28b3e7c-6313-441a-ab91-2f95f4026611?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=hl1t"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/PsOoduA-hl1t-8T4ytQ?o=01KYHTFC0WT3849NJ43BWZDHVN&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "lenovo.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": 29.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/PsOoduA-LFnL-8T4ytQ?o=01KJX1EB99NMCY8B85HGT9X9V3&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "staples.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/PsOoduA-T9Fg-8T4ytQ?o=01KNMB6AJEV9M39ACVG9R9EKW7&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "adorama.com",
+          "price": {
+            "price": 26.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "YY9ssqL",
+      "title": "159617 Headset",
+      "brands": [
+        {
+          "id": "uVCT",
+          "name": "Koss"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/1e06e611-0733-4e8d-b874-7106d9445949?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=LPzf"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/YY9ssqL-LPzf-8T4ytQ?o=01KBPD7XM0MG2PM0MK7YDDY957&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "newegg.com",
+          "price": {
+            "price": 27.69,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "2WHDcMO",
+      "title": "H340 USB PC Crystal-Clear Headset",
+      "brands": [
+        {
+          "id": "BJcR",
+          "name": "Logitech"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e951c114-4695-41e9-963d-eddcfa73f311?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=oHaU"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/2WHDcMO-oHaU-8T4ytQ?o=01M3HWFW3PXWTFCQ1R3AMSP4M7&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "bhphotovideo.com",
+          "price": {
+            "price": 22.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "SkNuisg",
+      "title": "Wired On-Ear Stereo Headset",
+      "brands": [
+        {
+          "id": "9m4c",
+          "name": "Verbatim"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/SkNuisg?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=T9Fg"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/SkNuisg-T9Fg-8T4ytQ?o=01KCAHHG8CPACDWQZY066SSQEZ&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "adorama.com",
+          "price": {
+            "price": 9.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "kO41hhj",
+      "title": "Stereo Headset",
+      "brands": [
+        {
+          "id": "uVCT",
+          "name": "Koss"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/2051b315-8849-4d42-82b4-369a401f215e?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/kO41hhj-LFnL-8T4ytQ?o=01KR45NHYQSAQAQ0PT6VFGVZ0G&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "staples.com",
+          "price": {
+            "price": 57.76,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "xtOv8jD",
+      "title": "NU-3500 Headset",
+      "brands": [
+        {
+          "id": "69hi",
+          "name": "Nyko"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e26e8b0b-2ced-4d46-bcf4-02f215e61433?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=0kS2"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/xtOv8jD-0kS2-8T4ytQ?o=01M0FHX4ASE807JNP40GE5XXAS&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "nyko.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "tnAl4qs",
+      "title": "CS95 USB On-Ear Communication Headset",
+      "brands": [
+        {
+          "id": "uVCT",
+          "name": "Koss"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/9d196aa6-dbba-4321-85c0-ce13507e89e4?aid=01M480QCT9BYDTA7G2B5QB6A2Q&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Headsets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/tnAl4qs-LFnL-8T4ytQ?o=01KZ5MNJ68CD1J2DPAYHBB5Q3D&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "staples.com",
+          "price": {
+            "price": 26.74,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/tnAl4qs-6Uzl-8T4ytQ?o=01KBPA9FQQF29BXAF7WX9N3WPF&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "odpbusiness.com",
+          "price": {
+            "price": 31.49,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/tnAl4qs-p1PB-8T4ytQ?o=01KYGZN2NH0VKE4GFW7EB15G8W&aid=01M480QCT9BYDTA7G2B5QB6A2Q",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 31.76,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "m4Nx1Ck",
+      "title": "Epson 100\" Whiteboard for Projection and Dry-Erase",
+      "brands": [
+        {
+          "id": "gqYb",
+          "name": "Epson"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/1a225b69-38df-4ec1-bf0b-60923b86fa4a?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=oHaU"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/m4Nx1Ck-oHaU-8T4ytQ?o=01M3ZE7HVMMS9H28QDG230Y6YP&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "bhphotovideo.com",
+          "price": {
+            "price": 1027,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "s5Gl8tc",
+      "title": "Basic Melamine Dry-Erase Whiteboard",
+      "brands": [
+        {
+          "id": "hO4I",
+          "name": "Mead"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/0c4f4a15-ed33-4041-8190-6f4afa1304f4?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=LPzf"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/s5Gl8tc-LPzf-8T4ytQ?o=01M204FMG2N9KSNJ5QV30WHV4Y&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "newegg.com",
+          "price": {
+            "price": 27.99,
+            "compare_at_price": 37.29,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/s5Gl8tc-6Uzl-8T4ytQ?o=01KSSFFMCQH7KDX8S265HXE5WK&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "officedepot.com",
+          "price": {
+            "price": 339.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "T3SqKMJ",
+      "title": "Wall-Mounted Magnetic Whiteboard",
+      "brands": [
+        {
+          "id": "K9pJ",
+          "name": "Luxor"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/05262361-3681-406a-b60f-88210deb40f7?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=9Hkm"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/T3SqKMJ-9Hkm-8T4ytQ?o=01M37GX5DD5KKD6SY7V176EY76&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "jbtools.com",
+          "price": {
+            "price": 342.04,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "Sek4ctj",
+      "title": "Non-Magnetic Whiteboard with Aluminum Frame",
+      "brands": [
+        {
+          "id": "yhwe",
+          "name": "Ghent"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/ef4476ea-85d0-4182-801d-65e82ffffe1b?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/Sek4ctj-p1PB-8T4ytQ?o=01KXQ7M8Z5SAW9Q9BZ7MN5HJRW&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 59.41,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/Sek4ctj-cBzV-8T4ytQ?o=01KVWV9XDQVKE72Z4FD10NNN1N&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "michaels.com",
+          "price": {
+            "price": 80.79,
+            "compare_at_price": 100.99,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/Sek4ctj-LFnL-8T4ytQ?o=01KMN3PZAH7NPT7D4VK2R9YSGP&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "staples.com",
+          "price": {
+            "price": 187.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "ALpFbKN",
+      "title": "Sparco Melamine Dry Erase Whiteboard with Aluminum Frame",
+      "brands": [
+        {
+          "id": "VgJL",
+          "name": "Sparco"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/31aad848-5ac4-42e0-a19c-5ea8f30f3884?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=6Uzl"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/ALpFbKN-6Uzl-8T4ytQ?o=01KBPAQ68J4HYA3R7F33DQEBES&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "odpbusiness.com",
+          "price": {
+            "price": 341.32,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "SSoxOfp",
+      "title": "Matrix Whiteboard",
+      "brands": [
+        {
+          "id": "kbK8",
+          "name": "Quartet"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/7a54ee37-f57f-4431-b119-63309fa91869?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=p1PB"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/SSoxOfp-p1PB-8T4ytQ?o=01KXSBVABMKNB3Y72XS4PMQRZX&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 70.21,
+            "compare_at_price": 74.47,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "gDHZxRm",
+      "title": "Melamine Dry-Erase Whiteboard",
+      "brands": [
+        {
+          "id": "qKdn",
+          "name": "Staples"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/26e906f3-a40f-463e-9d63-001b380c8718?aid=01M480QDS8K0K1BKQ7T2S7NAH4&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Dry-Erase Boards"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/gDHZxRm-LFnL-8T4ytQ?o=01KPGQHCVRGCHXYJB7WTBTCWP4&aid=01M480QDS8K0K1BKQ7T2S7NAH4",
+          "domain": "staples.com",
+          "price": {
+            "price": 34.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "nEm3Idy",
+      "title": "Printer Paper",
+      "brands": [
+        {
+          "id": "NdmC",
+          "name": "HP"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/57636597-2756-4b30-a828-5ed194fdfe30?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/nEm3Idy-LFnL-8T4ytQ?o=01KQJYP25M6KQ5P60N3A3M5E7C&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "staples.com",
+          "price": {
+            "price": 28.19,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/nEm3Idy-QnTm-8T4ytQ?o=01KRW91D6VNKT7M93FP55YY705&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "target.com",
+          "price": {
+            "price": 29.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "lF7CfLF",
+      "title": "Printer Paper",
+      "brands": [
+        {
+          "id": "9wxJ",
+          "name": "Caliber"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/9cf3bc54-eb3e-4aac-9ffa-b4eda6eccdb2?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=oeWt"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/lF7CfLF-oeWt-8T4ytQ?o=01M1RS8XNB29T28P7X1XB5FRM1&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "es.cvs.com",
+          "price": {
+            "price": 13.19,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "R82BqKX",
+      "title": "Printer Paper",
+      "brands": [
+        {
+          "id": "9wxJ",
+          "name": "Caliber"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/e8f732ed-7a81-43de-b07f-ad77df614f65?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=oeWt"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/R82BqKX-oeWt-8T4ytQ?o=01KRNYX8A1978RYEQ3H7S0E45W&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "es.cvs.com",
+          "price": {
+            "price": 9.29,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "L9QzazN",
+      "title": "Printer Paper",
+      "brands": [
+        {
+          "id": "9wxJ",
+          "name": "Caliber"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/2bdcd96a-3ba5-49bc-913e-15b0829b7839?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=oeWt"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/L9QzazN-oeWt-8T4ytQ?o=01KRSXT2X9MBKVB4VXZJ760KZY&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "cvs.com",
+          "price": {
+            "price": 9.39,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "1fry3gO",
+      "title": "Office Depot ImagePrint Multi-Use Printer & Copy Paper",
+      "brands": [
+        {
+          "id": "BIhj",
+          "name": "Office Depot"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/b67efcf0-63a0-473d-be68-8aa5adbb6433?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=6Uzl"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/1fry3gO-6Uzl-8T4ytQ?o=01M2QQK7BVQMXATK8XZGXFT0GQ&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "officedepot.com",
+          "price": {
+            "price": 34.99,
+            "compare_at_price": 54,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "3n5xkgy",
+      "title": "Multipurpose Printer Paper",
+      "brands": [
+        {
+          "id": "SsMC",
+          "name": "Xerox"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/00fe3069-4b3b-487c-961f-d752888ff577?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/3n5xkgy-LFnL-8T4ytQ?o=01KPJ290GY076MYE0NFJA6S28K&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "staples.com",
+          "price": {
+            "price": 10.19,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/3n5xkgy-p1PB-8T4ytQ?o=01KXS5BS1CF13RQS1HBCQBM69J&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 12.39,
+            "compare_at_price": 13.85,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "7pfRTqu",
+      "title": "Multipurpose Printer Paper",
+      "brands": [
+        {
+          "id": "SsMC",
+          "name": "Xerox"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/dfdf311f-2923-415f-b320-643dafc43e1f?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=LFnL"
+        }
+      ],
+      "category": {
+        "title": "Printer & Copier Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/7pfRTqu-LFnL-8T4ytQ?o=01KPJC29ZQ39PZJVA98NDR99KB&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "staples.com",
+          "price": {
+            "price": 125.96,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "V5jE6PP",
+      "title": "Cricut Sublimation Printer Paper",
+      "brands": [
+        {
+          "id": "B9ws",
+          "name": "Cricut"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/9596d00f-9b48-4feb-ab3e-e5547355cbe3?aid=01M480QEZG66WR8TSSWRFB6YPB&mid=K6RA"
+        }
+      ],
+      "category": {
+        "title": "Transfer Paper"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/V5jE6PP-K6RA-8T4ytQ?o=01M3YXFH8ZKMQPVDKW3HGP4WYA&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "macys.com",
+          "price": {
+            "price": 12.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        },
+        {
+          "url": "https://buy.trychannel3.com/V5jE6PP-p1PB-8T4ytQ?o=01M41S05NS1PDXYPADWNE6NY02&aid=01M480QEZG66WR8TSSWRFB6YPB",
+          "domain": "bestbuy.com",
+          "price": {
+            "price": 12.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "BLKwFQa",
+      "title": "Tul Retractable Gel Pens",
+      "brands": [
+        {
+          "id": "HvFm",
+          "name": "TUL"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/5c6c3502-c904-43a2-abdf-ebce1ccc0297?aid=01M480QGY6MAZE0NP2100AMFSY&mid=6Uzl"
+        }
+      ],
+      "category": {
+        "title": "Pens"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/BLKwFQa-6Uzl-8T4ytQ?o=01KR1F71NGPNDG3481N6P5KQ3M&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "officedepot.com",
+          "price": {
+            "price": 24.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "ChsO18t",
+      "title": "Tul Bp Series Retractable Ballpoint Pens Medium Point 1.0 Mm",
+      "brands": [
+        {
+          "id": "HvFm",
+          "name": "TUL"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/d6ec40a1-12b8-44fd-a2ae-8f2075643938?aid=01M480QGY6MAZE0NP2100AMFSY&mid=6Uzl"
+        }
+      ],
+      "category": {
+        "title": "Pens"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/ChsO18t-6Uzl-8T4ytQ?o=01M2E451MK1WZP5DZRX4XJJXGR&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "odpbusiness.com",
+          "price": {
+            "price": 20.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "kfqhHbb",
+      "title": "Liquid Gel Pens",
+      "brands": [
+        {
+          "id": "Deha",
+          "name": "Five Below"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/cadd294e-9f8b-4c22-b239-f3d3583325e5?aid=01M480QGY6MAZE0NP2100AMFSY&mid=FLYH"
+        }
+      ],
+      "category": {
+        "title": "Pens"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/kfqhHbb-FLYH-8T4ytQ?o=01M12BMGN63SGYQA9VC0DG3FDF&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "fivebelow.com",
+          "price": {
+            "price": 5,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "wTxNM4i",
+      "title": "G2 Bold Point Retractable Gel Pens",
+      "brands": [
+        {
+          "id": "kxFK",
+          "name": "Pilot"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/9ddd4ede-fab7-4b6b-9b0a-f1fcea3ee2a1?aid=01M480QGY6MAZE0NP2100AMFSY&mid=dCgO"
+        }
+      ],
+      "category": {
+        "title": "Pens"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/wTxNM4i-dCgO-8T4ytQ?o=01KSQF484Z17PP10MGPJ9KAVNK&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "samsclub.com",
+          "price": {
+            "price": 12.98,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "BrSDVQp",
+      "title": "Gel Pens Set",
+      "brands": [
+        {
+          "id": "Deha",
+          "name": "Five Below"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/4d516221-69e5-43c5-b146-6a2511294300?aid=01M480QGY6MAZE0NP2100AMFSY&mid=FLYH"
+        }
+      ],
+      "category": {
+        "title": "Pen & Pencil Sets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/BrSDVQp-FLYH-8T4ytQ?o=01M12SXM6KMEXNSY9GJG24D13B&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "fivebelow.com",
+          "price": {
+            "price": 5,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "AaX45ez",
+      "title": "G2 Retractable Gel Pens",
+      "brands": [
+        {
+          "id": "kxFK",
+          "name": "Pilot"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/22e8ee1a-132e-4e15-aee3-f5011933078d?aid=01M480QGY6MAZE0NP2100AMFSY&mid=6Uzl"
+        }
+      ],
+      "category": {
+        "title": "Pens"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/AaX45ez-6Uzl-8T4ytQ?o=01KR8BPMJBV1BED0HR2XNGKHQS&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "odpbusiness.com",
+          "price": {
+            "price": 42.99,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "J7JxFVH",
+      "title": "Faber-Castell Pitt Artist Pens - Studio Gift Box, Set of 24, Brush Nib",
+      "brands": [
+        {
+          "id": "WD2W",
+          "name": "Faber-Castell"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/d3633c38-8ba6-433a-aef9-30b44f3eb370?aid=01M480QGY6MAZE0NP2100AMFSY&mid=1ACV"
+        }
+      ],
+      "category": {
+        "title": "Markers"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/J7JxFVH-1ACV-8T4ytQ?o=01M2RBRTGYR3NW70JFYAHZ3BKE&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "dickblick.com",
+          "price": {
+            "price": 56.6,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    },
+    {
+      "id": "Wbvylvb",
+      "title": "Best Gel Pens Ever, Set of 6",
+      "brands": [
+        {
+          "id": "NRaL",
+          "name": "Natural Life"
+        }
+      ],
+      "images": [
+        {
+          "url": "https://cdn.trychannel3.com/8284fa4e-542c-4d61-a67b-871a89a18d83?aid=01M480QGY6MAZE0NP2100AMFSY&mid=jgjV"
+        }
+      ],
+      "category": {
+        "title": "Pen & Pencil Sets"
+      },
+      "offers": [
+        {
+          "url": "https://buy.trychannel3.com/Wbvylvb-jgjV-8T4ytQ?o=01M2NRTQ8QYPFEVC08PGZNA45C&aid=01M480QGY6MAZE0NP2100AMFSY",
+          "domain": "naturallife.com",
+          "price": {
+            "price": 14,
+            "compare_at_price": null,
+            "currency": "USD"
+          },
+          "availability": "InStock"
+        }
+      ]
+    }
+  ]
+}

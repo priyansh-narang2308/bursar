@@ -24,7 +24,9 @@ export interface Wire {
  * active mandate, a supplier, two offers and a mission. `lenient` drops R-NEW-VENDOR so a first order does
  * not wait for a person.
  */
-export async function world(options: { lenient?: boolean; budget?: number } = {}) {
+export async function world(
+  options: { lenient?: boolean; budget?: number; keepVaultTokens?: boolean } = {},
+) {
   const { db, close } = await createTestDb();
   let clock = new Date('2026-10-05T12:00:00Z');
   const fake = createFakePayPal({ now: () => clock });
@@ -65,6 +67,7 @@ export async function world(options: { lenient?: boolean; budget?: number } = {}
     provenanceKeys: [bytes(80)],
     webhookId: 'WH-0001',
     now: () => clock,
+    keepVaultTokens: options.keepVaultTokens,
     breaker,
     policyFor: () => policy,
   });

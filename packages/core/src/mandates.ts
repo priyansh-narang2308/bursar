@@ -82,6 +82,64 @@ export async function startMandate(
   });
 }
 
+export interface AdoptMandateInput {
+  readonly payerName: string;
+  readonly cap: AmountJSON;
+  readonly perMissionCap: AmountJSON;
+  readonly validFrom: Date;
+  readonly validTo: Date;
+  /** A PayPal payment token a payer has already approved, such as one from a demo's payer pool. */
+  readonly paymentTokenId: string;
+}
+
+/**
+ * Starts a mandate that is already approved: the buyer said yes earlier, and their payment token is used again.
+ * It is how a demo gives every visitor a funded workspace without a buyer to click. The token is sealed to the
+ * new mandate exactly as a fresh one would be.
+ */
+export async function adoptMandate(
+  deps: CoreDeps,
+  orgId: OrganizationId,
+  actor: Actor,
+  input: AdoptMandateInput,
+) {
+  const [cap, perMission] = [moneyFromJSON(input.cap), moneyFromJSON(input.perMissionCap)];
+  const mandateId = newId('mandate');
+  return withOrg(deps.db, orgId, async (tx) => {
+    const [payer] = await tx
+      .insert(payers)
+      .values({
+        id: newId('payer'),
+        orgId,
+        paypalPayerId: `adopted-${mandateId}`,
+        displayName: input.payerName,
+      })
+      .returning();
+    const [policySet] = await tx
+      .insert(policySets)
+      .values({ id: newId('policySet'), orgId, name: 'Default policy' })
+      .returning();
+    if (payer === undefined || policySet === undefined) throw new Error('insert returned nothing');
+    await tx.insert(mandates).values({
+      id: mandateId,
+      orgId,
+      payerId: payer.id,
+      policySetId: policySet.id,
+      status: 'ACTIVE',
+      currency: cap.currency,
+      capMinor: cap.minor,
+      perMissionCapMinor: perMission.minor,
+      validFrom: input.validFrom,
+      validTo: input.validTo,
+      signedAt: deps.now(),
+      vaultTokenSealed: encryptSecret(deps.vaultKeys, input.paymentTokenId, `mandate:${mandateId}`),
+    });
+    await record(tx, orgId, actor, 'mandate.adopted', { mandateId }, deps.now());
+    await emit(tx, orgId, 'mandate.activated', { mandateId });
+    return { mandateId, status: 'ACTIVE' as const };
+  });
+}
+
 async function load(tx: Tx, mandateId: MandateId) {
   const [mandate] = await tx.select().from(mandates).where(eq(mandates.id, mandateId));
   if (mandate === undefined) throw new CoreError('NOT_FOUND', 'No such mandate.');
@@ -155,7 +213,8 @@ export async function changeMandate(
     const mandate = await load(tx, mandateId);
     assertMove(mandateStatusSchema.parse(mandate.status), to);
     if (to === 'ACTIVE') await assertNoOpenIncident(tx);
-    if (to === 'REVOKED' && mandate.vaultTokenSealed !== null) {
+    // A token shared between workspaces (a demo's payer pool) must outlive any one workspace revoking it.
+    if (to === 'REVOKED' && mandate.vaultTokenSealed !== null && deps.keepVaultTokens !== true) {
       await deps.paypal.vault.deletePaymentToken(
         openVaultToken(deps, mandateId, mandate.vaultTokenSealed),
       );

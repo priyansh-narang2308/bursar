@@ -12,7 +12,7 @@ import {
 } from '@bursar/db';
 import { type Account, isBalanced } from '@bursar/ledger';
 import { desc, eq } from 'drizzle-orm';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { CoreError } from '../src';
 import { money } from '../src/util';
 import { usd, type World, world } from './support';
@@ -257,6 +257,50 @@ describe('the decision pipeline', () => {
     expect(await w.core.actions.execute(w.orgId, proposal.actionId)).toMatchObject({
       outcome: 'confirmed',
     });
+  });
+
+  it('adopts a buyer’s earlier approval so a workspace can spend at once, and leaves a shared token alone on revoke', async () => {
+    w = await world({ keepVaultTokens: true });
+    const setup = await w.paypal.vault.createSetupToken({
+      requestId: 'adopt-1',
+      returnUrl: 'https://a.test/r',
+      cancelUrl: 'https://a.test/c',
+    });
+    w.fake.approveSetupToken(setup.id);
+    const token = await w.paypal.vault.createPaymentToken({
+      requestId: 'adopt-2',
+      setupTokenId: setup.id,
+    });
+    const adopted = await w.core.mandates.adopt(w.orgId, w.owner, {
+      payerName: 'Pooled buyer',
+      cap: usd(1_000_000),
+      perMissionCap: usd(500_000),
+      validFrom: new Date('2026-10-01T00:00:00Z'),
+      validTo: new Date('2026-12-01T00:00:00Z'),
+      paymentTokenId: token.id,
+    });
+    expect(adopted.status).toBe('ACTIVE');
+    const mission = await w.core.catalog.createMission(w.orgId, w.owner, {
+      goal: 'Pooled',
+      budget: usd(10_000),
+      mandateId: adopted.mandateId,
+    });
+    const cart = await w.core.catalog.buildCart(w.orgId, w.owner, mission?.id as never, [
+      { offerId: w.offers.pens?.id as never, quantity: 1 },
+    ]);
+    const proposal = await w.core.actions.propose(w.orgId, w.agent, {
+      type: 'AUTHORIZE',
+      missionId: mission?.id as never,
+      cartId: cart.cartId as never,
+    });
+    expect(await w.core.actions.execute(w.orgId, proposal.actionId)).toMatchObject({
+      outcome: 'confirmed',
+    });
+    const spy = vi.spyOn(w.paypal.vault, 'deletePaymentToken');
+    await w.core.mandates.change(w.orgId, w.owner, adopted.mandateId as never, 'REVOKED', 'done');
+    expect(spy).not.toHaveBeenCalled();
+    const [row] = await w.db.select().from(mandates).where(eq(mandates.id, adopted.mandateId));
+    expect(row).toMatchObject({ status: 'REVOKED', vaultTokenSealed: null });
   });
 
   it('does not count an approved hold twice against the envelope when it runs', async () => {

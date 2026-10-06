@@ -9,6 +9,9 @@ catalogs:
     '@biomejs/biome':
       specifier: ^2.5.0
       version: 2.5.15
+    '@channel3/sdk':
+      specifier: ^4.1.0
+      version: 4.1.0
     '@electric-sql/pglite':
       specifier: ^0.5.8
       version: 0.5.8
@@ -479,6 +482,9 @@ importers:
       '@bursar/money':
         specifier: workspace:*
         version: link:../money
+      '@channel3/sdk':
+        specifier: 'catalog:'
+        version: 4.1.0
     devDependencies:
       '@bursar/tooling':
         specifier: workspace:*
@@ -489,6 +495,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 5.0.3(vitest@5.0.3)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.15
       typescript:
         specifier: 'catalog:'
         version: 7.0.2
@@ -1036,6 +1045,10 @@ packages:
   '@bramus/specificity@2.4.2':
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
+
+  '@channel3/sdk@4.1.0':
+    resolution: {integrity: sha512-tEjkhcUNhfLOkKE6XALt3726gXIQWcvK08Re2abAZmPu0LTN8B3cnDoRvnR2iLkEbAaO2WDlG9wYOHxyj7YBag==}
+    engines: {node: '>=18.0.0'}
 
   '@csstools/color-helpers@6.1.2':
     resolution: {integrity: sha512-grhRy3OKmniaAEKXMjua5z/EODX0MSqBGjunw8+j/3HQjOnahs2AGhvEOIYVUWcU6ScApbhLhVrQTX8XqrMrow==}
@@ -3133,6 +3146,8 @@ snapshots:
   '@bramus/specificity@2.4.2':
     dependencies:
       css-tree: 3.2.1
+
+  '@channel3/sdk@4.1.0': {}
 
   '@csstools/color-helpers@6.1.2': {}
 

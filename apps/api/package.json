@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
-    "dev:demo": "tsx src/dev.ts"
+    "dev:demo": "tsx src/dev.ts",
+    "payer": "tsx --env-file=../../.env src/dev-tools/payer.ts",
+    "spike": "tsx --env-file=../../.env src/dev-tools/spike.ts"
   },
   "dependencies": {
     "@bursar/agent-tools": "workspace:*",

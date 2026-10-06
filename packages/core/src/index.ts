@@ -4,7 +4,13 @@ import { buildCart, createMission, createSupplier, recordOffer } from './catalog
 import { recordDelivery } from './deliveries';
 import { describePolicy } from './describe';
 import { execute } from './executor';
-import { changeMandate, completeMandate, expireMandates, startMandate } from './mandates';
+import {
+  adoptMandate,
+  changeMandate,
+  completeMandate,
+  expireMandates,
+  startMandate,
+} from './mandates';
 import { decide, expireApprovals, propose } from './pipeline';
 import { receipt, replayDecision, verifyAudit } from './receipts';
 import { reconcile } from './reconcile';
@@ -15,7 +21,7 @@ import { ingest, pollSubmitted, WEBHOOK_EVENT_TYPES } from './webhooks';
 export { emit as emitEvent, record as recordAudit } from './audit';
 export { CircuitBreaker } from './breaker';
 export type { ExecuteResult } from './executor';
-export { MANDATE_TRANSITIONS } from './mandates';
+export { type AdoptMandateInput, MANDATE_TRANSITIONS } from './mandates';
 export type { Proposal, ProposeInput } from './pipeline';
 export { type Actor, type CoreDeps, CoreError } from './types';
 export type { IngestStatus } from './webhooks';
@@ -35,6 +41,7 @@ export function createCore(options: CoreOptions) {
   return {
     mandates: {
       start: startMandate.bind(null, deps),
+      adopt: adoptMandate.bind(null, deps),
       complete: completeMandate.bind(null, deps),
       change: changeMandate.bind(null, deps),
       expire: expireMandates.bind(null, deps),

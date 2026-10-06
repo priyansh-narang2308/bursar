@@ -1,9 +1,11 @@
 import { Money } from '@bursar/money';
+import { Channel3Error } from '@channel3/sdk';
 import { describe, expect, it } from 'vitest';
 import {
   type CallRecord,
   CatalogError,
   type Channel3Product,
+  type Channel3SdkClient,
   createCatalog,
   createFixtureApi,
   fromSdk,
@@ -213,32 +215,35 @@ describe('the catalog', () => {
     expect((await catalog.requote('p2', Money.of(0n, 'USD'), 'm1')).driftBasisPoints).toBe(0);
   });
 
-  it('adapts the SDK’s page shape', async () => {
-    const api = fromSdk({
+  it('adapts the SDK’s pages, turns a 429 into the catalog’s own signal, and a 404 into "gone"', async () => {
+    const client = (over: Partial<Channel3SdkClient['products']> = {}): Channel3SdkClient => ({
       products: {
-        search: async () => ({ data: [FIXTURES[1] as Channel3Product] }),
+        search: async () => ({ data: FIXTURES }),
         retrieve: async () => FIXTURES[1] as Channel3Product,
+        ...over,
       },
     });
-    expect(await api.search({ query: 'x', limit: 1 })).toHaveLength(1);
-    expect(
-      (
-        await fromSdk({
-          products: {
-            search: async () => ({ products: FIXTURES }),
-            retrieve: async () => FIXTURES[0] as Channel3Product,
-          },
-        }).search({ query: 'x', limit: 3 })
-      ).length,
-    ).toBe(3);
-    expect(
-      await fromSdk({
-        products: {
-          search: async () => ({}),
-          retrieve: async () => FIXTURES[0] as Channel3Product,
-        },
-      }).search({ query: 'x', limit: 3 }),
-    ).toEqual([]);
-    expect((await api.retrieve('p2'))?.id).toBe('p2');
+    expect(await fromSdk(client()).search({ query: 'x', limit: 3 })).toHaveLength(3);
+    expect((await fromSdk(client()).retrieve('p2'))?.id).toBe('p2');
+    const limited = client({
+      search: async () => {
+        throw new Channel3Error({ statusCode: 429, message: 'slow' });
+      },
+    });
+    await expect(fromSdk(limited).search({ query: 'x', limit: 1 })).rejects.toBeInstanceOf(
+      RateLimitError,
+    );
+    const gone = client({
+      retrieve: async () => {
+        throw new Channel3Error({ statusCode: 404, message: 'no' });
+      },
+    });
+    expect(await fromSdk(gone).retrieve('nope')).toBeUndefined();
+    const broken = client({
+      retrieve: async () => {
+        throw new Channel3Error({ statusCode: 500, message: 'boom' });
+      },
+    });
+    await expect(fromSdk(broken).retrieve('p')).rejects.toBeInstanceOf(Channel3Error);
   });
 });

@@ -22,6 +22,8 @@ export interface CoreDeps {
   /** The id PayPal gave the registered webhook, for verification. */
   readonly webhookId: string;
   readonly now: () => Date;
+  /** Revoking a mandate does not delete its PayPal token. For tokens that several workspaces share. */
+  readonly keepVaultTokens?: boolean | undefined;
   readonly breaker: CircuitBreaker;
   /** The policy an organisation runs under. */
   readonly policyFor: (orgId: OrganizationId) => Policy;

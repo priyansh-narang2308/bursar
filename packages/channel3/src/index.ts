@@ -10,7 +10,8 @@ export interface Channel3Product {
   readonly title: string;
   readonly brands?: readonly { readonly name: string }[];
   readonly images?: readonly { readonly url: string }[];
-  readonly category?: { readonly name?: string } | null;
+  /** Channel3 gives a `title`; fixtures may give a `name`. */
+  readonly category?: { readonly title?: string; readonly name?: string } | null;
   readonly offers?: readonly {
     readonly url: string;
     readonly domain: string;
@@ -73,7 +74,7 @@ export function normalize(product: Channel3Product): Quote | undefined {
     productId: product.id,
     title: product.title,
     brand: product.brands?.[0]?.name ?? null,
-    category: product.category?.name ?? 'general',
+    category: product.category?.title ?? product.category?.name ?? 'general',
     imageUrl: product.images?.[0]?.url ?? null,
     url: best.offer.url,
     domain: best.offer.domain.toLowerCase(),
@@ -261,23 +262,10 @@ export function createFixtureApi(
   };
 }
 
-/** The shape of `@channel3/sdk`'s client that this uses. Not run against the live API yet: it needs a key. */
-export interface Channel3SdkClient {
-  products: {
-    search(request: {
-      query: string;
-      limit?: number;
-    }): Promise<{ products?: readonly Channel3Product[]; data?: readonly Channel3Product[] }>;
-    retrieve(request: { product_id: string }): Promise<Channel3Product>;
-  };
-}
+export { type Channel3SdkClient, createLiveApi, fromSdk } from './live';
 
-export function fromSdk(client: Channel3SdkClient): ProductApi {
-  return {
-    async search(request) {
-      const page = await client.products.search(request);
-      return page.products ?? page.data ?? [];
-    },
-    retrieve: (productId) => client.products.retrieve({ product_id: productId }),
-  };
-}
+import recorded from '../fixtures/recorded.json' with { type: 'json' };
+
+/** Real products and retailers from Channel3, recorded once (`pnpm --filter @bursar/channel3 record`). */
+export const RECORDED_PRODUCTS: readonly Channel3Product[] =
+  recorded.products as unknown as Channel3Product[];

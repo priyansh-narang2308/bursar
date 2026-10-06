@@ -11,16 +11,19 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "record": "tsx --env-file=../../.env scripts/record.ts"
   },
   "dependencies": {
-    "@bursar/money": "workspace:*"
+    "@bursar/money": "workspace:*",
+    "@channel3/sdk": "catalog:"
   },
   "devDependencies": {
     "@bursar/tooling": "workspace:*",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "tsx": "catalog:"
   }
 }
