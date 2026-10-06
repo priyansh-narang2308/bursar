@@ -306,6 +306,38 @@ describe('endpoints', () => {
     });
   });
 
+  it('searches transactions for reconciliation, in exact amounts', async () => {
+    const { client, calls } = scripted([
+      reply(200, {
+        transaction_details: [
+          {
+            transaction_info: {
+              transaction_id: 'T1',
+              transaction_event_code: 'T0006',
+              transaction_amount: { currency_code: 'USD', value: '12.50' },
+              custom_field: 'bursar:v1:act:mac',
+              transaction_initiation_date: '2026-10-05T10:00:00Z',
+            },
+          },
+        ],
+      }),
+    ]);
+    const found = await client.transactions.search({
+      start: new Date('2026-10-05T00:00:00Z'),
+      end: new Date('2026-10-06T00:00:00Z'),
+    });
+    expect(found).toEqual([
+      {
+        id: 'T1',
+        code: 'T0006',
+        amount: usd(1250),
+        customId: 'bursar:v1:act:mac',
+        at: '2026-10-05T10:00:00Z',
+      },
+    ]);
+    expect(calls()[0]?.path).toBe('/v1/reporting/transactions');
+  });
+
   it('creates payouts with the batch and item ids that make a retry one payout', async () => {
     const { client, calls } = scripted([
       reply(201, { batch_header: { payout_batch_id: 'B1', batch_status: 'PENDING' } }),

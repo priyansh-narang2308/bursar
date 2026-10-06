@@ -140,6 +140,8 @@ export const decisions = pgTable(
     outcome: text().notNull(),
     requiredApprovals: integer().notNull(),
     trace: jsonb().notNull(),
+    /** What the rules were given, kept so the ruling can be replayed exactly. Null on older rows. */
+    inputs: jsonb(),
     inputsHash: text().notNull(),
     evaluatedAt: timestamptz().notNull(),
   },
@@ -388,4 +390,38 @@ export const outbox = pgTable('outbox', {
   payload: jsonb().notNull(),
   createdAt: createdAt(),
   deliveredAt: timestamptz(),
+});
+
+/** Goods received for one supplier's part of a cart. A payout waits for it to be INSPECTED. */
+export const deliveries = pgTable(
+  'deliveries',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    orgId: orgId(),
+    cartId: idCol('cart')
+      .notNull()
+      .references(() => carts.id),
+    supplierId: idCol('supplier')
+      .notNull()
+      .references(() => suppliers.id),
+    status: text().notNull().default('ORDERED'),
+    deliveredAt: timestamptz(),
+    inspectedAt: timestamptz(),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    unique('deliveries_cart_supplier').on(t.cartId, t.supplierId),
+    check('deliveries_status', oneOf(t.status, ['ORDERED', 'DELIVERED', 'INSPECTED', 'REJECTED'])),
+  ],
+);
+
+/** Every call to the product catalog and the credits it cost, so spending on it is visible and capped. */
+export const channel3Calls = pgTable('channel3_calls', {
+  id: uuid().primaryKey().defaultRandom(),
+  orgId: orgId(),
+  endpoint: text().notNull(),
+  credits: integer().notNull(),
+  latencyMs: integer().notNull(),
+  status: text().notNull(),
+  createdAt: createdAt(),
 });

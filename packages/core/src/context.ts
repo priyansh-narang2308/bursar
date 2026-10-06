@@ -5,6 +5,7 @@ import {
   cartLines,
   carts,
   decisions,
+  deliveries,
   envelopes,
   mandates,
   missions,
@@ -20,6 +21,8 @@ import { amountJson } from './util';
 
 export type ActionRow = typeof actions.$inferSelect;
 const HOUR = 3_600_000;
+/** After goods are inspected, a payout waits this long in case of a dispute. */
+export const COOLING_OFF_HOURS = 24;
 
 /** A cart read back from the database in the shape its hash is made from. */
 export async function loadCart(tx: Tx, cartId: string) {
@@ -50,6 +53,31 @@ export async function loadCart(tx: Tx, cartId: string) {
     })),
   };
   return { cart, rows, content, hash: cartHash(content) };
+}
+
+async function payoutFacts(tx: Tx, action: ActionRow): Promise<JsonValue> {
+  if (action.type !== 'PAYOUT' || action.cartId === null || action.supplierId === null) return null;
+  const [delivery] = await tx
+    .select()
+    .from(deliveries)
+    .where(and(eq(deliveries.cartId, action.cartId), eq(deliveries.supplierId, action.supplierId)));
+  if (delivery === undefined) return null;
+  const [capture] = await tx
+    .select()
+    .from(actions)
+    .where(
+      and(
+        eq(actions.cartId, action.cartId),
+        eq(actions.type, 'CAPTURE'),
+        eq(actions.state, 'CONFIRMED'),
+      ),
+    );
+  const inspectedAt = delivery.inspectedAt ?? new Date(0);
+  return {
+    inspected: delivery.status === 'INSPECTED',
+    coolingOffEndsAt: new Date(inspectedAt.getTime() + COOLING_OFF_HOURS * HOUR).toISOString(),
+    captureSettled: capture !== undefined,
+  };
 }
 
 async function priorPayouts(tx: Tx, supplierId: string): Promise<number> {
@@ -262,6 +290,6 @@ export async function buildContext(
     ),
     recent: await recentOrders(tx, action, now),
     approvals: await approvalFacts(tx, deps, action, cart?.hash, policy),
-    payout: null,
+    payout: await payoutFacts(tx, action),
   } as JsonObject;
 }

@@ -1,12 +1,17 @@
 import { standardPolicy } from '@bursar/policy';
 import { CircuitBreaker } from './breaker';
 import { buildCart, createMission, createSupplier, recordOffer } from './catalog';
+import { recordDelivery } from './deliveries';
 import { execute } from './executor';
 import { changeMandate, completeMandate, expireMandates, startMandate } from './mandates';
 import { decide, expireApprovals, propose } from './pipeline';
+import { receipt, replayDecision, verifyAudit } from './receipts';
+import { reconcile } from './reconcile';
 import type { CoreDeps } from './types';
+import { contain, resolveIncident } from './verifier';
 import { ingest, pollSubmitted, WEBHOOK_EVENT_TYPES } from './webhooks';
 
+export { record as recordAudit } from './audit';
 export { CircuitBreaker } from './breaker';
 export type { ExecuteResult } from './executor';
 export { MANDATE_TRANSITIONS } from './mandates';
@@ -44,6 +49,17 @@ export function createCore(options: CoreOptions) {
       decide: decide.bind(null, deps),
       expireApprovals: expireApprovals.bind(null, deps),
       execute: execute.bind(null, deps),
+    },
+    deliveries: { record: recordDelivery.bind(null, deps) },
+    incidents: {
+      contain: contain.bind(null, deps),
+      resolve: resolveIncident.bind(null, deps),
+      reconcile: reconcile.bind(null, deps),
+    },
+    receipts: {
+      get: receipt.bind(null, deps),
+      replay: replayDecision.bind(null, deps),
+      verifyAudit: verifyAudit.bind(null, deps),
     },
     webhooks: { ingest: ingest.bind(null, deps), pollSubmitted: pollSubmitted.bind(null, deps) },
   };

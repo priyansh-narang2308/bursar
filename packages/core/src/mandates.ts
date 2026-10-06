@@ -1,5 +1,5 @@
 import { decryptSecret, encryptSecret } from '@bursar/crypto';
-import { mandates, payers, policySets, withOrg } from '@bursar/db';
+import { incidents, mandates, payers, policySets, type Tx, withOrg } from '@bursar/db';
 import { moneyFromJSON } from '@bursar/money';
 import {
   type AmountJSON,
@@ -9,7 +9,7 @@ import {
   newId,
   type OrganizationId,
 } from '@bursar/schemas';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { emit, record } from './audit';
 import { type Actor, type CoreDeps, CoreError } from './types';
 import { requestIdFor } from './util';
@@ -82,10 +82,20 @@ export async function startMandate(
   });
 }
 
-async function load(tx: Parameters<Parameters<typeof withOrg>[2]>[0], mandateId: MandateId) {
+async function load(tx: Tx, mandateId: MandateId) {
   const [mandate] = await tx.select().from(mandates).where(eq(mandates.id, mandateId));
   if (mandate === undefined) throw new CoreError('NOT_FOUND', 'No such mandate.');
   return mandate;
+}
+
+/** A mandate frozen by an incident stays frozen until an owner has resolved the incident. */
+async function assertNoOpenIncident(tx: Tx): Promise<void> {
+  const open = await tx
+    .select()
+    .from(incidents)
+    .where(inArray(incidents.status, ['OPEN', 'CONTAINED']));
+  if (open.length > 0)
+    throw new CoreError('CONFLICT', 'There is an open incident. Resolve it before unfreezing.');
 }
 
 function assertMove(from: MandateStatus, to: MandateStatus): void {
@@ -144,6 +154,7 @@ export async function changeMandate(
   return withOrg(deps.db, orgId, async (tx) => {
     const mandate = await load(tx, mandateId);
     assertMove(mandateStatusSchema.parse(mandate.status), to);
+    if (to === 'ACTIVE') await assertNoOpenIncident(tx);
     if (to === 'REVOKED' && mandate.vaultTokenSealed !== null) {
       await deps.paypal.vault.deletePaymentToken(
         openVaultToken(deps, mandateId, mandate.vaultTokenSealed),
