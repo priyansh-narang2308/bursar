@@ -19,6 +19,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0013](0013-live-services-and-the-payer-pool.md) | Live services and the payer pool | Accepted |
 | [0014](0014-hardening-and-the-policy-lab-screen.md) | Hardening, and the Policy Lab on screen | Accepted |
 | [0015](0015-bryntum-gantt.md) | Bryntum Gantt for the delivery schedule | Accepted |
+| [0016](0016-scheduled-jobs-and-the-render-workflow.md) | Scheduled jobs and the Render Workflow | Accepted |
 
 ## Template
 

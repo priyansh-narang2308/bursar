@@ -216,6 +216,7 @@ describe('the dashboard', () => {
           },
         },
         problems: [],
+        ranOn: 'render-workflow',
         calls: [{ tool: 'search_offers', role: 'RESEARCHER', ok: true, code: null, ms: 12 }],
       },
     });
@@ -224,6 +225,7 @@ describe('the dashboard', () => {
     expect(await screen.findByText('Standing desk basic')).toBeInTheDocument();
     expect(screen.getByText('Pending approval')).toBeInTheDocument();
     expect(screen.getByText('search_offers')).toBeInTheDocument();
+    expect(screen.getByText('Ran on a Render Workflow')).toBeInTheDocument();
   });
 
   it('shows a blocked proposal as blocked, not approved', async () => {

@@ -13,6 +13,7 @@ import { openApiDocument } from './openapi';
 import { agentRoutes } from './routes/agents';
 import { demoRoutes } from './routes/demo';
 import { healthRoutes } from './routes/health';
+import { type JobsDeps, jobRoutes } from './routes/jobs';
 import { type AgentToolsDeps, mcpRoutes } from './routes/mcp';
 import { moneyRoutes } from './routes/money';
 import { oversightRoutes } from './routes/oversight';
@@ -61,6 +62,8 @@ export interface AppDeps {
   /** Demo-only helpers. Without them the demo routes that need them answer 404. */
   readonly demo?: DemoHooks;
   readonly integrations?: Integrations;
+  /** A scheduler's door (`POST /internal/jobs`). Without it there is none. */
+  readonly jobs?: JobsDeps;
 }
 
 function integrationsOf(deps: AppDeps): Integrations {
@@ -116,6 +119,7 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
     if (deps.agentTools !== undefined) v1.route('/', mcpRoutes(db, deps.core, deps.agentTools));
   }
   app.route('/v1', v1);
+  if (deps.jobs !== undefined) app.route('/', jobRoutes(deps.jobs));
   if (deps.core !== undefined) {
     // PayPal's events are small; refuse anything else before it is read and its signature checked.
     app.use(

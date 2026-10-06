@@ -329,7 +329,18 @@ export function MissionDetail() {
           </span>
         }
       />
-      <Panel title="Agent trace">
+      <Panel
+        title={
+          <span className="row">
+            Agent trace
+            {trace?.ranOn === 'render-workflow' && (
+              <Badge tone="ok" plain>
+                Ran on a Render Workflow
+              </Badge>
+            )}
+          </span>
+        }
+      >
         {!trace && !run.isPending && (
           <EmptyState title="The agents have not run yet">
             Press Run agents. The Planner splits the goal, a Researcher searches the catalog for

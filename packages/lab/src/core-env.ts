@@ -46,7 +46,8 @@ export function createCoreLab(deps: {
       payerName: 'Lab',
       cap: usd(100_000_000),
       perMissionCap: usd(50_000_000),
-      validFrom: new Date(now - 86_400_000),
+      // Valid from the start of time, whatever the lab's clock says: scenarios live in their own made-up present.
+      validFrom: new Date(0),
       validTo: new Date(now + 3_650 * 86_400_000),
       paymentTokenId: 'lab-token',
     });

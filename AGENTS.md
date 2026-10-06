@@ -87,6 +87,10 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - A pooled buyer's token is shared: revoking a workspace's mandate must not delete it (`keepVaultTokens`).
 - Anything that spends credits or calls a live service is gated behind an environment flag in tests (`PAYPAL_LIVE_TESTS=1`, `CHANNEL3_LIVE_TESTS=1`) and skipped otherwise.
 
+### Scheduled work
+- Work that runs on a clock goes behind `POST /internal/jobs` (secret token, constant-time compare), one reported step at a time. Cross-tenant jobs live there and nowhere else.
+- A Render Workflow task only proposes. It never executes, approves or pays, and what it needs from the database comes from `BURSAR_DATABASE_URL`.
+
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).
 - PayPal credentials exist only in the executor and workflow service.

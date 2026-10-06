@@ -30,6 +30,7 @@
     "@bursar/paypal": "workspace:*",
     "@bursar/paypal-fake": "workspace:*",
     "@bursar/policy": "workspace:*",
+    "@bursar/render-workflow": "workspace:*",
     "@bursar/schedule": "workspace:*",
     "@bursar/schemas": "workspace:*",
     "@bursar/workflows": "workspace:*",
