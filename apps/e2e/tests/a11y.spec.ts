@@ -4,18 +4,27 @@ import { openWorkspace, visit } from './support';
 
 const RULES = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
-// The landing page fades its sections in; a contrast check taken mid-fade reads half-transparent text.
-// Only what is on screen matters: sections further down stay hidden until they are scrolled to.
+// The landing page fades its sections in, with script and with CSS; a contrast check taken mid-fade
+// reads half-transparent text. Only what is on screen matters: sections further down stay hidden
+// until they are scrolled to.
 async function settled(page: import('@playwright/test').Page) {
   await page
     .waitForFunction(
-      () =>
-        [...document.querySelectorAll<HTMLElement>('[style*="opacity"]')]
+      () => {
+        const done = document
+          .getAnimations()
+          .every(
+            (a) =>
+              a.playState === 'finished' || a.effect?.getComputedTiming().iterations === Infinity,
+          );
+        const shown = [...document.querySelectorAll<HTMLElement>('[style*="opacity"]')]
           .filter((el) => {
             const box = el.getBoundingClientRect();
             return el.style.opacity !== '' && box.top < window.innerHeight && box.bottom > 0;
           })
-          .every((el) => el.style.opacity === '1'),
+          .every((el) => el.style.opacity === '1');
+        return done && shown;
+      },
       undefined,
       { timeout: 8000 },
     )
