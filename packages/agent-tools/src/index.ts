@@ -205,6 +205,7 @@ const handlers = {
     });
     return {
       cartId: cart.cartId,
+      actionId: proposal.actionId,
       total: display(BigInt(cart.total.minor), cart.total.currency),
       state: proposal.state,
       outcome: proposal.outcome,

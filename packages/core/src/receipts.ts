@@ -50,6 +50,7 @@ export async function receipt(deps: CoreDeps, orgId: OrganizationId, actionId: s
         type: action.type,
         state: action.state,
         proposedBy: action.proposedBy,
+        missionId: action.missionId,
         amountMinor: text(action.amountMinor),
         currency: action.currency,
         idempotencyKey: action.idempotencyKey,

@@ -15,7 +15,13 @@ const role = z.enum(['OWNER', 'APPROVER', 'OPERATOR', 'AUDITOR', 'AGENT', 'VERIF
 
 /** Every route the API serves. A test fails if this list and the app disagree. */
 export const OPERATIONS: readonly Operation[] = [
-  { method: 'get', path: '/healthz', summary: 'Liveness', permission: 'public', status: 200 },
+  {
+    method: 'get',
+    path: '/healthz',
+    summary: 'Liveness',
+    permission: 'public',
+    status: 200,
+  },
   {
     method: 'get',
     path: '/readyz',
@@ -40,13 +46,33 @@ export const OPERATIONS: readonly Operation[] = [
   },
   {
     method: 'post',
+    path: '/v1/demo/mandates/:id/approve',
+    summary: 'Approve a mandate as the buyer would on PayPal’s page (demo mode only)',
+    permission: 'mandates:write',
+    status: 200,
+  },
+  {
+    method: 'post',
+    path: '/v1/missions/:id/run',
+    summary: 'Run the agents on a mission and return what they did (demo mode only)',
+    permission: 'actions:propose',
+    status: 200,
+  },
+  {
+    method: 'post',
     path: '/v1/demo/role',
     summary: 'Switch role in the demo',
     permission: 'signed-in',
     body: z.object({ role }),
     status: 200,
   },
-  { method: 'get', path: '/v1/me', summary: 'Who am I', permission: 'signed-in', status: 200 },
+  {
+    method: 'get',
+    path: '/v1/me',
+    summary: 'Who am I',
+    permission: 'signed-in',
+    status: 200,
+  },
   {
     method: 'get',
     path: '/v1/workspace',
@@ -324,7 +350,9 @@ export function openApiDocument() {
         : {
             requestBody: {
               required: true,
-              content: { 'application/json': { schema: z.toJSONSchema(op.body) } },
+              content: {
+                'application/json': { schema: z.toJSONSchema(op.body) },
+              },
             },
           }),
       responses: {
@@ -332,7 +360,9 @@ export function openApiDocument() {
         default: {
           description: 'An error',
           content: {
-            'application/problem+json': { schema: { $ref: '#/components/schemas/ProblemDetails' } },
+            'application/problem+json': {
+              schema: { $ref: '#/components/schemas/ProblemDetails' },
+            },
           },
         },
       },

@@ -19,6 +19,16 @@ import { webhookRoutes } from './routes/webhooks';
 import { workspaceRoutes } from './routes/workspace';
 import type { AppEnv } from './types';
 
+/**
+ * What a demo server adds: a seeded workspace, a stand-in for the buyer approving a mandate on PayPal's page,
+ * and a run of the agents with a trace. Only the demo server supplies these; a real one leaves them out.
+ */
+export interface DemoHooks {
+  seed(orgId: string, ownerId: string): Promise<void>;
+  approveMandate(orgId: string, mandateId: string, ownerId: string): Promise<void>;
+  runAgents(orgId: string, missionId: string): Promise<unknown>;
+}
+
 export interface AppDeps {
   readonly config: Config;
   readonly db: Db;
@@ -28,6 +38,8 @@ export interface AppDeps {
   readonly core?: Core;
   /** What agents may use over MCP. Without it the MCP door is closed. */
   readonly agentTools?: AgentToolsDeps;
+  /** Demo-only helpers. Without them the demo routes that need them answer 404. */
+  readonly demo?: DemoHooks;
 }
 
 /** The whole API as a value, so tests and the server build it the same way. */
@@ -51,7 +63,7 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
   const v1 = new Hono<AppEnv>();
   v1.use(rateLimit({ windowMs: 60_000, max: 300 }));
   v1.use(authenticate({ db, config, now }));
-  v1.route('/', demoRoutes({ db, config, now }));
+  v1.route('/', demoRoutes({ db, config, now, hooks: deps.demo }));
   v1.route('/', workspaceRoutes(db));
   v1.route('/', agentRoutes(db));
   if (deps.core !== undefined) {

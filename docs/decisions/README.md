@@ -15,6 +15,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0009](0009-the-money-loop.md)                  | The money loop                              | Accepted |
 | [0010](0010-oversight-catalog-and-agents.md)    | Oversight, the catalog and the agents       | Accepted |
 | [0011](0011-schedules-workflows-lab-and-the-mcp-gateway.md) | Schedules, workflows, the lab and the MCP gateway | Accepted |
+| [0012](0012-web-app-and-demo-server.md) | The web app and the demo server | Accepted |
 
 ## Template
 

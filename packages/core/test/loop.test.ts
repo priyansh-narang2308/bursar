@@ -259,6 +259,18 @@ describe('the decision pipeline', () => {
     });
   });
 
+  it('does not count an approved hold twice against the envelope when it runs', async () => {
+    // The cart is 3,000 of a 5,000 envelope: reserved at approval, then asked again at execution.
+    w = await world({ lenient: false, budget: 5_000 });
+    const proposal = await authorize((await w.cart()).cartId);
+    const checker = { kind: 'USER' as const, id: await w.person() };
+    await w.core.actions.decide(w.orgId, checker, proposal.approvalIds[0] as string, 'APPROVE');
+    expect(await w.core.actions.execute(w.orgId, proposal.actionId)).toMatchObject({
+      outcome: 'confirmed',
+    });
+    expect((await envelope())?.heldMinor).toBe(3_000n);
+  });
+
   it('refuses an approval that was altered after it was given: the policy checks it again at execution', async () => {
     w = await world({ lenient: false });
     const proposal = await authorize((await w.cart()).cartId);

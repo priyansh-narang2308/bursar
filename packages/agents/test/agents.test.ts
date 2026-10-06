@@ -6,6 +6,7 @@ import { standardPolicy } from '@bursar/policy';
 import { newId } from '@bursar/schemas';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { type AgentDeps, buy, plan, research, runMission } from '../src';
+import { demoModel, needsFromGoal } from '../src/demo';
 import { EVAL_CASES, EVAL_CATALOG, type EvalCase, evaluate, heuristicModel } from '../src/eval';
 
 let w: Awaited<ReturnType<typeof world>>;
@@ -160,5 +161,32 @@ describe('the eval harness', () => {
     expect(report.summary.constraintsMetRate).toBeGreaterThanOrEqual(0.7);
     expect(report.summary.meanTokens).toBeGreaterThan(0);
     expect(byId['lamps']?.constraintsMet).toBe(false); // 20 lamps do not fit the budget, and the score says so
+  });
+});
+
+describe('the demo model', () => {
+  it('reads what a goal asks for, with quantities', () => {
+    expect(needsFromGoal('Equip a team with 4 standing desks and two office chairs')).toEqual([
+      { label: 'desks', query: 'standing desk', quantity: 4 },
+      { label: 'chairs', query: 'office chair', quantity: 2 },
+    ]);
+    expect(needsFromGoal('a lamp for the corner')).toEqual([
+      { label: 'lamps', query: 'lamp', quantity: 1 },
+    ]);
+    expect(needsFromGoal('something unusual entirely')[0]).toMatchObject({
+      label: 'items',
+      quantity: 1,
+    });
+  });
+
+  it('plans from the goal and searches like the scripted model', async () => {
+    const { deps } = await setup(demoModel());
+    const goal = await w.core.catalog.createMission(w.orgId, w.owner, {
+      goal: 'Get 3 monitors',
+      budget: usd(100_000),
+      mandateId: w.mandateId,
+    });
+    const made = await plan({ ...deps, missionId: goal?.id as never });
+    expect(made.needs).toMatchObject([{ label: 'monitors', quantity: 3 }]);
   });
 });

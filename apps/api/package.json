@@ -10,7 +10,8 @@
     "start": "tsx --env-file-if-exists=../../.env src/server.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "dev:demo": "tsx src/dev.ts"
   },
   "dependencies": {
     "@bursar/agent-tools": "workspace:*",
@@ -27,13 +28,16 @@
     "hono": "catalog:",
     "pino": "catalog:",
     "tsx": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "@bursar/agents": "workspace:*",
+    "@bursar/llm": "workspace:*",
+    "@bursar/money": "workspace:*",
+    "@bursar/paypal-fake": "workspace:*",
+    "@electric-sql/pglite": "catalog:"
   },
   "devDependencies": {
-    "@bursar/paypal-fake": "workspace:*",
     "@modelcontextprotocol/sdk": "catalog:",
     "@bursar/tooling": "workspace:*",
-    "@electric-sql/pglite": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",
