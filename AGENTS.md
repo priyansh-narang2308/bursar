@@ -21,6 +21,8 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 | `pnpm db:migrate` | Apply the migrations to `DATABASE_URL` (safe to repeat) |
 | `pnpm db:reset` | Wipe the local database and migrate it again |
 | `pnpm dev:demo` | Run the whole product with no keys and no Docker: an in-memory Postgres, the fake PayPal, an offline catalog and a scripted model, on port 8787 |
+| `pnpm dev:payer` | Add one sandbox buyer to the demo's payer pool: prints a PayPal address to approve once, then seals the payment token into `.bursar/payers.json` (git-ignored) |
+| `pnpm dev:spike` | One real purchase on PayPal's sandbox through the money loop (hold, capture, refund) using a pooled buyer. Sandbox money only |
 | `pnpm dev:web` | Run the web app (Vite, port 5173), which proxies `/v1` to the demo API |
 | `pnpm dev:doctor` | Check the developer environment: Node, pnpm, Claude Code plugins, sponsor skills, optional tools (`--strict` fails on warnings, `--json` for machines) |
 | `pnpm dev:skills` | Restore the sponsor skills pinned in `skills-lock.json` into `.claude/skills` (`--dry-run`, `--force`) |
@@ -76,6 +78,11 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - The app is dark only, and the landing page and the dashboard share one set of tokens and components in `apps/web/src/styles` and `components/ui.tsx`. Add a colour only when it means something (green healthy, amber waiting, red dangerous).
 - The web app never does arithmetic on money: it formats minor units with `@bursar/money` and sends typed amounts as exact cents (`minorFromInput`). A screen that shows something simulated says so with `SimBadge`.
 - Anything the demo server fakes (the buyer's PayPal approval, the scripted model) is behind `DemoHooks` and answers 404 outside demo mode.
+
+### Live services
+- The demo runs on stand-ins unless told otherwise: `BURSAR_PAYPAL=sandbox` uses PayPal's real sandbox, `BURSAR_CATALOG=live` searches Channel3 live. Never point either at anything but the sandbox, and never print a key, a token or a sealed value.
+- A pooled buyer's token is shared: revoking a workspace's mandate must not delete it (`keepVaultTokens`).
+- Anything that spends credits or calls a live service is gated behind an environment flag in tests (`PAYPAL_LIVE_TESTS=1`, `CHANNEL3_LIVE_TESTS=1`) and skipped otherwise.
 
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).

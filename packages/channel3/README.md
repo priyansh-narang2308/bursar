@@ -8,4 +8,4 @@ The product catalog behind search. `createCatalog` wraps any `ProductApi` (a fix
 - **Re-quotes.** `requote` is never cached and reports how far a price moved, in basis points, since it was shortlisted.
 - **Every call is reported** (`onCall`), cached or not, for the `channel3_calls` table.
 
-The SDK adapter is written to the SDK's typings and has not run against the live API (it needs a key).
+`createLiveApi({ apiKey })` is the real thing (`@channel3/sdk`): a gated test (`CHANNEL3_LIVE_TESTS=1`) searches the live catalog and re-quotes a product. `RECORDED_PRODUCTS` is real data recorded once with `pnpm --filter @bursar/channel3 record`, so the demo shows real retailers with no key.

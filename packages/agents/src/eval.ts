@@ -29,6 +29,17 @@ export interface EvalCase {
 }
 
 const SELLER = 'shop.example';
+const CATEGORY: Record<string, string> = {
+  d: 'Desks',
+  c: 'Chairs',
+  m: 'Monitors',
+  l: 'Lamps',
+  k: 'Keyboards',
+  p: 'Paper',
+  w: 'Whiteboards',
+  h: 'Headsets',
+  x: 'Desk accessories',
+};
 const item = (
   id: string,
   title: string,
@@ -38,7 +49,7 @@ const item = (
   id,
   title,
   brands: [{ name: 'Generic' }],
-  category: { name: 'office' },
+  category: { name: CATEGORY[id.slice(0, 1)] ?? 'Office' },
   offers: [
     {
       url: `https://${SELLER}/${id}`,
@@ -199,6 +210,8 @@ function pick(text: string): LlmResponse {
   }));
   const best = offersSeen
     .filter((o) => o.availability === 'IN_STOCK')
+    // The first few are the best matches; among those, the cheapest. The very cheapest of everything is often an accessory.
+    .slice(0, 3)
     .sort((a, b) => centsOf(a.price) - centsOf(b.price))[0];
   return useTool('pick', {
     offerId: best?.offerId ?? null,
