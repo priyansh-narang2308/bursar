@@ -17,6 +17,7 @@
     "typecheck": "pnpm -r --workspace-concurrency=Infinity typecheck && tsc --noEmit -p tsconfig.json",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter @bursar/e2e test:e2e",
+    "demo:record": "pnpm --filter @bursar/e2e demo:record",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "db:up": "docker compose up -d --wait postgres",
     "db:down": "docker compose down",

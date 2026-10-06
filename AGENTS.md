@@ -13,6 +13,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 | `pnpm install` | Install dependencies (build scripts are allow-listed) and install git hooks |
 | `pnpm check` | The full gate: lint, typecheck, test |
 | `pnpm test:e2e` | Browser tests (Playwright, with axe accessibility checks): builds the web app, starts the demo server on port 8790 and drives it in Chrome. Locally it uses the installed Chrome; CI installs Chromium. Not part of `pnpm check` |
+| `pnpm demo:record` | Records the demo video's screen track and measures every number the script quotes. Against the local demo server on :8790 by default, or `BASE_URL=https://… pnpm demo:record` for the deployed site. Writes `.demo/` (ignored) and `docs/submission/` |
 | `pnpm lint` / `pnpm lint:fix` | Biome lint and format check; `lint:fix` also applies safe fixes |
 | `pnpm format` | Biome format only |
 | `pnpm typecheck` | `tsc --noEmit` in every package (TypeScript 7) |

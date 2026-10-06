@@ -8,13 +8,15 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "playwright test --list",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "demo:record": "node --import tsx recorder/record.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",
     "@bursar/tooling": "workspace:*",
     "@playwright/test": "catalog:",
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "tsx": "catalog:"
   }
 }
