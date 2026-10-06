@@ -13,6 +13,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@bryntum/gantt": "catalog:",
+    "@bryntum/gantt-react": "catalog:",
     "@bursar/money": "workspace:*",
     "@fontsource-variable/inter": "catalog:",
     "@fontsource-variable/jetbrains-mono": "catalog:",

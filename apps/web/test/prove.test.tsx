@@ -6,6 +6,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/App';
 import { ToastProvider } from '../src/components/ui';
 
+// Bryntum needs a real browser layout, so the tests stand in for it and check what it is given.
+vi.mock('../src/components/ScheduleGantt', () => ({
+  default: ({ timing }: { timing: { finish: number; deadlineSlack: number | null } }) => (
+    <div data-testid="gantt">{`finish ${timing.finish}, slack ${timing.deadlineSlack}`}</div>
+  ),
+}));
+
 type Handler = (body: unknown) => { status?: number; json: unknown };
 let routes: Record<string, Handler>;
 const calls: { method: string; path: string; body: unknown }[] = [];
@@ -197,6 +204,11 @@ describe('schedule', () => {
       await screen.findByRole('button', { name: 'Delay the longest delivery' }),
     );
     expect(await screen.findByText('3 days late')).toBeInTheDocument();
+    expect(screen.getByTestId('gantt')).toHaveTextContent('finish 10, slack -3'); // the late plan is what is drawn
+    await userEvent.click(screen.getByRole('tab', { name: 'Recovery' }));
+    expect(screen.getByTestId('gantt')).toHaveTextContent('finish 6, slack 1');
+    await userEvent.click(screen.getByRole('tab', { name: 'The plan' }));
+    expect(screen.getByTestId('gantt')).toHaveTextContent('slack 1');
     expect(screen.getByText('Desk premium')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Propose the recovery' }));
     expect(
@@ -209,7 +221,9 @@ describe('schedule', () => {
   });
 
   it('says when no alternative is fast enough', async () => {
-    routes['GET /v1/missions/mis_1/schedule'] = () => ({ json: { names: {}, ...timing(6, 1) } });
+    routes['GET /v1/missions/mis_1/schedule'] = () => ({
+      json: { start: '2026-10-06T00:00:00Z', names: {}, ...timing(6, 1) },
+    });
     routes['POST /v1/missions/mis_1/replan'] = () => ({
       json: {
         names: {},

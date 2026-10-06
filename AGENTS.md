@@ -79,6 +79,8 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - The web app never does arithmetic on money: it formats minor units with `@bursar/money` and sends typed amounts as exact cents (`minorFromInput`). A screen that shows something simulated says so with `SimBadge`.
 - Anything the demo server fakes (the buyer's PayPal approval, the scripted model) is behind `DemoHooks` and answers 404 outside demo mode.
 
+- Bryntum comes from the public trial packages by alias (ADR-0015); its install script stays denied in `allowBuilds`. Anything Bryntum draws is fed by data the server computed, and the chart is read-only.
+
 ### Live services
 - The demo runs on stand-ins unless told otherwise: `BURSAR_PAYPAL=sandbox` uses PayPal's real sandbox, `BURSAR_CATALOG=live` searches Channel3 live. Never point either at anything but the sandbox, and never print a key, a token or a sealed value.
 - A pooled buyer's token is shared: revoking a workspace's mandate must not delete it (`keepVaultTokens`).

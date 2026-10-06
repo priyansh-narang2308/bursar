@@ -18,6 +18,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0012](0012-web-app-and-demo-server.md) | The web app and the demo server | Accepted |
 | [0013](0013-live-services-and-the-payer-pool.md) | Live services and the payer pool | Accepted |
 | [0014](0014-hardening-and-the-policy-lab-screen.md) | Hardening, and the Policy Lab on screen | Accepted |
+| [0015](0015-bryntum-gantt.md) | Bryntum Gantt for the delivery schedule | Accepted |
 
 ## Template
 
