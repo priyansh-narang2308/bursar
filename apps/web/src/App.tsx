@@ -16,6 +16,7 @@ import { Mandate } from './pages/Mandate';
 import { MissionDetail, Missions } from './pages/Missions';
 import { Overview } from './pages/Overview';
 import { Policy } from './pages/Policy';
+import { Limits, Security } from './pages/Public';
 import { Schedule } from './pages/Schedule';
 
 const SOON: [string, string, string][] = [
@@ -31,6 +32,8 @@ export function App() {
     <ErrorBoundary>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/security" element={<Security />} />
+        <Route path="/limits" element={<Limits />} />
         <Route path="/_ui" element={<Gallery />} />
         <Route
           path="/dashboard"
