@@ -4,7 +4,17 @@ import { openWorkspace, visit } from './support';
 
 const RULES = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
+// The landing page fades its sections in; a contrast check taken mid-fade reads half-transparent text.
+async function settled(page: import('@playwright/test').Page) {
+  await page.waitForFunction(() =>
+    [...document.querySelectorAll<HTMLElement>('[style*="opacity"]')].every(
+      (el) => el.style.opacity === '1',
+    ),
+  );
+}
+
 async function noViolations(page: import('@playwright/test').Page, exclude: string[] = []) {
+  await settled(page);
   const builder = new AxeBuilder({ page }).withTags(RULES);
   for (const selector of exclude) builder.exclude(selector);
   const { violations } = await builder.analyze();
