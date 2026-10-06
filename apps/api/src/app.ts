@@ -3,9 +3,9 @@ import type { Db } from '@bursar/db';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
-import { secureHeaders } from 'hono/secure-headers';
 import { authenticate } from './auth';
 import type { Config } from './config';
+import { apiHeaders } from './http/headers';
 import { accessLog, rateLimit, requestId, sameOrigin } from './http/middleware';
 import { ApiError, handleError } from './http/problem';
 import type { Logger } from './logger';
@@ -89,7 +89,7 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
 
   app.use(requestId());
   app.use(accessLog(logger));
-  app.use(secureHeaders());
+  app.use(apiHeaders());
   app.use(cors({ origin: config.publicBaseUrl, credentials: true }));
   app.onError(handleError);
   app.notFound(() => {

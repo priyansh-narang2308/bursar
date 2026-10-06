@@ -1,4 +1,6 @@
+import { Hono } from 'hono';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { webHeaders } from '../src/http/headers';
 import { createTestApp, openWorkspace, type TestApp } from './support';
 
 let t: TestApp;
@@ -123,5 +125,26 @@ describe('the scheduler door', () => {
     expect(await ok.json()).toMatchObject({ ok: true, result: { reconciled: 3 } });
     expect(runs).toBe(1);
     await app.close();
+  });
+});
+
+describe('what a browser is allowed to do with a page', () => {
+  it('lets the API load nothing and keeps it out of frames', async () => {
+    const reply = await t.app.request('/healthz');
+    const policy = reply.headers.get('content-security-policy') ?? '';
+    expect(policy).toContain("default-src 'none'");
+    expect(policy).toContain("frame-ancestors 'none'");
+    expect(reply.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(reply.headers.get('permissions-policy')).toMatch(/camera=\(\)/);
+  });
+
+  it('holds the web app to its own scripts, with no eval and no framing', async () => {
+    const page = new Hono().use('*', webHeaders()).get('/', (c) => c.html('<p>hi</p>'));
+    const policy = (await page.request('/')).headers.get('content-security-policy') ?? '';
+    expect(policy).toContain("script-src 'self'");
+    expect(policy).toContain("connect-src 'self'");
+    expect(policy).toContain("frame-ancestors 'none'");
+    expect(policy).toContain("object-src 'none'");
+    expect(policy).not.toMatch(/unsafe-eval|script-src[^;]*unsafe-inline|\*/);
   });
 });

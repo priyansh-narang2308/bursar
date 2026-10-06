@@ -194,6 +194,8 @@ A caller names what to buy, never how much or who is paid. The amount comes from
 
 ## Security model
 
+The full table of threats, the control for each and the test that proves it is in [docs/threat-model.md](docs/threat-model.md).
+
 - **Sandbox only.** `ALLOW_LIVE` must be `false`; the PayPal base URL is asserted at startup.
 - **No trusted amounts.** Totals are recomputed server-side from stored snapshots. Catalog prices are re-quoted before buying.
 - **Prompt injection is contained structurally.** Tools carry no amount, payee or currency, external text is fenced, and a model's pick must name an id a tool returned.
