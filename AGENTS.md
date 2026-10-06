@@ -12,6 +12,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 | --- | --- |
 | `pnpm install` | Install dependencies (build scripts are allow-listed) and install git hooks |
 | `pnpm check` | The full gate: lint, typecheck, test |
+| `pnpm test:e2e` | Browser tests (Playwright, with axe accessibility checks): builds the web app, starts the demo server on port 8790 and drives it in Chrome. Locally it uses the installed Chrome; CI installs Chromium. Not part of `pnpm check` |
 | `pnpm lint` / `pnpm lint:fix` | Biome lint and format check; `lint:fix` also applies safe fixes |
 | `pnpm format` | Biome format only |
 | `pnpm typecheck` | `tsc --noEmit` in every package (TypeScript 7) |
@@ -72,6 +73,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - Reconciliation is cross-tenant: run it from a job, never from a tenant route.
 
 - Any tool reachable over MCP goes through `@bursar/mcp-gateway`. PayPal's own toolkit tools are deny by default: classify a new one before it can be reached, and never register one that moves money.
+- The Treasurer (Studio's assistant, ADR-0018) holds only the tools in `TREASURER_TOOLS` in `@bursar/schemas`, all read-only. Add one only there, with no amount, payee or currency in it and no way to move money; a test on each side holds the list to that.
 - Work that may run twice (a queue, a retry) is a task in `@bursar/workflows`, keyed so a repeat does nothing. A replan or recovery proposes through the decision pipeline and never orders.
 - When the Policy Lab finds a hole, freeze it in `packages/lab/regressions/` with the patch that fixes it.
 
@@ -80,6 +82,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - The web app never does arithmetic on money: it formats minor units with `@bursar/money` and sends typed amounts as exact cents (`minorFromInput`). A screen that shows something simulated says so with `SimBadge`.
 - Anything the demo server fakes (the buyer's PayPal approval, the scripted model) is behind `DemoHooks` and answers 404 outside demo mode.
 
+- AG Studio draws the cockpit (ADR-0017). Every figure comes from `GET /v1/cockpit`, already summed; Studio's tables hold no amounts to add up, and its custom widgets read a store, not context.
 - Bryntum comes from the public trial packages by alias (ADR-0015); its install script stays denied in `allowBuilds`. Anything Bryntum draws is fed by data the server computed, and the chart is read-only.
 
 ### Live services

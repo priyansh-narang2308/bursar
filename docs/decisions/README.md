@@ -20,6 +20,8 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0014](0014-hardening-and-the-policy-lab-screen.md) | Hardening, and the Policy Lab on screen | Accepted |
 | [0015](0015-bryntum-gantt.md) | Bryntum Gantt for the delivery schedule | Accepted |
 | [0016](0016-scheduled-jobs-and-the-render-workflow.md) | Scheduled jobs and the Render Workflow | Accepted |
+| [0017](0017-ag-studio-cockpit.md) | The AG Studio cockpit | Accepted |
+| [0018](0018-the-treasurer.md) | The Treasurer, Studio's assistant | Accepted |
 
 ## Template
 

@@ -1,4 +1,5 @@
 export * from './api';
+export * from './cockpit';
 export * from './common';
 export * from './entities/audit';
 export * from './entities/commerce';
