@@ -6,5 +6,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   server: { port: 5173, proxy: { '/v1': 'http://localhost:8787' } },
+  // Bryntum is one large module; pre-bundling it keeps it from loading twice in development.
+  optimizeDeps: { include: ['@bryntum/gantt'] },
   build: { sourcemap: true },
 });

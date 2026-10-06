@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Gantt } from '../components/Gantt';
 import {
   Badge,
   EmptyState,
@@ -16,6 +15,11 @@ import { useMissions, useSchedule } from '../lib/queries';
 import type { ReplanView, TimingView } from '../lib/types';
 import { PageHead } from './parts';
 
+// The Gantt library is large, so it is fetched only when this page is opened.
+const ScheduleGantt = lazy(() => import('../components/ScheduleGantt'));
+
+type View = 'plan' | 'delayed' | 'recovered';
+
 function Verdict({ timing }: { timing: TimingView }) {
   const slack = timing.deadlineSlack;
   if (slack === null) return <Badge>No deadline</Badge>;
@@ -28,6 +32,40 @@ function Verdict({ timing }: { timing: TimingView }) {
     );
   return (
     <Badge tone="ok">{slack === 0 ? 'On the deadline' : `${slack} day${plural} to spare`}</Badge>
+  );
+}
+
+function Tabs({
+  view,
+  onView,
+  result,
+}: {
+  view: View;
+  onView: (v: View) => void;
+  result: ReplanView | null;
+}) {
+  const tabs: [View, string, boolean][] = [
+    ['plan', 'The plan', true],
+    ['delayed', 'After the delay', result !== null],
+    ['recovered', 'Recovery', result?.recovered != null && result.swaps.length > 0],
+  ];
+  return (
+    <span className="row" role="tablist" aria-label="Schedule view" style={{ gap: 4 }}>
+      {tabs
+        .filter(([, , shown]) => shown)
+        .map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={view === id}
+            className={view === id ? 'btn btn-sm' : 'btn btn-sm btn-ghost'}
+            onClick={() => onView(id)}
+          >
+            {label}
+          </button>
+        ))}
+    </span>
   );
 }
 
@@ -82,12 +120,10 @@ function DelayControls({
 
 function Recovery({
   result,
-  scale,
   busy,
   onApply,
 }: {
   result: ReplanView;
-  scale: number;
   busy: boolean;
   onApply: () => void;
 }) {
@@ -101,12 +137,12 @@ function Recovery({
   if (!first)
     return <div className="callout">The delay is absorbed: the plan still meets its deadline.</div>;
   return (
-    <Panel title="Recovery" action={<Verdict timing={result.recovered} />} flush>
-      <Gantt timing={result.recovered} names={result.names} scaleTo={scale} />
-      <div className="panel-body row-between" style={{ borderTop: '1px solid var(--border)' }}>
+    <Panel title="Recovery">
+      <div className="row-between">
         <span className="muted">
           Swap to <strong style={{ color: 'var(--text)' }}>{first.label}</strong> ({first.leadDays}{' '}
-          day{first.leadDays === 1 ? '' : 's'} to deliver).
+          day{first.leadDays === 1 ? '' : 's'} to deliver). It is only a proposal: policy and a
+          person still decide.
         </span>
         {result.applied ? (
           <Link to="/dashboard/approvals" className="btn btn-sm">
@@ -131,28 +167,15 @@ function Recovery({
   );
 }
 
-function Outcome({
-  result,
-  busy,
-  onApply,
-}: {
-  result: ReplanView;
-  busy: boolean;
-  onApply: () => void;
-}) {
-  const scale = Math.max(result.delayed.finish, result.baseline.finish);
-  return (
-    <>
-      <Panel
-        title={`After the delay: ${result.delayedTask} +${result.days} days`}
-        action={<Verdict timing={result.delayed} />}
-        flush
-      >
-        <Gantt timing={result.delayed} names={result.names} scaleTo={scale} />
-      </Panel>
-      <Recovery result={result} scale={scale} busy={busy} onApply={onApply} />
-    </>
-  );
+/** Which schedule a tab asks for. A tab with nothing behind it shows the plan. */
+function timingFor(
+  view: View,
+  plan: TimingView | undefined,
+  result: ReplanView | null,
+): TimingView | undefined {
+  if (result && view === 'delayed') return result.delayed;
+  if (result?.recovered && view === 'recovered') return result.recovered;
+  return plan;
 }
 
 export function Schedule() {
@@ -162,6 +185,7 @@ export function Schedule() {
   const schedule = useSchedule(missionId);
   const [days, setDays] = useState(4);
   const [result, setResult] = useState<ReplanView | null>(null);
+  const [view, setView] = useState<View>('plan');
   const client = useQueryClient();
   const toast = useToast();
   const replan = useMutation({
@@ -169,15 +193,24 @@ export function Schedule() {
       api.post<ReplanView>(`/v1/missions/${missionId}/replan`, { days, apply }),
     onSuccess: (r, apply) => {
       setResult(r);
-      if (!apply) return;
+      if (!apply) {
+        setView('delayed');
+        return;
+      }
       toast('ok', 'The recovery was proposed. It goes through the same policy as any purchase.');
+      setView('recovered');
       void client.invalidateQueries();
     },
     onError: (e: Error) => toast('bad', (e as { readable?: string }).readable ?? e.message),
   });
   const base = schedule.data;
   const plan = result?.baseline ?? (base?.timings ? (base as TimingView) : undefined);
-  const scale = result ? Math.max(result.delayed.finish, result.baseline.finish) : undefined;
+  const shown = timingFor(view, plan, result);
+  const names = result?.names ?? base?.names ?? {};
+  const reset = () => {
+    setResult(null);
+    setView('plan');
+  };
   return (
     <div className="content">
       <PageHead
@@ -192,7 +225,7 @@ export function Schedule() {
               value={missionId}
               onChange={(e) => {
                 setPick(e.target.value);
-                setResult(null);
+                reset();
               }}
             >
               {missions.data.map((m) => (
@@ -232,24 +265,22 @@ export function Schedule() {
           </EmptyState>
         </Panel>
       )}
-      {plan && (
+      {plan && shown && base?.start && (
         <>
           <Panel
-            title={result ? 'The plan' : 'Delivery plan'}
-            action={<Verdict timing={plan} />}
+            title={<Tabs view={view} onView={setView} result={result} />}
+            action={<Verdict timing={shown} />}
             flush
           >
-            <Gantt
-              timing={plan}
-              names={result?.names ?? base?.names ?? {}}
-              {...(scale === undefined ? {} : { scaleTo: scale })}
-            />
+            <Suspense fallback={<TableSkeleton rows={6} />}>
+              <ScheduleGantt timing={shown} names={names} start={base.start} />
+            </Suspense>
           </Panel>
           <DelayControls
             days={days}
             onDays={(d) => {
               setDays(d);
-              setResult(null);
+              reset();
             }}
             busy={replan.isPending}
             onRun={() => replan.mutate(false)}
@@ -257,7 +288,7 @@ export function Schedule() {
         </>
       )}
       {result && (
-        <Outcome result={result} busy={replan.isPending} onApply={() => replan.mutate(true)} />
+        <Recovery result={result} busy={replan.isPending} onApply={() => replan.mutate(true)} />
       )}
     </div>
   );
