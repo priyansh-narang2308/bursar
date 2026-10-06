@@ -101,6 +101,10 @@ const BUILT_ON = [
     'Bryntum',
     'The schedule. A read-only Gantt of deliveries with the critical path and a replanner.',
   ],
+  [
+    'AG Studio',
+    'The cockpit. Six custom widgets and an assistant that reads the workspace, over figures the server summed.',
+  ],
 ] as const;
 
 function Product() {
@@ -198,7 +202,7 @@ export function Landing() {
 
         <section className="lp-strip lp-wrap" aria-label="Built on">
           <span>Built on</span>
-          {['PayPal', 'Channel3', 'Render', 'Bryntum', 'Claude'].map((name) => (
+          {['PayPal', 'Channel3', 'Render', 'Bryntum', 'AG Studio'].map((name) => (
             <strong key={name}>{name}</strong>
           ))}
         </section>
@@ -347,9 +351,9 @@ export function Landing() {
         <section className="lp-section lp-wrap">
           <Reveal>
             <span className="eyebrow">Built on</span>
-            <h2>Four sponsors, each doing real work.</h2>
+            <h2>Five sponsors, each doing real work.</h2>
           </Reveal>
-          <div className="lp-cols-4">
+          <div className="lp-cols-5">
             {BUILT_ON.map(([name, text], i) => (
               <Reveal key={name} delay={i * 70}>
                 <article className="lp-tile">

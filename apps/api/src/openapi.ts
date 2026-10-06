@@ -335,6 +335,22 @@ export const OPERATIONS: readonly Operation[] = [
     status: 200,
   },
   {
+    method: 'get',
+    path: '/v1/cockpit',
+    summary:
+      'The cockpit: envelopes, rulings, rule hits, money flows and verification, summed on the server',
+    permission: 'audit:read',
+    status: 200,
+  },
+  {
+    method: 'post',
+    path: '/v1/studio/ai/turn',
+    summary:
+      'One turn of the Studio assistant: the next thing the Treasurer says, or a read-only tool it calls',
+    permission: 'audit:read',
+    status: 200,
+  },
+  {
     method: 'post',
     path: '/v1/decisions/:id/replay',
     summary: 'Run a ruling again and say whether it reproduces',

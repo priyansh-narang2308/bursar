@@ -80,6 +80,8 @@ Bursar is the missing layer between an agent and the money. It does not try to m
 - Dashboard pages for the mandate, agents and keys, missions with the agent trace, approvals, activity, policy, incidents, integrations and receipts.
 - A delivery schedule drawn as a Bryntum Gantt: critical path, slack against a deadline, and a replanner that proposes through the decision pipeline and never orders anything itself.
 - A kill switch and a rogue-capture demo that shows the Verifier containing an unexplained capture within seconds.
+- An AG Studio cockpit: an envelope gauge, decision stream, rule heatmap, money-flow diagram, verification status and lab scorecard, drawn from figures the server summed, with a layout a person can rearrange. Picking a rule in one widget narrows the others.
+- The Treasurer, an assistant inside Studio. It reads the envelope, rulings and incidents, runs what-ifs on a rule, and builds charts through Studio's own agents. Every tool it holds is read-only and none can move money. In the demo its words come from a script ([ADR-0018](docs/decisions/0018-the-treasurer.md)).
 
 **Proof**
 - The Policy Lab generates adversarial scenarios (split purchases, structuring under the dual-approval threshold, price drift, duplicate carts), checks invariants, minimises a failing scenario, proposes a patch and freezes it in [`packages/lab/regressions`](packages/lab/regressions).
@@ -102,6 +104,7 @@ A suggested path through the dashboard:
 5. **Incidents.** Trigger the rogue capture and watch the Verifier explain nothing, open one incident, freeze the mandate and refund.
 6. **Gauntlet and Lab.** Run the injection corpus against the naive and guarded agents, then run the Policy Lab and apply its patch.
 7. **Schedule.** See the delivery Gantt and replan a delayed delivery.
+8. **Studio.** Open the cockpit, click a rule in the heatmap, then choose **Edit layout** and ask the assistant "how much is left?" or to add a chart of what each rule is holding back.
 
 ## Run it locally
 
@@ -143,6 +146,7 @@ BURSAR_PAYPAL=sandbox BURSAR_CATALOG=live pnpm dev:demo
 | `pnpm test` | Vitest with enforced per-package coverage thresholds |
 | `pnpm db:up` / `pnpm db:down` | Start or stop a local Postgres with Docker Compose |
 | `pnpm db:migrate` / `pnpm db:reset` | Apply migrations to `DATABASE_URL`, or wipe and migrate |
+| `pnpm test:e2e` | Browser tests in Chrome: the scripted demo, a rejected purchase, a rogue capture, the Gauntlet, the Lab, Studio and the assistant, plus axe accessibility checks on the public and dashboard pages. Not part of `pnpm check` |
 | `pnpm start:demo` | The demo server as a deploy runs it, serving the built web app and API on one port |
 | `pnpm dev:doctor` | Check the developer environment and AI tooling (`--strict`, `--json`) |
 | `pnpm dev:skills` | Restore the pinned sponsor skills for Claude Code |
@@ -158,6 +162,7 @@ Copy `.env.example` to `.env`. Only placeholders are committed, and a test enfor
 | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_WEBHOOK_ID` | Sandbox app credentials and the registered webhook |
 | `PAYPAL_READER_CLIENT_ID`, `PAYPAL_READER_CLIENT_SECRET` | Optional read-only app used by reconciliation |
 | `CHANNEL3_API_KEY` | Catalog search when `BURSAR_CATALOG=live` |
+| `VITE_AG_STUDIO_LICENSE_KEY` | An AG Studio licence, to hide the trial notice (optional; the cockpit runs without it) |
 | `ANTHROPIC_API_KEY`, `AI_MODEL_PRIMARY`, `AI_MODEL_FAST` | The model used by `@bursar/llm` (the demo server uses its scripted model) |
 | `BURSAR_PAYPAL` | `fake` (default) or `sandbox` |
 | `BURSAR_CATALOG` | `recorded` (default), `live` or `synthetic` |
@@ -178,6 +183,7 @@ All routes are under `/v1`, described by an OpenAPI document, validated by stric
 | Actions | `POST /actions`, `GET /actions`, `POST /actions/:id/execute` |
 | Approvals | `GET /approvals`, `POST /approvals/:id/decide` |
 | Agents | `GET/POST /agents`, `POST /agents/:id/keys`, key rotate and revoke |
+| Cockpit | `GET /cockpit` (everything summed on the server), `POST /studio/ai/turn` (one turn of the Studio assistant) |
 | Oversight | `GET /policy`, `GET /integrations`, `GET /receipts/:actionId`, `GET /audit/verify`, `POST /decisions/:id/replay`, `GET /incidents`, `GET /events` (SSE) |
 | MCP | `POST /mcp` with an agent key |
 | Webhooks | `POST /webhooks/paypal` (raw body, signature verified) |
@@ -204,8 +210,9 @@ A caller names what to buy, never how much or who is paid. The amount comes from
 
 - **Lint and format:** [Biome](https://biomejs.dev), with `any`, non-null assertions and unused code treated as errors.
 - **Types:** TypeScript 7 in its strictest practical configuration, with `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and erasable syntax only.
-- **Tests:** more than 2,200 tests across the workspace on Vitest, with per-package coverage thresholds (95 percent or higher for the critical packages) and fast-check property tests for invariants such as exact money, ledger balance and policy determinism.
+- **Tests:** more than 2,250 tests across the workspace on Vitest, with per-package coverage thresholds (95 percent or higher for the critical packages) and fast-check property tests for invariants such as exact money, ledger balance and policy determinism.
 - **Repository conventions as tests:** pinned runtimes, safe dependency specifiers, a secret-free `.env.example`, sandbox-only defaults, numbered decision records, and a locked-down Claude Code configuration are all checked by `packages/tooling`.
+- **Browser tests:** Playwright drives the built app on the demo server, with axe checking WCAG 2.1 A and AA on the landing page, the security and limits pages, and the dashboard. They run in CI as their own job.
 - **Git hooks:** Biome on staged files, a secret scan, and Conventional Commits validation.
 - **CI:** GitHub Actions pinned to commit SHAs, plus a gitleaks scan of every commit in a push or pull request.
 - **Live tests are opt-in:** anything that spends credits or calls a live service runs only with `PAYPAL_LIVE_TESTS=1` or `CHANNEL3_LIVE_TESTS=1`.
@@ -234,6 +241,7 @@ The repository is a pnpm workspace. Internal packages export TypeScript source, 
 | `apps/api` | Hono API: sessions, roles, agent keys, money routes, webhook receiver, MCP door, scheduler door, OpenAPI, and the demo server |
 | `apps/web` | React 19 and Vite app: the landing page and a dark, dense dashboard |
 | `apps/workflows` | Idempotent background tasks with a durable run record |
+| `apps/e2e` | Browser tests of the whole product, with accessibility checks |
 | `apps/render-workflow` | The mission pipeline as a Render Workflow, one parallel task per need |
 
 ### Packages
@@ -263,13 +271,13 @@ The repository is a pnpm workspace. Internal packages export TypeScript source, 
 
 | Path | Purpose |
 | --- | --- |
-| `docs/decisions` | Sixteen architecture decision records |
+| `docs/decisions` | Eighteen architecture decision records |
 | `docs/development-with-ai.md` | How the AI tooling is set up and verified, with an evidence log |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` |
 
 ### Stack
 
-TypeScript 7, Node.js 24 LTS, React 19 and Vite, Hono, Postgres with Drizzle (PGlite in tests and the keyless demo), Zod 4, Vitest, Biome, and a Claude client for the agents. Sponsor services: PayPal (Vault, Orders, Refunds, Payouts and webhooks on the sandbox), Channel3 (catalog), Render (web service, Postgres, cron job and Workflows) and Bryntum (Gantt, from the public trial packages). The reasoning is in [ADR-0001](docs/decisions/0001-stack-and-conventions.md).
+TypeScript 7, Node.js 24 LTS, React 19 and Vite, Hono, Postgres with Drizzle (PGlite in tests and the keyless demo), Zod 4, Vitest, Biome, and a Claude client for the agents. Sponsor services: PayPal (Vault, Orders, Refunds, Payouts and webhooks on the sandbox), Channel3 (catalog), Render (web service, Postgres, cron job and Workflows) and Bryntum (Gantt, from the public trial packages) and AG Studio (the cockpit and its assistant, on a trial licence). The reasoning is in [ADR-0001](docs/decisions/0001-stack-and-conventions.md).
 
 ## Scope and known limits
 
@@ -277,7 +285,8 @@ TypeScript 7, Node.js 24 LTS, React 19 and Vite, Hono, Postgres with Drizzle (PG
 - **A shared pool of sandbox buyers.** Real PayPal approval is a one-time step per buyer, so the public demo draws on a small pool of pre-approved sandbox buyers. A workspace revoking its mandate never deletes a pooled buyer's token.
 - **The Gantt is read-only** and fed by data the server computed. Bryntum comes from its public trial packages ([ADR-0015](docs/decisions/0015-bryntum-gantt.md)).
 - **The demo agents run on a scripted model.** The demo server always uses a deterministic scripted model, so the demo is repeatable and costs nothing. The Claude client, budgets and record/replay in `@bursar/llm` are built and tested, but the demo server does not call Claude yet.
-- **Not yet built:** browser end-to-end and accessibility test suites, and an AG Studio cockpit (the dashboard uses its own components).
+- **Studio runs on a trial licence** and shows its trial notice; a key goes in `VITE_AG_STUDIO_LICENSE_KEY`. Studio's own charts and the custom widgets filter among themselves, not across each other.
+- **No visual regression suite.** Screenshots differ across machines, so the browser tests assert on content and accessibility instead.
 
 ## License
 

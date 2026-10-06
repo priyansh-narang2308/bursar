@@ -105,12 +105,16 @@ export function Limits() {
         Demo workspaces are throwaway and may be reset. Do not enter anything you want to keep, and
         do not enter real payment details anywhere.
       </p>
-      <h2>Not built yet</h2>
+      <h2>The assistant in the cockpit is scripted</h2>
+      <p>
+        The Treasurer in Studio answers a fixed set of questions about the envelope, rulings,
+        incidents and rules, and can add a chart. Its words come from a deterministic script on the
+        server, behind the same door a model would use. Everything it can call is read-only and
+        cannot move money.
+      </p>
+      <h2>Smaller things</h2>
       <ul>
-        <li>
-          Browser end-to-end and visual regression suites run in development, not in the public
-          demo.
-        </li>
+        <li>Studio runs on a trial licence and shows its trial notice.</li>
         <li>
           The schedule chart is read only. Changing a delivery goes through a proposal, not a drag.
         </li>

@@ -42,7 +42,7 @@ const NAV: { label: string; items: NavEntry[] }[] = [
     label: 'Agents',
     items: [
       { to: '/dashboard/agents', label: 'Agents & keys', icon: 'key' },
-      { to: '/dashboard/studio', label: 'Studio', icon: 'grid', soon: true },
+      { to: '/dashboard/studio', label: 'Studio', icon: 'grid' },
       { to: '/dashboard/schedule', label: 'Schedule', icon: 'cal' },
     ],
   },

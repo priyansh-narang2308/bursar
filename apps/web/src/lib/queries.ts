@@ -1,3 +1,4 @@
+import type { Cockpit } from '@bursar/schemas';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { api } from './api';
@@ -67,6 +68,12 @@ export const useIncidents = () =>
     queryKey: ['incidents'],
     queryFn: () => api.get<{ items: Incident[] }>('/v1/incidents').then((r) => r.items),
   });
+export const useCockpit = () =>
+  useQuery({
+    queryKey: ['cockpit'],
+    queryFn: () => api.get<Cockpit>('/v1/cockpit'),
+    refetchInterval: 20_000,
+  });
 export const useIntegrations = () =>
   useQuery({
     queryKey: ['integrations'],
@@ -119,6 +126,7 @@ export function useLiveEvents(enabled: boolean) {
               'receipt',
               'incidents',
               'schedule',
+              'cockpit',
             ].map((key) => client.invalidateQueries({ queryKey: [key] })),
           ),
         300,
