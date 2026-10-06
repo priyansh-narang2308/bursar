@@ -5,7 +5,7 @@ import { RequireSession } from './lib/session';
 import { Activity } from './pages/Activity';
 import { Agents } from './pages/Agents';
 import { Approvals } from './pages/Approvals';
-import { ComingSoon } from './pages/ComingSoon';
+import { Cockpit } from './pages/Cockpit';
 import { Gallery } from './pages/Gallery';
 import { Gauntlet } from './pages/Gauntlet';
 import { Incidents } from './pages/Incidents';
@@ -18,14 +18,6 @@ import { Overview } from './pages/Overview';
 import { Policy } from './pages/Policy';
 import { Limits, Security } from './pages/Public';
 import { Schedule } from './pages/Schedule';
-
-const SOON: [string, string, string][] = [
-  [
-    'studio',
-    'Studio',
-    'A workbench to talk to the agents and see their work as tables and charts.',
-  ],
-];
 
 export function App() {
   return (
@@ -56,9 +48,7 @@ export function App() {
           <Route path="schedule" element={<Schedule />} />
           <Route path="gauntlet" element={<Gauntlet />} />
           <Route path="lab" element={<Lab />} />
-          {SOON.map(([path, title, text]) => (
-            <Route key={path} path={path} element={<ComingSoon title={title} text={text} />} />
-          ))}
+          <Route path="studio" element={<Cockpit />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -5,6 +5,8 @@ packages:
 # One place for every shared dependency version. Packages reference these as `catalog:`.
 catalog:
   '@renderinc/sdk': ^1.2.0 # Render Workflows: define tasks, and start them from the API
+  ag-studio: 3.0.0
+  ag-studio-react: 3.0.0
   '@bryntum/gantt': npm:@bryntum/gantt-trial@7.3.7 # Bryntum Gantt, the public trial build (swap for the licensed package with a token)
   '@bryntum/gantt-react': 7.3.7 # its React wrapper
   '@channel3/sdk': ^4.1.0 # the product catalog behind agent search (Channel3)

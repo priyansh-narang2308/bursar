@@ -1,3 +1,4 @@
+import { cockpitSchema } from '@bursar/schemas';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createTestApp, openWorkspace, type TestApp, type TestClient } from './support';
 
@@ -112,6 +113,35 @@ describe('the money loop over HTTP', () => {
     expect((await w.call(w.browser, 'GET', '/v1/audit-events')).json.items.length).toBeGreaterThan(
       10,
     );
+  });
+
+  it('adds up the cockpit on the server: figures, rule hits and where the money went', async () => {
+    const w = await workspace();
+    const cart = await w.call(w.bot, 'POST', `/v1/missions/${w.mission.id}/carts`, {
+      lines: [{ offerId: w.offer.id, quantity: 3, rationale: 'Running low' }],
+    });
+    const proposed = await w.call(w.bot, 'POST', '/v1/actions', {
+      type: 'AUTHORIZE',
+      missionId: w.mission.id,
+      cartId: cart.json.cartId,
+    });
+    const [approvalId] = proposed.json.proposal.approvalIds as [string];
+    await w.call(w.browser, 'POST', `/v1/approvals/${approvalId}/decide`, { decision: 'APPROVE' });
+
+    const reply = await w.call(w.browser, 'GET', '/v1/cockpit');
+    expect(reply.status).toBe(200);
+    const cockpit = cockpitSchema.parse(reply.json);
+    expect(cockpit.envelopes[0]).toMatchObject({
+      ceiling: usd(10_000),
+      held: usd(3_000),
+      usedPercent: 30,
+    });
+    expect(cockpit.flows).toContainEqual(expect.objectContaining({ from: 'Mandate', to: 'Held' }));
+    expect(cockpit.ruleHits.some((h) => h.rule === 'R-NEW-VENDOR')).toBe(true);
+    expect(cockpit.decisions[0]?.rules.length).toBeGreaterThan(5);
+    expect(cockpit.verification.unexplained).toBe(0);
+    expect((await w.call(w.bot, 'GET', '/v1/cockpit')).status).toBe(403); // an agent key holds no audit scope
+    expect((await t.client().call('GET', '/v1/cockpit')).status).toBe(401);
   });
 
   it('refuses any field that would let a caller name an amount, a price or a payee', async () => {

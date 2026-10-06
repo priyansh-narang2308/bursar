@@ -11,6 +11,7 @@ import { ApiError, handleError } from './http/problem';
 import type { Logger } from './logger';
 import { openApiDocument } from './openapi';
 import { agentRoutes } from './routes/agents';
+import { cockpitRoutes } from './routes/cockpit';
 import { demoRoutes } from './routes/demo';
 import { healthRoutes } from './routes/health';
 import { type JobsDeps, jobRoutes } from './routes/jobs';
@@ -116,6 +117,7 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
   if (deps.core !== undefined) {
     v1.route('/', moneyRoutes(db, deps.core));
     v1.route('/', oversightRoutes(db, deps.core, integrationsOf(deps)));
+    v1.route('/', cockpitRoutes(db));
     if (deps.agentTools !== undefined) v1.route('/', mcpRoutes(db, deps.core, deps.agentTools));
   }
   app.route('/v1', v1);

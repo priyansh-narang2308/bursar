@@ -63,6 +63,13 @@ cartHashSchema
 cartLineSchema
 cartSchema
 cartStatusSchema
+cockpitDecisionSchema
+cockpitEnvelopeSchema
+cockpitFlowSchema
+cockpitIncidentSchema
+cockpitRuleHitSchema
+cockpitRuleSchema
+cockpitSchema
 compareOffersInputSchema
 createMissionRequestSchema
 createUlidGenerator

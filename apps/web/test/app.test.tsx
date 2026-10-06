@@ -6,6 +6,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/App';
 import { ToastProvider } from '../src/components/ui';
 
+// Studio draws on canvases and observers that jsdom does not have, so the page is tested against a stand-in.
+vi.mock('ag-studio', () => ({ createStudioTheme: () => ({ withParams: () => ({}) }) }));
+vi.mock('ag-studio-react', () => ({
+  createWidgets: () => ({}),
+  AgStudio: ({ data }: { data: { sources: { id: string; data: unknown[] }[] } }) => (
+    <div data-testid="studio">{data.sources.map((s) => `${s.id}:${s.data.length}`).join(' ')}</div>
+  ),
+}));
+
+const emptyCockpit = {
+  generatedAt: '2026-10-05T12:00:00Z',
+  envelopes: [],
+  decisions: [],
+  ruleHits: [],
+  flows: [],
+  verification: { confirmed: 0, waiting: 0, unexplained: 0 },
+  incidents: [],
+};
+
 type Handler = (body: unknown) => { status?: number; json: unknown };
 let routes: Record<string, Handler>;
 const calls: { method: string; path: string; body: unknown }[] = [];
@@ -285,9 +304,37 @@ describe('the dashboard', () => {
     expect(await screen.findByText('That didn’t load')).toBeInTheDocument();
   });
 
-  it('lists pages that are not built yet without pretending', async () => {
+  it('opens the Studio cockpit, and says plainly when there is nothing to chart yet', async () => {
     signedIn();
+    routes['GET /v1/cockpit'] = () => ({ status: 200, json: emptyCockpit });
     renderAt('/dashboard/studio');
-    expect(await screen.findByText('Not built yet')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Studio' })).toBeInTheDocument();
+    expect(await screen.findByText('Nothing to chart yet')).toBeInTheDocument();
+  });
+
+  it('draws the cockpit from the figures the server sent', async () => {
+    signedIn();
+    routes['GET /v1/cockpit'] = () => ({
+      status: 200,
+      json: {
+        ...emptyCockpit,
+        decisions: [
+          {
+            id: 'dec_1',
+            actionId: 'act_1',
+            type: 'AUTHORIZE',
+            state: 'AWAITING_APPROVAL',
+            outcome: 'REQUIRE_APPROVAL',
+            requiredApprovals: 1,
+            amount: { currency: 'USD', minor: '300000' },
+            evaluatedAt: '2026-10-05T12:00:00Z',
+            rules: [{ rule: 'R-NEW-VENDOR', outcome: 'REQUIRE_APPROVAL', message: 'First order' }],
+          },
+        ],
+      },
+    });
+    renderAt('/dashboard/studio');
+    expect(await screen.findByTestId('studio')).toHaveTextContent('decisions:1');
+    expect(screen.getByRole('button', { name: 'Edit layout' })).toBeInTheDocument();
   });
 });
