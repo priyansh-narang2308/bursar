@@ -52,6 +52,7 @@ const PATHS = {
   close: 'm4 4 8 8M12 4l-8 8',
   arrow: 'M3 8h10M9 4l4 4-4 4',
   play: 'M5 3.5v9l7-4.5z',
+  sidebar: 'M2.5 3.5h11v9h-11zM6 3.5v9',
 } as const;
 export type IconName = keyof typeof PATHS;
 

@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMe } from '../lib/queries';
 import { OpenDemoButton } from '../lib/session';
+import { AuroraBackground } from './AuroraBackground';
 import { Icon, Logo } from './ui';
 
 export const REPO_URL = 'https://github.com/priyansh-narang2308/bursar';
@@ -142,7 +143,7 @@ export function PublicPage({
     document.title = `${title} - Bursar`;
   }, [title]);
   return (
-    <div className="lp">
+    <AuroraBackground className="lp">
       <SiteNav />
       <main className="lp-wrap lp-doc">
         <span className="eyebrow">{eyebrow}</span>
@@ -151,6 +152,6 @@ export function PublicPage({
         {children}
       </main>
       <SiteFooter />
-    </div>
+    </AuroraBackground>
   );
 }
