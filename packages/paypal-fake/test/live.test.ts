@@ -7,7 +7,7 @@ const live =
 
 /**
  * The live sandbox smoke test: real credentials, no money moved. It is skipped, and says so, unless
- * `PAYPAL_LIVE_TESTS=1` and the sandbox keys are in the environment. It has not been run yet.
+ * `PAYPAL_LIVE_TESTS=1` and the sandbox keys are in the environment. The wider live checks are in `apps/api/src/dev-tools/validate.ts`.
  */
 describe.skipIf(!live)('PayPal sandbox smoke (needs PAYPAL_LIVE_TESTS=1 and sandbox keys)', () => {
   it('authenticates and starts a vault setup, which needs the payer to approve before anything is charged', async () => {

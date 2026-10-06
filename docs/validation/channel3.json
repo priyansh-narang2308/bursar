@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-06T17:30:43.412Z",
+  "creditsSpent": 10,
+  "calls": 10,
+  "medianLatencyMs": 988,
+  "slowestMs": 2378,
+  "statuses": {
+    "ok": 10
+  },
+  "rows": [
+    {
+      "query": "standing desk",
+      "results": 4,
+      "withPrice": 4,
+      "withDomain": 4,
+      "availability": {
+        "IN_STOCK": 4
+      },
+      "cheapest": "USD 829.00",
+      "priciest": "USD 1225.00",
+      "requote": {
+        "found": true,
+        "changed": false,
+        "driftBasisPoints": 0
+      }
+    },
+    {
+      "query": "ergonomic office chair",
+      "results": 5,
+      "withPrice": 5,
+      "withDomain": 5,
+      "availability": {
+        "IN_STOCK": 5
+      },
+      "cheapest": "USD 139.99",
+      "priciest": "USD 1385.00",
+      "requote": {
+        "found": true,
+        "changed": false,
+        "driftBasisPoints": 0
+      }
+    },
+    {
+      "query": "usb-c monitor",
+      "results": 5,
+      "withPrice": 5,
+      "withDomain": 5,
+      "availability": {
+        "IN_STOCK": 5
+      },
+      "cheapest": "USD 154.99",
+      "priciest": "USD 514.80",
+      "requote": {
+        "found": true,
+        "changed": false,
+        "driftBasisPoints": 0
+      }
+    },
+    {
+      "query": "mechanical keyboard",
+      "results": 5,
+      "withPrice": 5,
+      "withDomain": 5,
+      "availability": {
+        "IN_STOCK": 5
+      },
+      "cheapest": "USD 34.99",
+      "priciest": "USD 71.99",
+      "requote": {
+        "found": true,
+        "changed": false,
+        "driftBasisPoints": 0
+      }
+    },
+    {
+      "query": "laptop stand",
+      "results": 5,
+      "withPrice": 5,
+      "withDomain": 5,
+      "availability": {
+        "IN_STOCK": 5
+      },
+      "cheapest": "USD 24.52",
+      "priciest": "USD 129.00"
+    },
+    {
+      "query": "desk lamp",
+      "results": 5,
+      "withPrice": 5,
+      "withDomain": 5,
+      "availability": {
+        "IN_STOCK": 5
+      },
+      "cheapest": "USD 320.00",
+      "priciest": "USD 625.00"
+    }
+  ]
+}

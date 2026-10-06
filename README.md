@@ -273,6 +273,8 @@ The repository is a pnpm workspace. Internal packages export TypeScript source, 
 
 | Path | Purpose |
 | --- | --- |
+| `docs/validation` | What happened when the fake's assumptions met PayPal's sandbox and Channel3's live catalog, with the raw results and the fixes |
+| `docs/threat-model.md` | Each threat, its control, and the test that proves it |
 | `docs/decisions` | Eighteen architecture decision records |
 | `docs/development-with-ai.md` | How the AI tooling is set up and verified, with an evidence log |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` |
@@ -284,6 +286,7 @@ TypeScript 7, Node.js 24 LTS, React 19 and Vite, Hono, Postgres with Drizzle (PG
 ## Scope and known limits
 
 - **Sandbox only, by design.** There is no live-money mode and none is planned for this submission.
+- **Payouts and reconciliation are verified against the fake only.** The sandbox app answered 403 for Payouts and Transaction Search, because those features are not enabled on it. Everything else the fake assumes was checked live on 2026-10-06 and the two wrong error codes were fixed ([docs/validation](docs/validation/README.md)).
 - **A shared pool of sandbox buyers.** Real PayPal approval is a one-time step per buyer, so the public demo draws on a small pool of pre-approved sandbox buyers. A workspace revoking its mandate never deletes a pooled buyer's token.
 - **The Gantt is read-only** and fed by data the server computed. Bryntum comes from its public trial packages ([ADR-0015](docs/decisions/0015-bryntum-gantt.md)).
 - **The demo agents run on a scripted model.** The demo server always uses a deterministic scripted model, so the demo is repeatable and costs nothing. The Claude client, budgets and record/replay in `@bursar/llm` are built and tested, but the demo server does not call Claude yet.

@@ -235,7 +235,7 @@ export function createFakePayPal(options: FakeOptions = {}) {
     const amount = parseAmount(req.body['amount'] ?? amountOf(a.amount.subtract(a.captured)));
     if (amount.currency !== a.amount.currency) throw new FakeError(422, 'CURRENCY_MISMATCH');
     if (a.captured.add(amount).greaterThan(a.amount))
-      throw new FakeError(422, 'AUTHORIZATION_AMOUNT_EXCEEDED');
+      throw new FakeError(422, 'MAX_CAPTURE_AMOUNT_EXCEEDED');
     a.captured = a.captured.add(amount);
     a.status =
       req.body['final_capture'] === true || a.captured.equals(a.amount)
@@ -263,6 +263,8 @@ export function createFakePayPal(options: FakeOptions = {}) {
 
   async function voidAuthorization(req: Req): Promise<Res> {
     const a = authorizationOf(req.params[0]);
+    // Seen on the sandbox: voiding twice is PREVIOUSLY_VOIDED, though capturing a voided one is AUTHORIZATION_VOIDED.
+    if (a.status === 'VOIDED') throw new FakeError(422, 'PREVIOUSLY_VOIDED');
     assertOpen(a);
     a.status = 'VOIDED';
     await emit('PAYMENT.AUTHORIZATION.VOIDED', 'authorization', {
