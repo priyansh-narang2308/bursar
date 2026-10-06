@@ -18,6 +18,7 @@ import { type JobsDeps, jobRoutes } from './routes/jobs';
 import { type AgentToolsDeps, mcpRoutes } from './routes/mcp';
 import { moneyRoutes } from './routes/money';
 import { oversightRoutes } from './routes/oversight';
+import { studioAiRoutes } from './routes/studioAi';
 import { webhookRoutes } from './routes/webhooks';
 import { workspaceRoutes } from './routes/workspace';
 import type { AppEnv } from './types';
@@ -118,6 +119,7 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
     v1.route('/', moneyRoutes(db, deps.core));
     v1.route('/', oversightRoutes(db, deps.core, integrationsOf(deps)));
     v1.route('/', cockpitRoutes(db));
+    v1.route('/', studioAiRoutes());
     if (deps.agentTools !== undefined) v1.route('/', mcpRoutes(db, deps.core, deps.agentTools));
   }
   app.route('/v1', v1);

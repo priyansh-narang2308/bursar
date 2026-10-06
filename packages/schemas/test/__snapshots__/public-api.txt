@@ -43,6 +43,7 @@ SCHEMA_CATALOG
 SSE_EVENT_TYPES
 SUBSCRIBED_PAYPAL_EVENTS
 SWAP_REASONS
+TREASURER_TOOLS
 ULID_PATTERN
 VERIFICATION_STATUSES
 VERIFIER_STEPS
@@ -50,6 +51,8 @@ actionSchema
 actionStateSchema
 actionTypeSchema
 actorKindSchema
+aiTurnRequestSchema
+aiTurnResponseSchema
 amountSchema
 approvalSchema
 approvalStatusSchema

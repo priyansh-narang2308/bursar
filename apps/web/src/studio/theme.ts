@@ -1,10 +1,10 @@
-import { createStudioTheme } from 'ag-studio';
+import { studioTheme } from 'ag-studio';
 
 /**
  * Studio wears Bursar's tokens (`styles/app.css`): near-black surfaces, hairlines, and colour only where it
  * means something. In the charts, grey is neutral, green is allow, amber is waiting and red is deny.
  */
-export const bursarStudioTheme = createStudioTheme().withParams({
+export const bursarStudioTheme = studioTheme.withParams({
   fontFamily: 'Inter Variable, ui-sans-serif, system-ui, sans-serif',
   fontSize: 13,
   backgroundColor: '#0e0f10',

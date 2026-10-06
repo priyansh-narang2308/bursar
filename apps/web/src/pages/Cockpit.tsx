@@ -1,8 +1,9 @@
-import type { AgReportState, AgStudioApi } from 'ag-studio';
+import { type AgReportState, AgStudioAiModule, type AgStudioApi } from 'ag-studio';
 import { AgStudio } from 'ag-studio-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { EmptyState, ErrorNote, Panel, SimBadge, Skeleton } from '../components/ui';
 import { useCockpit, useMe } from '../lib/queries';
+import { createTreasurerHarness, treasurerToolDisplay } from '../studio/ai';
 import { loadLayout, saveLayout, toSources } from '../studio/model';
 import { type BursarRegistry, bursarWidgets } from '../studio/registry';
 import { cockpitStore } from '../studio/store';
@@ -13,6 +14,9 @@ import { PageHead } from './parts';
  * The cockpit: AG Studio, themed with Bursar's tokens, drawing figures the server worked out. A person can
  * rearrange it in edit mode; the layout is kept in this browser and survives refreshes and live updates.
  */
+const MODULES = [AgStudioAiModule];
+const harness = ({ api }: { api: AgStudioApi }) => createTreasurerHarness(api);
+
 export function Cockpit() {
   const me = useMe();
   const cockpit = useCockpit();
@@ -92,6 +96,9 @@ export function Cockpit() {
             mode={mode}
             theme={bursarStudioTheme}
             widgets={bursarWidgets}
+            modules={MODULES}
+            ai={harness as never}
+            aiToolDisplay={treasurerToolDisplay}
             initialState={initialState}
             onApiReady={(event) => {
               studio.current = event.api;

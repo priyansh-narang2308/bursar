@@ -84,3 +84,36 @@ export const cockpitSchema = z
   })
   .meta({ id: 'Cockpit', description: 'The figures the cockpit draws, worked out on the server.' });
 export type Cockpit = z.infer<typeof cockpitSchema>;
+
+/*
+ * The Treasurer: the assistant inside Studio. It reads; it never moves money. Studio sends one turn of the
+ * conversation, and the server answers with what the model said next: text, or a call to a read-only tool.
+ * The items are Studio's own conversation items, so they are checked for their kind and no further.
+ */
+export const aiTurnRequestSchema = z.strictObject({
+  input: z.array(z.looseObject({ type: z.string().min(1).max(40) })).max(200),
+  instructions: z.string().max(20_000).optional(),
+  tools: z.array(z.looseObject({ name: z.string().min(1).max(80) })).max(60),
+});
+export type AiTurnRequest = z.infer<typeof aiTurnRequestSchema>;
+
+export const aiTurnResponseSchema = z.strictObject({
+  id: z.string().min(1).max(80),
+  createdAt: z.int().min(0),
+  status: z.literal('completed'),
+  output: z.array(z.looseObject({ type: z.string().min(1).max(40) })).max(20),
+});
+export type AiTurnResponse = z.infer<typeof aiTurnResponseSchema>;
+
+/**
+ * Everything the Treasurer may call. Each reads the workspace and nothing else: none names an amount, a payee or
+ * an account, and none can order, capture, refund or pay. A test holds this list to that.
+ */
+export const TREASURER_TOOLS = [
+  'get_envelope',
+  'list_incidents',
+  'explain_decision',
+  'simulate_policy_change',
+  'add_blocked_by_rule_widget',
+] as const;
+export type TreasurerTool = (typeof TREASURER_TOOLS)[number];

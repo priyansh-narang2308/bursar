@@ -7,7 +7,12 @@ import { App } from '../src/App';
 import { ToastProvider } from '../src/components/ui';
 
 // Studio draws on canvases and observers that jsdom does not have, so the page is tested against a stand-in.
-vi.mock('ag-studio', () => ({ createStudioTheme: () => ({ withParams: () => ({}) }) }));
+vi.mock('ag-studio', () => ({
+  studioTheme: { withParams: () => ({}) },
+  AgStudioAiModule: {},
+  createAiHarness: () => ({}),
+  directLlmRunner: (config: unknown) => config,
+}));
 vi.mock('ag-studio-react', () => ({
   createWidgets: () => ({}),
   AgStudio: ({ data }: { data: { sources: { id: string; data: unknown[] }[] } }) => (

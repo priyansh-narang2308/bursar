@@ -72,6 +72,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - Reconciliation is cross-tenant: run it from a job, never from a tenant route.
 
 - Any tool reachable over MCP goes through `@bursar/mcp-gateway`. PayPal's own toolkit tools are deny by default: classify a new one before it can be reached, and never register one that moves money.
+- The Treasurer (Studio's assistant, ADR-0018) holds only the tools in `TREASURER_TOOLS` in `@bursar/schemas`, all read-only. Add one only there, with no amount, payee or currency in it and no way to move money; a test on each side holds the list to that.
 - Work that may run twice (a queue, a retry) is a task in `@bursar/workflows`, keyed so a repeat does nothing. A replan or recovery proposes through the decision pipeline and never orders.
 - When the Policy Lab finds a hole, freeze it in `packages/lab/regressions/` with the patch that fixes it.
 
