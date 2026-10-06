@@ -21,6 +21,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 | `pnpm db:migrate` | Apply the migrations to `DATABASE_URL` (safe to repeat) |
 | `pnpm db:reset` | Wipe the local database and migrate it again |
 | `pnpm dev:demo` | Run the whole product with no keys and no Docker: an in-memory Postgres, the fake PayPal, an offline catalog and a scripted model, on port 8787 |
+| `pnpm start:demo` | The demo server as a deploy runs it: from the repo root, serving the built web app (`pnpm --filter @bursar/web build`) and the API on one port. In-memory data |
 | `pnpm dev:payer` | Add one sandbox buyer to the demo's payer pool: prints a PayPal address to approve once, then seals the payment token into `.bursar/payers.json` (git-ignored) |
 | `pnpm dev:spike` | One real purchase on PayPal's sandbox through the money loop (hold, capture, refund) using a pooled buyer. Sandbox money only |
 | `pnpm dev:web` | Run the web app (Vite, port 5173), which proxies `/v1` to the demo API |

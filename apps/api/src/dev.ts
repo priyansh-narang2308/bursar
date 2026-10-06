@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
+import { relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type AgentRole, createToolbox, type ToolCallLog } from '@bursar/agent-tools';
 import { runMission } from '@bursar/agents';
@@ -56,7 +57,9 @@ import { dayOf, planFromBasket, type Schedule, schedule as scheduleOf } from '@b
 import { type MissionId, newId, type OrganizationId } from '@bursar/schemas';
 import { createWorkflows, recoveryFor } from '@bursar/workflows';
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { and, desc, eq, inArray, isNotNull } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { createApp, type DemoHooks } from './app';
 import { loadConfig } from './config';
 import { createLogger } from './logger';
@@ -72,7 +75,7 @@ const usd = (cents: number) => ({ currency: 'USD' as const, minor: String(cents)
 const DAY = 86_400_000;
 
 const config = loadConfig({
-  NODE_ENV: 'development',
+  NODE_ENV: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
   DATABASE_URL: 'memory',
   SESSION_SECRET: randomBytes(32).toString('hex'),
   DEMO_MODE: 'true',
@@ -148,9 +151,13 @@ if (fake !== undefined)
 
 /** Buyers who approved once, with `pnpm dev:payer`, whose approval each workspace borrows. */
 const POOL_FILE = fileURLToPath(new URL('../../../.bursar/payers.json', import.meta.url));
+// On a host there is no file: the sealed pool travels in an environment variable instead.
+const poolJson =
+  process.env['BURSAR_PAYER_POOL'] ??
+  (existsSync(POOL_FILE) ? readFileSync(POOL_FILE, 'utf8') : undefined);
 const payerPool: string[] =
-  sandbox && existsSync(POOL_FILE)
-    ? (JSON.parse(readFileSync(POOL_FILE, 'utf8')) as { sealed: string }[]).map((p) =>
+  sandbox && poolJson !== undefined
+    ? (JSON.parse(poolJson) as { sealed: string }[]).map((p) =>
         decryptSecret(vaultKeys, p.sealed, 'payer-pool'),
       )
     : [];
@@ -708,5 +715,21 @@ const app = createApp({
     },
   },
 });
-serve({ fetch: app.fetch, port: config.port });
-logger.info({ port: config.port }, 'demo api listening (in-memory data, fake PayPal)');
+// One address for everything: the API, and the built web app for any other path (so a deploy needs one service).
+const WEB_DIST = fileURLToPath(new URL('../../web/dist', import.meta.url));
+const hasWeb = existsSync(`${WEB_DIST}/index.html`);
+const dist = relative(process.cwd(), WEB_DIST);
+const isApi = (path: string) => /^\/(v1|webhooks|healthz|readyz|openapi\.json)(\/|$)/.test(path);
+const server = new Hono();
+if (hasWeb) {
+  server.use('*', (c, next) => (isApi(c.req.path) ? next() : serveStatic({ root: dist })(c, next)));
+  server.get('*', (c, next) =>
+    isApi(c.req.path) ? next() : serveStatic({ path: `${dist}/index.html` })(c, next),
+  );
+}
+server.route('/', app);
+serve({ fetch: server.fetch, port: config.port });
+logger.info(
+  { port: config.port, web: hasWeb, paypal: sandbox ? 'sandbox' : 'fake' },
+  'demo listening (in-memory data)',
+);

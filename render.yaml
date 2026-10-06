@@ -1,0 +1,37 @@
+# The public demo: one web service that serves the built web app and the API on one address, with in-memory
+# data (a workspace lasts until the service restarts). Secrets are set in the dashboard, never here.
+services:
+  - type: web
+    name: bursar-demo
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @bursar/web build
+    startCommand: pnpm start:demo
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: DEMO_MODE
+        value: "true"
+      - key: PUBLIC_BASE_URL
+        sync: false # the service's own address, https://<name>.onrender.com
+      # Optional: PayPal's real sandbox instead of the in-process fake.
+      - key: BURSAR_PAYPAL
+        sync: false # sandbox
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: VAULT_ENC_KEY
+        sync: false
+      - key: PROVENANCE_HMAC_KEY
+        sync: false
+      - key: BURSAR_PAYER_POOL
+        sync: false # the sealed contents of .bursar/payers.json
