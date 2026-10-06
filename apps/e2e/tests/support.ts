@@ -31,7 +31,7 @@ export function watchConsole(page: Page): string[] {
   page.on('console', (message) => {
     const text = message.text();
     // Studio's trial licence notice is printed as a box of asterisks; a 401 is the landing page asking who is signed in.
-    if (message.type() === 'error' && !/^\*|License|favicon|401 \(Unauthorized\)/.test(text))
+    if (message.type() === 'error' && !/^\*|License|favicon|status of 401/.test(text))
       problems.push(text);
   });
   return problems;
