@@ -60,6 +60,9 @@ describe('the kill switch', () => {
     expect(mandate).toMatchObject({ status: 'REVOKED', vaultTokenSealed: null });
     expect(w.fake.transactions.map((t) => t.code)).toEqual(['T0006', 'T1107']); // captured, then refunded
     expect(w.fake.transactions[1]?.amount.minor).toBe(3_000n);
+    // The Verifier's own refund arrives as a webhook too. It is not a second incident.
+    expect(await w.deliver()).toEqual(['processed']);
+    expect(await w.db.select().from(incidents)).toHaveLength(1);
   });
 
   it('keeps a frozen mandate frozen until an owner resolves the incident', async () => {

@@ -17,9 +17,13 @@ A judge will see Bursar for a few minutes, with no keys and no account. The prod
 - **Screens that are not built say so.** Unbuilt areas are in the sidebar marked *soon* and open a page that says it is not built, rather than showing invented data.
 - **No arithmetic on money in the browser.** Amounts are formatted from minor units, and typed amounts are parsed to exact cents or refused.
 
+- **Every screen reads the real backend.** Policy, incidents, receipts, schedules and the Gauntlet are all produced by the same routes a real deployment serves. The three things a demo cannot do for itself are `DemoHooks`: the rogue capture (money moved at PayPal outside the gateway, so the Verifier has something to catch), the schedule and replan for the sample mission, and the Gauntlet's run. The schedule is drawn with a small Gantt component rather than a library.
+
 ## Consequences
 
 - Building this found a real bug in the money loop: an approved hold was counted twice against the envelope when it ran, so any cart over half the envelope was denied at execution. It is fixed and has a regression test.
 - The agent run is scripted, not Claude. The Claude provider is written but unverified against the live service.
 - The trace of a run is kept in the browser's cache, so it is gone after a reload; the receipts and the audit trail are permanent.
+- The Verifier's own refund used to arrive as a second incident (an unexplained refund). It is now recognised as the Verifier's doing, with a regression test.
+- AG Studio and the Bryntum Gantt are not used: they need accounts and licences that were not available here, and a stand-in would not be worth showing. The sidebar says so.
 - Real sign-in is out of scope for the hackathon; demo sessions, roles and agent keys are the whole of authentication.

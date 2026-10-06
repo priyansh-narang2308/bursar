@@ -165,3 +165,69 @@ export interface RunTrace {
     ms: number;
   }[];
 }
+
+export interface PolicyView {
+  hash: string;
+  rules: { id: string; version: number; summary: string; params: unknown }[];
+}
+
+export interface Incident {
+  id: string;
+  type: string;
+  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  status: 'OPEN' | 'CONTAINED' | 'RESOLVED';
+  openedAt: string;
+  closedAt: string | null;
+  evidence: {
+    why?: string;
+    amount?: { value: string; currency_code: string };
+    eventType?: string;
+    resourceId?: string;
+    actionId?: string;
+  };
+  autoResponse: { at: string; step: string; actionId: string | null }[];
+  resolution: { note?: string } | null;
+}
+
+export interface IntegrationsView {
+  paypal: { mode: string; detail: string };
+  catalog: { mode: string; detail: string };
+  model: { mode: string; detail: string };
+  mcp: { path: string };
+}
+
+export interface TimingView {
+  finish: number;
+  deadline: number | null;
+  deadlineSlack: number | null;
+  criticalPath: string[];
+  timings: { id: string; es: number; ef: number; slack: number; critical: boolean }[];
+}
+export interface ScheduleView extends Partial<TimingView> {
+  start?: string;
+  names?: Record<string, string>;
+}
+export interface ReplanView {
+  names: Record<string, string>;
+  delayedTask: string;
+  days: number;
+  baseline: TimingView;
+  delayed: TimingView;
+  recovered: TimingView | null;
+  swaps: { offerId: string; label: string; leadDays: number }[];
+  applied: { status?: string; state?: string; outcome?: string } | null;
+}
+
+export interface GauntletView {
+  total: number;
+  naiveCompromised: number;
+  guardedPayPalCalls: number;
+  rows: {
+    id: string;
+    family: string;
+    text: string;
+    naiveCompromised: boolean;
+    guardedRefused: number;
+    guardedPayPalCalls: number;
+  }[];
+}

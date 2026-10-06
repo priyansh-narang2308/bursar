@@ -7,10 +7,15 @@ import { Agents } from './pages/Agents';
 import { Approvals } from './pages/Approvals';
 import { ComingSoon } from './pages/ComingSoon';
 import { Gallery } from './pages/Gallery';
+import { Gauntlet } from './pages/Gauntlet';
+import { Incidents } from './pages/Incidents';
+import { Integrations } from './pages/Integrations';
 import { Landing } from './pages/Landing';
 import { Mandate } from './pages/Mandate';
 import { MissionDetail, Missions } from './pages/Missions';
 import { Overview } from './pages/Overview';
+import { Policy } from './pages/Policy';
+import { Schedule } from './pages/Schedule';
 
 const SOON: [string, string, string][] = [
   [
@@ -38,7 +43,6 @@ const SOON: [string, string, string][] = [
     'Policy lab',
     'Adversarial scenarios run against the policy, with what broke and how it was fixed.',
   ],
-  ['gauntlet', 'Gauntlet', 'Prompt-injection attacks against a naive agent and a guarded one.'],
 ];
 
 export function App() {
@@ -62,6 +66,11 @@ export function App() {
           <Route path="activity" element={<Activity />} />
           <Route path="mandate" element={<Mandate />} />
           <Route path="agents" element={<Agents />} />
+          <Route path="policy" element={<Policy />} />
+          <Route path="incidents" element={<Incidents />} />
+          <Route path="integrations" element={<Integrations />} />
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="gauntlet" element={<Gauntlet />} />
           {SOON.map(([path, title, text]) => (
             <Route key={path} path={path} element={<ComingSoon title={title} text={text} />} />
           ))}

@@ -18,6 +18,9 @@ catalog:
   react-dom: ^19.3.0
   react-router-dom: ^7.18.0 # routes for the landing page and the dashboard
   vite: ^8.3.0 # dev server and bundler for the web app
+  clsx: ^2.1.1
+  framer-motion: ^12.4.0
+  lucide-react: ^1.52.0
   '@biomejs/biome': ^2.5.0
   '@modelcontextprotocol/sdk': ^1.32.1
   '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)

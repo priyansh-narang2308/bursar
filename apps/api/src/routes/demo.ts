@@ -54,6 +54,25 @@ export function demoRoutes(deps: {
         await hooks().approveMandate(orgId, c.req.param('id'), userId ?? '');
         return c.json({ approved: true });
       })
+      // Moves money at PayPal outside the gateway. The Verifier should notice, freeze and refund.
+      .post('/demo/rogue-capture', can('mandates:write'), async (c) =>
+        c.json(await hooks().rogueCapture(requirePrincipal(c).orgId)),
+      )
+      .get('/missions/:id/schedule', can('missions:read'), async (c) =>
+        c.json(await hooks().schedule(requirePrincipal(c).orgId, c.req.param('id'))),
+      )
+      .post('/missions/:id/replan', can('actions:propose'), async (c) => {
+        const input = await readBody(
+          c,
+          z.strictObject({
+            days: z.int().min(1).max(30).default(4),
+            apply: z.boolean().default(false),
+          }),
+        );
+        return c.json(await hooks().replan(requirePrincipal(c).orgId, c.req.param('id'), input));
+      })
+      // Attacks a naive agent and the guarded one with the same payloads.
+      .post('/demo/gauntlet', can('missions:read'), async (c) => c.json(await hooks().gauntlet()))
       // Runs the agents on a mission (plan, research, one cart) and returns what they did.
       .post('/missions/:id/run', can('actions:propose'), async (c) =>
         c.json(await hooks().runAgents(requirePrincipal(c).orgId, c.req.param('id'))),

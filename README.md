@@ -33,7 +33,7 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 
 | Path | Purpose | State |
 | --- | --- | --- |
-| `apps/api` | Hono API with sessions, roles, agent keys, health checks and OpenAPI; the money routes, webhook receiver and MCP gateway are next | in progress |
+| `apps/api` | Hono API with sessions, roles, agent keys, health checks and OpenAPI; the money routes, webhook receiver and MCP gateway are next | ready (Studio and lab screens still to come) |
 | `apps/web` | React and Vite app with the AG Studio cockpit and Bryntum Gantt | planned |
 | `apps/workflows` | Render Workflows tasks | planned |
 | `packages/money` | Exact money: `bigint` minor units, PayPal's currencies, explicit rounding, lossless splitting | ready |

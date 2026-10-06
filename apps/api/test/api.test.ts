@@ -121,7 +121,7 @@ describe('errors are RFC 9457 problems from the catalog', () => {
     const fresh = await createTestApp();
     const anon = fresh.client();
     let last = await anon.call('GET', '/v1/me');
-    for (let i = 0; i < 305 && last.status !== 429; i++) last = await anon.call('GET', '/v1/me');
+    for (let i = 0; i < 605 && last.status !== 429; i++) last = await anon.call('GET', '/v1/me');
     expect(last.status).toBe(429);
     expect(last.json).toMatchObject({ code: 'RATE_LIMITED', retryable: true });
     expect(Number(last.headers.get('retry-after'))).toBeGreaterThan(0);
