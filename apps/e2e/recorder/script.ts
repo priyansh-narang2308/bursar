@@ -118,3 +118,46 @@ export const narrationMs = (text: string) =>
 export type Measured = Record<string, string>;
 export const fill = (template: string, values: Measured) =>
   template.replace(/\{\{(\w+)\}\}/g, (_, key: string) => values[key] ?? `[${key}]`);
+
+const ONES = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve',
+  'thirteen',
+  'fourteen',
+  'fifteen',
+  'sixteen',
+  'seventeen',
+  'eighteen',
+  'nineteen',
+];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+/** A whole number below a million, in words. */
+export function wordsFor(n: number): string {
+  if (n < 20) return ONES[n] ?? '';
+  if (n < 100) return `${TENS[Math.floor(n / 10)]}${n % 10 === 0 ? '' : `-${ONES[n % 10]}`}`;
+  if (n < 1000)
+    return `${ONES[Math.floor(n / 100)]} hundred${n % 100 === 0 ? '' : ` ${wordsFor(n % 100)}`}`;
+  return `${wordsFor(Math.floor(n / 1000))} thousand${n % 1000 === 0 ? '' : ` ${wordsFor(n % 1000)}`}`;
+}
+
+/** The text as a person would say it: amounts in words, so a voice does not stumble on "$3,424.47". */
+export function spoken(text: string): string {
+  return text.replace(/\$([\d,]+)(?:\.(\d\d))?/g, (_, whole: string, cents: string | undefined) => {
+    const dollars = Number(whole.replaceAll(',', ''));
+    const c = cents === undefined ? 0 : Number(cents);
+    const d = `${wordsFor(dollars)} ${dollars === 1 ? 'dollar' : 'dollars'}`;
+    return c === 0 ? d : `${d} and ${wordsFor(c)} ${c === 1 ? 'cent' : 'cents'}`;
+  });
+}

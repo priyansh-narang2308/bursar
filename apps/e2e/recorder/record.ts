@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { chromium, type Page } from '@playwright/test';
 import { BEATS, fill, MAX_RUNTIME_MS, type Measured, narrationMs, wordsOf } from './script';
@@ -24,6 +24,13 @@ const OUT = join(ROOT, '.demo', MODE);
 const DOCS = join(ROOT, 'docs', 'submission');
 mkdirSync(OUT, { recursive: true });
 mkdirSync(DOCS, { recursive: true });
+
+// If a voice-over has been generated (`pnpm demo:narrate`), each beat is held for as long as the real audio runs.
+const DURATIONS = join(ROOT, '.demo', 'voice', MODE, 'durations.json');
+const audio: Record<string, number> = existsSync(DURATIONS)
+  ? JSON.parse(readFileSync(DURATIONS, 'utf8'))
+  : {};
+const lengthOf = (id: string, spokenText: string) => audio[id] ?? narrationMs(spokenText);
 
 const values: Measured = {};
 // Stretches of waiting on a server (the lab running, a webhook arriving) are shown sped up in the finished video,
@@ -142,7 +149,7 @@ async function beat(id: string, run: () => Promise<void>) {
   const atMs = cnow();
   await run();
   // The narration starts a moment after the beat does, and the next beat waits for it to finish.
-  const needed = atMs + 400 + narrationMs(fill(def.voiceover, values)) + 500;
+  const needed = atMs + 400 + lengthOf(id, fill(def.voiceover, values)) + 500;
   if (cnow() < needed) await sleep(needed - cnow());
   starts.push({ id, atMs, endMs: cnow() });
 }
@@ -254,7 +261,7 @@ await beat('lab', async () => {
   await page.getByLabel('Policy').selectOption({ index: 1 });
   await sleep(500);
   await press(page.getByRole('button', { name: 'Run the lab' }));
-  await fast(() => page.getByText('Broke the policy').first().waitFor({ timeout: 60_000 }));
+  await fast(() => page.getByText('Broke the policy').first().waitFor({ timeout: 150_000 }));
   await sleep(600);
   const lab = await text();
   values['broken'] = grab(lab, /Broke the policy\s+(\d+)/);
@@ -329,8 +336,12 @@ await beat('rogue', async () => {
   );
   const took = now() - began;
   values['containMs'] = String(took);
-  values['contain'] =
-    took < 10_000 ? `${(took / 1000).toFixed(1)} seconds` : `${Math.round(took / 1000)} seconds`;
+  if (took > 30_000)
+    throw new Error(
+      `The kill switch took ${Math.round(took / 1000)} s; the script says "within thirty seconds".`,
+    );
+  values['contain'] = 'thirty seconds';
+  took < 10_000 ? `${(took / 1000).toFixed(1)} seconds` : `${Math.round(took / 1000)} seconds`;
   await sleep(2500);
   await glide(1500, 60);
 });
@@ -416,7 +427,7 @@ for (const mark of starts) {
   const total = sentences.reduce((sum, s) => sum + wordsOf(s), 0);
   let cursor = mark.atMs + 400;
   for (const sentence of sentences) {
-    const length = Math.round((wordsOf(sentence) / total) * narrationMs(spoken));
+    const length = Math.round((wordsOf(sentence) / total) * lengthOf(mark.id, spoken));
     srt += `${n}\n${stamp(cursor)} --> ${stamp(cursor + length)}\n${sentence}\n\n`;
     cursor += length;
     n += 1;
@@ -440,6 +451,14 @@ Every number in the voice-over was measured on this take against ${BASE}. The ta
 ${table}
 `;
 writeFileSync(join(DOCS, `captions-${MODE}.srt`), srt);
+writeFileSync(
+  join(DOCS, `timeline-${MODE}.json`),
+  `${JSON.stringify(
+    starts.map((mark) => ({ id: mark.id, atMs: mark.atMs, endMs: mark.endMs })),
+    null,
+    2,
+  )}\n`,
+);
 writeFileSync(join(DOCS, `video-script-${MODE}.md`), script);
 writeFileSync(
   join(DOCS, `measured-${MODE}.json`),

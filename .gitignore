@@ -16,7 +16,7 @@ coverage/
 
 # tests / tooling output
 playwright-report/
-.demo/
+.demo
 test-results/
 spikes/results/*.local.json
 *.log

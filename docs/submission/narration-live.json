@@ -1,0 +1,57 @@
+[
+  {
+    "id": "title",
+    "text": "AI agents can finally buy things. The hard question is not whether they can pay. It is whether you would let one spend your money.",
+    "speech": "AI agents can finally buy things. The hard question is not whether they can pay. It is whether you would let one spend your money."
+  },
+  {
+    "id": "mandate",
+    "text": "Meet Bursar. A workspace opens in one click on PayPal's sandbox. The owner sets a mandate: a cap of $10,000.00, a limit per mission, and a window. It is tied to a PayPal Vault token, so revoking it is real.",
+    "speech": "Meet Bursar. A workspace opens in one click on PayPal's sandbox. The owner sets a mandate: a cap of ten thousand dollars, a limit per mission, and a window. It is tied to a PayPal Vault token, so revoking it is real."
+  },
+  {
+    "id": "plan",
+    "text": "A mission states a goal and a budget of $1,000.00. The Planner splits it into 4 needs, and a researcher per need searches real products through tools that cannot name a price. Bursar re-quotes every offer and proposes one cart, priced by the server at $251.96. The model never types an amount.",
+    "speech": "A mission states a goal and a budget of one thousand dollars. The Planner splits it into 4 needs, and a researcher per need searches real products through tools that cannot name a price. Bursar re-quotes every offer and proposes one cart, priced by the server at two hundred fifty-one dollars and ninety-six cents. The model never types an amount."
+  },
+  {
+    "id": "approve",
+    "text": "Nothing moves yet. 17 pure rules rule on the cart, and one wants a person, because the supplier is new. The owner approves this exact cart. The approval is signed over its hash, so change one line and it is void. Then PayPal places the hold.",
+    "speech": "Nothing moves yet. 17 pure rules rule on the cart, and one wants a person, because the supplier is new. The owner approves this exact cart. The approval is signed over its hash, so change one line and it is void. Then PayPal places the hold."
+  },
+  {
+    "id": "receipt",
+    "text": "Every action ends in a receipt: the rules that ran, who approved, what was sent to PayPal, and a tamper-evident audit chain. Replay the ruling, and it reproduces, byte for byte.",
+    "speech": "Every action ends in a receipt: the rules that ran, who approved, what was sent to PayPal, and a tamper-evident audit chain. Replay the ruling, and it reproduces, byte for byte."
+  },
+  {
+    "id": "attack",
+    "text": "Now an attack. Product titles are written by sellers, so they can carry instructions. 27 injection payloads, read by the same gullible agent twice. With raw payment tools it is talked into paying or ordering 24 times. Through Bursar, it makes 0 PayPal calls.",
+    "speech": "Now an attack. Product titles are written by sellers, so they can carry instructions. 27 injection payloads, read by the same gullible agent twice. With raw payment tools it is talked into paying or ordering 24 times. Through Bursar, it makes 0 PayPal calls."
+  },
+  {
+    "id": "lab",
+    "text": "Before any agent runs, Bursar attacks its own policy. Remove the daily limit, and the lab finds 6 ways through, spending about $3,424.47 with no person involved. It shrinks one to the fewest orders that still works, and proposes the fix.",
+    "speech": "Before any agent runs, Bursar attacks its own policy. Remove the daily limit, and the lab finds 6 ways through, spending about three thousand four hundred twenty-four dollars and forty-seven cents with no person involved. It shrinks one to the fewest orders that still works, and proposes the fix."
+  },
+  {
+    "id": "studio",
+    "text": "The cockpit shows the whole workspace at once: the envelope, which rules fire, and where the money went. Ask the Treasurer in plain words and it answers from figures the server summed. It can read, and it can chart. It cannot move money.",
+    "speech": "The cockpit shows the whole workspace at once: the envelope, which rules fire, and where the money went. Ask the Treasurer in plain words and it answers from figures the server summed. It can read, and it can chart. It cannot move money."
+  },
+  {
+    "id": "schedule",
+    "text": "Reality changes. A carrier says a delivery is 3 days late. The scheduler finds the fewest swaps that still meet the deadline, and proposes them. A recovery is only ever a proposal.",
+    "speech": "Reality changes. A carrier says a delivery is 3 days late. The scheduler finds the fewest swaps that still meet the deadline, and proposes them. A recovery is only ever a proposal."
+  },
+  {
+    "id": "rogue",
+    "text": "And if something bypasses Bursar entirely? A capture appears at PayPal with no decision behind it. The signed webhook arrives, nothing explains it, and within thirty seconds the Verifier freezes the mandate, refunds the charge, and revokes the token.",
+    "speech": "And if something bypasses Bursar entirely? A capture appears at PayPal with no decision behind it. The signed webhook arrives, nothing explains it, and within thirty seconds the Verifier freezes the mandate, refunds the charge, and revokes the token."
+  },
+  {
+    "id": "close",
+    "text": "Bursar. Spend authority for AI agents: governed by code, bound by PayPal, verified by webhooks. Sandbox only, and honest about what is simulated.",
+    "speech": "Bursar. Spend authority for AI agents: governed by code, bound by PayPal, verified by webhooks. Sandbox only, and honest about what is simulated."
+  }
+]

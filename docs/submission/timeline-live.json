@@ -1,0 +1,57 @@
+[
+  {
+    "id": "title",
+    "atMs": 4,
+    "endMs": 8507
+  },
+  {
+    "id": "mandate",
+    "atMs": 8507,
+    "endMs": 23454
+  },
+  {
+    "id": "plan",
+    "atMs": 23454,
+    "endMs": 45612
+  },
+  {
+    "id": "approve",
+    "atMs": 45612,
+    "endMs": 62461
+  },
+  {
+    "id": "receipt",
+    "atMs": 62461,
+    "endMs": 74266
+  },
+  {
+    "id": "attack",
+    "atMs": 74266,
+    "endMs": 92928
+  },
+  {
+    "id": "lab",
+    "atMs": 92928,
+    "endMs": 116838
+  },
+  {
+    "id": "studio",
+    "atMs": 116838,
+    "endMs": 133705
+  },
+  {
+    "id": "schedule",
+    "atMs": 133705,
+    "endMs": 146200
+  },
+  {
+    "id": "rogue",
+    "atMs": 146200,
+    "endMs": 162805
+  },
+  {
+    "id": "close",
+    "atMs": 162805,
+    "endMs": 174462
+  }
+]

@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "test": "playwright test --list",
     "test:e2e": "playwright test",
-    "demo:record": "node --import tsx recorder/record.ts"
+    "demo:record": "node --import tsx recorder/record.ts",
+    "demo:narration": "node --import tsx recorder/narration.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "catalog:",
