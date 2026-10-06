@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "dev:demo": "tsx src/dev.ts",
     "payer": "tsx --env-file=../../.env src/dev-tools/payer.ts",
-    "spike": "tsx --env-file=../../.env src/dev-tools/spike.ts"
+    "spike": "tsx --env-file=../../.env src/dev-tools/spike.ts",
+    "webhook": "tsx --env-file=../../.env src/dev-tools/webhook.ts"
   },
   "dependencies": {
     "@bursar/agent-tools": "workspace:*",
@@ -36,14 +37,16 @@
     "@hono/node-server": "catalog:",
     "drizzle-orm": "catalog:",
     "hono": "catalog:",
+    "pg": "catalog:",
     "pino": "catalog:",
     "tsx": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@modelcontextprotocol/sdk": "catalog:",
     "@bursar/tooling": "workspace:*",
+    "@modelcontextprotocol/sdk": "catalog:",
     "@types/node": "catalog:",
+    "@types/pg": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

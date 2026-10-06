@@ -40,6 +40,26 @@ describe('writes from another site', () => {
     expect((await post('/v1/demo/role', { cookie }, '{"role":"OWNER"}')).status).toBe(200); // no Origin: a script or a test
   });
 
+  it('are allowed from the very host they were sent to, which is what a deployed site sees behind a proxy', async () => {
+    const { browser } = await openWorkspace(t);
+    const cookie = browser.cookie ?? '';
+    const same = await post(
+      '/v1/demo/role',
+      { cookie, origin: 'https://demo.example.onrender.com', host: 'demo.example.onrender.com' },
+      '{"role":"OWNER"}',
+    );
+    expect(same.status).toBe(200);
+    const other = await post(
+      '/v1/demo/role',
+      { cookie, origin: 'https://evil.example', host: 'demo.example.onrender.com' },
+      '{"role":"OWNER"}',
+    );
+    expect(other.status).toBe(403);
+    expect(
+      (await post('/v1/demo/role', { cookie, origin: 'not a url' }, '{"role":"OWNER"}')).status,
+    ).toBe(403);
+  });
+
   it('do not stop reading from another site', async () => {
     const { browser } = await openWorkspace(t);
     const read = await t.app.request('/v1/me', {
@@ -56,5 +76,18 @@ describe('request size', () => {
     const response = await post('/v1/agents', { cookie: browser.cookie ?? '' }, big);
     expect(response.status).toBe(400);
     expect(await response.json()).toMatchObject({ code: 'VALIDATION_FAILED' });
+  });
+});
+
+describe('roles in a demo workspace', () => {
+  it('are different people, so one cannot approve what another proposed', async () => {
+    const { browser } = await openWorkspace(t);
+    const owner = (await browser.call('GET', '/v1/me')).json.userId;
+    await browser.call('POST', '/v1/demo/role', { json: { role: 'APPROVER' } });
+    const approver = (await browser.call('GET', '/v1/me')).json;
+    expect(approver.role).toBe('APPROVER');
+    expect(approver.userId).not.toBe(owner);
+    await browser.call('POST', '/v1/demo/role', { json: { role: 'OWNER' } });
+    expect((await browser.call('GET', '/v1/me')).json.userId).toBe(owner); // and back again
   });
 });

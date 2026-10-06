@@ -1,0 +1,50 @@
+# The public demo: one web service that serves the built web app and the API on one address, on a Render
+# Postgres (workspaces survive a restart). Secrets are set in the dashboard, never here.
+services:
+  - type: web
+    name: bursar-demo
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    autoDeploy: true
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @bursar/web build
+    startCommand: pnpm start:demo
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: DEMO_MODE
+        value: "true"
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=380 # keeps the process under a 512 MB plan
+      - key: BURSAR_DATABASE_URL
+        fromDatabase:
+          name: bursar-db
+          property: connectionString
+      - key: PUBLIC_BASE_URL
+        sync: false # the service's own address, https://<name>.onrender.com
+      # Optional: PayPal's real sandbox instead of the in-process fake.
+      - key: BURSAR_PAYPAL
+        sync: false # sandbox
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: VAULT_ENC_KEY
+        sync: false
+      - key: PROVENANCE_HMAC_KEY
+        sync: false
+      - key: BURSAR_PAYER_POOL
+        sync: false # the sealed contents of .bursar/payers.json
+
+databases:
+  - name: bursar-db
+    databaseName: bursar
+    user: bursar
+    plan: free # expires after 30 days; use a paid plan for anything that must last
+    region: oregon

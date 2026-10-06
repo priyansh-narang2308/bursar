@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
+import { relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type AgentRole, createToolbox, type ToolCallLog } from '@bursar/agent-tools';
 import { runMission } from '@bursar/agents';
@@ -25,6 +26,7 @@ import { decodeKey, decryptSecret, parseKeyring } from '@bursar/crypto';
 import {
   cartLines,
   carts,
+  createDb,
   envelopes,
   mandates,
   missions,
@@ -33,7 +35,6 @@ import {
   users,
   withOrg,
 } from '@bursar/db';
-import { createTestDb } from '@bursar/db/testing';
 import {
   createCoreLab,
   DEFAULT_LIMITS,
@@ -49,14 +50,19 @@ import {
 } from '@bursar/lab';
 import { createRuntime, persistRun } from '@bursar/llm';
 import { Money } from '@bursar/money';
-import { createPayPalClient } from '@bursar/paypal';
+import { createPayPalClient, PayPalError } from '@bursar/paypal';
 import { createFakePayPal } from '@bursar/paypal-fake';
 import { standardPolicy } from '@bursar/policy';
 import { dayOf, planFromBasket, type Schedule, schedule as scheduleOf } from '@bursar/schedule';
 import { type MissionId, newId, type OrganizationId } from '@bursar/schemas';
 import { createWorkflows, recoveryFor } from '@bursar/workflows';
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { and, desc, eq, inArray, isNotNull } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { Hono } from 'hono';
+import { Pool } from 'pg';
 import { createApp, type DemoHooks } from './app';
 import { loadConfig } from './config';
 import { createLogger } from './logger';
@@ -72,14 +78,28 @@ const usd = (cents: number) => ({ currency: 'USD' as const, minor: String(cents)
 const DAY = 86_400_000;
 
 const config = loadConfig({
-  NODE_ENV: 'development',
+  NODE_ENV: process.env['NODE_ENV'] === 'production' ? 'production' : 'development',
   DATABASE_URL: 'memory',
   SESSION_SECRET: randomBytes(32).toString('hex'),
   DEMO_MODE: 'true',
+  ...(process.env['PUBLIC_BASE_URL'] ? { PUBLIC_BASE_URL: process.env['PUBLIC_BASE_URL'] } : {}),
   PORT: process.env['PORT'] ?? '8787',
 });
 const logger = createLogger(config.logLevel);
-const { db } = await createTestDb();
+// With BURSAR_DATABASE_URL the demo uses a real Postgres (migrated at start, so workspaces survive a restart and
+// the server stays small); without it, an in-memory one that needs nothing.
+const databaseUrl = process.env['BURSAR_DATABASE_URL'];
+const { db } = databaseUrl
+  ? await connect(databaseUrl)
+  : await (await import('@bursar/db/testing')).createTestDb();
+
+async function connect(url: string) {
+  const pool = new Pool({ connectionString: url });
+  await migrate(drizzle({ client: pool }), {
+    migrationsFolder: fileURLToPath(new URL('../../../packages/db/migrations', import.meta.url)),
+  });
+  return createDb(url);
+}
 
 // `BURSAR_PAYPAL=sandbox` uses PayPal's real sandbox with the keys in `.env` and the buyers in the payer pool
 // (`pnpm dev:payer`). Without it, everything runs against an in-process fake and needs no keys.
@@ -148,9 +168,13 @@ if (fake !== undefined)
 
 /** Buyers who approved once, with `pnpm dev:payer`, whose approval each workspace borrows. */
 const POOL_FILE = fileURLToPath(new URL('../../../.bursar/payers.json', import.meta.url));
+// On a host there is no file: the sealed pool travels in an environment variable instead.
+const poolJson =
+  process.env['BURSAR_PAYER_POOL'] ??
+  (existsSync(POOL_FILE) ? readFileSync(POOL_FILE, 'utf8') : undefined);
 const payerPool: string[] =
-  sandbox && existsSync(POOL_FILE)
-    ? (JSON.parse(readFileSync(POOL_FILE, 'utf8')) as { sealed: string }[]).map((p) =>
+  sandbox && poolJson !== undefined
+    ? (JSON.parse(poolJson) as { sealed: string }[]).map((p) =>
         decryptSecret(vaultKeys, p.sealed, 'payer-pool'),
       )
     : [];
@@ -540,12 +564,20 @@ const demo: DemoHooks = {
         'Approve a purchase first, so there is a hold to capture.',
       );
     // Straight to PayPal, with no action behind it: nothing in Bursar asked for this.
-    await paypal.payments.capture({
-      requestId: `rogue-${randomBytes(8).toString('hex')}`,
-      authorizationId: held.paypalAuthorizationId,
-      amount: Money.of(5_000n, 'USD'),
-      finalCapture: false,
-    });
+    await paypal.payments
+      .capture({
+        requestId: `rogue-${randomBytes(8).toString('hex')}`,
+        authorizationId: held.paypalAuthorizationId,
+        amount: Money.of(5_000n, 'USD'),
+        finalCapture: false,
+      })
+      .catch((error: unknown) => {
+        if (!(error instanceof PayPalError)) throw error;
+        throw new CoreError(
+          'CONFLICT',
+          'That hold is already used up. Try the kill switch after approving a purchase and before capturing it.',
+        );
+      });
     return { captured: true };
   },
 
@@ -708,5 +740,21 @@ const app = createApp({
     },
   },
 });
-serve({ fetch: app.fetch, port: config.port });
-logger.info({ port: config.port }, 'demo api listening (in-memory data, fake PayPal)');
+// One address for everything: the API, and the built web app for any other path (so a deploy needs one service).
+const WEB_DIST = fileURLToPath(new URL('../../web/dist', import.meta.url));
+const hasWeb = existsSync(`${WEB_DIST}/index.html`);
+const dist = relative(process.cwd(), WEB_DIST);
+const isApi = (path: string) => /^\/(v1|webhooks|healthz|readyz|openapi\.json)(\/|$)/.test(path);
+const server = new Hono();
+if (hasWeb) {
+  server.use('*', (c, next) => (isApi(c.req.path) ? next() : serveStatic({ root: dist })(c, next)));
+  server.get('*', (c, next) =>
+    isApi(c.req.path) ? next() : serveStatic({ path: `${dist}/index.html` })(c, next),
+  );
+}
+server.route('/', app);
+serve({ fetch: server.fetch, port: config.port });
+logger.info(
+  { port: config.port, web: hasWeb, paypal: sandbox ? 'sandbox' : 'fake' },
+  'demo listening (in-memory data)',
+);

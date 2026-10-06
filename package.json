@@ -27,7 +27,8 @@
     "dev:demo": "pnpm --filter @bursar/api dev:demo",
     "dev:web": "pnpm --filter @bursar/web dev",
     "dev:payer": "pnpm --filter @bursar/api payer",
-    "dev:spike": "pnpm --filter @bursar/api spike"
+    "dev:spike": "pnpm --filter @bursar/api spike",
+    "start:demo": "node --import tsx apps/api/src/dev.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

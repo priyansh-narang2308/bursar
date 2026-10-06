@@ -1,5 +1,6 @@
 import { type Db, memberships, organizations, users } from '@bursar/db';
 import { newId, roleSchema } from '@bursar/schemas';
+import { and, eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import type { DemoHooks } from '../app';
@@ -55,12 +56,18 @@ export function demoRoutes(deps: {
         const [orgId, userId] = [newId('organization'), newId('user')];
         await deps.db.transaction(async (tx) => {
           await tx.insert(organizations).values({ id: orgId, name });
-          await tx.insert(users).values({
-            id: userId,
-            email: `${userId.toLowerCase()}@demo.bursar.dev`,
-            displayName: 'Demo owner',
-          });
-          await tx.insert(memberships).values({ orgId, userId, role: 'OWNER' });
+          // Each role is its own person, so "a different person must approve" is true in the demo too.
+          for (const [id, role, displayName] of [
+            [userId, 'OWNER', 'Demo owner'],
+            [newId('user'), 'APPROVER', 'Demo approver'],
+            [newId('user'), 'OPERATOR', 'Demo operator'],
+            [newId('user'), 'AUDITOR', 'Demo auditor'],
+          ] as const) {
+            await tx
+              .insert(users)
+              .values({ id, email: `${id.toLowerCase()}@demo.bursar.dev`, displayName });
+            await tx.insert(memberships).values({ orgId, userId: id, role });
+          }
         });
         await deps.hooks?.seed(orgId, userId);
         startSession(c, deps.config, { userId, orgId, role: 'OWNER' }, deps.now());
@@ -119,10 +126,15 @@ export function demoRoutes(deps: {
         if (principal.kind !== 'session' || principal.userId === null)
           throw new ApiError('FORBIDDEN');
         const { role } = await readBody(c, z.object({ role: roleSchema }));
+        // Switching role means being the person who holds it. A workspace made before roles were people keeps the same one.
+        const [holder] = await deps.db
+          .select()
+          .from(memberships)
+          .where(and(eq(memberships.orgId, principal.orgId), eq(memberships.role, role)));
         startSession(
           c,
           deps.config,
-          { userId: principal.userId, orgId: principal.orgId, role },
+          { userId: holder?.userId ?? principal.userId, orgId: principal.orgId, role },
           deps.now(),
         );
         return c.json({ role });

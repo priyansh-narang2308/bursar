@@ -37,7 +37,13 @@ export function Approvals() {
       );
       void client.invalidateQueries();
     },
-    onError: (e: Error) => toast('bad', (e as { readable?: string }).readable ?? e.message),
+    onError: (e: Error) =>
+      toast(
+        'bad',
+        (e as { code?: string }).code === 'SEPARATION_OF_DUTIES'
+          ? 'Nobody approves their own proposal. Switch to Approver in the top bar and decide it as them.'
+          : ((e as { readable?: string }).readable ?? e.message),
+      ),
   });
   return (
     <div className="content">

@@ -212,6 +212,9 @@ importers:
       hono:
         specifier: 'catalog:'
         version: 4.13.13
+      pg:
+        specifier: 'catalog:'
+        version: 8.23.1
       pino:
         specifier: 'catalog:'
         version: 10.4.0
@@ -231,6 +234,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.19.1
+      '@types/pg':
+        specifier: 'catalog:'
+        version: 8.23.1
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 5.0.3(vitest@5.0.3)
