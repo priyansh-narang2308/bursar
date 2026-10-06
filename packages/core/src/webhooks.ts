@@ -1,9 +1,9 @@
 import { actionIdFromTag, sha256Hex, verifyProvenanceTag } from '@bursar/crypto';
-import { actions, executions, paypalEvents, webhookInbox } from '@bursar/db';
+import { actions, executions, incidents, paypalEvents, webhookInbox } from '@bursar/db';
 import { fromPayPalAmount } from '@bursar/money';
 import { PayPalError } from '@bursar/paypal';
-import { newId, type OrganizationId } from '@bursar/schemas';
-import { and, eq } from 'drizzle-orm';
+import { type JsonObject, newId, type OrganizationId } from '@bursar/schemas';
+import { and, eq, inArray } from 'drizzle-orm';
 import { confirm } from './confirm';
 import type { ActionRow } from './context';
 import { openIncident } from './incidents';
@@ -94,6 +94,52 @@ async function matchPayout(tx: Tx, deps: CoreDeps, event: PayPalEvent): Promise<
 }
 
 /**
+ * The Verifier refunds the capture it has just found unexplained. That refund's own webhook is the Verifier's
+ * doing, so it is not another incident.
+ */
+async function explainedByContainment(
+  tx: Tx,
+  orgId: OrganizationId,
+  event: PayPalEvent,
+  resourceId: string | null,
+): Promise<boolean> {
+  if (event.event_type !== 'PAYMENT.CAPTURE.REFUNDED' || resourceId === null) return false;
+  const found = await tx
+    .select()
+    .from(incidents)
+    .where(
+      and(
+        eq(incidents.orgId, orgId),
+        eq(incidents.type, 'UNEXPLAINED_MOVEMENT'),
+        inArray(incidents.status, ['OPEN', 'CONTAINED']),
+      ),
+    );
+  return found.some(
+    (i) =>
+      (i.evidence as { resourceId?: string; eventType?: string }).resourceId === resourceId &&
+      (i.evidence as { eventType?: string }).eventType === 'PAYMENT.CAPTURE.COMPLETED',
+  );
+}
+
+/** An event that matches our records but no action of ours: ours to contain, unless the Verifier itself caused it. */
+async function noActionFor(
+  tx: Tx,
+  deps: CoreDeps,
+  orgId: OrganizationId,
+  event: PayPalEvent,
+  seen: JsonObject & { resourceId: string | null },
+  expected: string,
+): Promise<Result> {
+  if (await explainedByContainment(tx, orgId, event, seen.resourceId))
+    return { status: 'MATCHED', orgId };
+  const incidentId = await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
+    ...seen,
+    why: `Money moved (${event.event_type}) with no approved ${expected} action to explain it.`,
+  });
+  return { status: 'UNMATCHED', orgId, incidentId };
+}
+
+/**
  * Decides what a verified event means. Every money event must trace, through the provenance tag in its
  * `custom_id`, to an approved action of ours, for the amount we approved; anything else is an incident.
  */
@@ -140,13 +186,7 @@ async function match(tx: Tx, deps: CoreDeps, event: PayPalEvent): Promise<Result
           .from(actions)
           .where(and(eq(actions.cartId, origin.cartId), eq(actions.type, expected)));
   const action = candidates[0];
-  if (action === undefined) {
-    const incidentId = await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
-      ...seen,
-      why: `Money moved (${event.event_type}) with no approved ${expected} action to explain it.`,
-    });
-    return { status: 'UNMATCHED', orgId, incidentId };
-  }
+  if (action === undefined) return noActionFor(tx, deps, orgId, event, seen, expected);
   const reported =
     event.resource.amount === undefined
       ? undefined

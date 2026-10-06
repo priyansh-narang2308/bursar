@@ -107,3 +107,77 @@ describe('oversight over HTTP', () => {
     expect((await t.client().call('GET', '/v1/incidents')).status).toBe(401);
   });
 });
+
+describe('what the product shows about itself', () => {
+  it('lists the rules in force with their parameters, and which services are real', async () => {
+    const { browser } = await openWorkspace(t);
+    const policy = (await browser.call('GET', '/v1/policy')).json;
+    expect(policy.hash).toMatch(/^[0-9a-f]{64}$/);
+    const velocity = policy.rules.find((r: { id: string }) => r.id === 'R-VELOCITY');
+    expect(velocity).toMatchObject({ version: 2, params: { orgMax: { currency: 'USD' } } });
+    expect(velocity.summary).toContain('organisation');
+    const integrations = (await browser.call('GET', '/v1/integrations')).json;
+    expect(integrations).toMatchObject({ mcp: { path: '/v1/mcp' }, paypal: { mode: 'off' } });
+    expect((await t.client().call('GET', '/v1/policy')).status).toBe(401);
+  });
+
+  it('answers 404 to the demo-only routes on a server that has no demo hooks', async () => {
+    const { browser } = await openWorkspace(t);
+    for (const [method, path] of [
+      ['POST', '/v1/demo/rogue-capture'],
+      ['POST', '/v1/demo/gauntlet'],
+      ['GET', '/v1/missions/mis_x/schedule'],
+      ['POST', '/v1/missions/mis_x/replan'],
+    ] as const)
+      expect((await browser.call(method, path, method === 'GET' ? {} : { json: {} })).status).toBe(
+        404,
+      );
+  });
+});
+
+describe('the demo hooks, when a demo server supplies them', () => {
+  it('passes the caller’s organisation and strict input through, and refuses anything else', async () => {
+    const seen: unknown[] = [];
+    const demo = {
+      seed: async () => undefined,
+      approveMandate: async () => undefined,
+      runAgents: async () => ({}),
+      rogueCapture: async (orgId: string) => {
+        seen.push(['rogue', orgId]);
+        return { captured: true };
+      },
+      schedule: async (orgId: string, missionId: string) => {
+        seen.push(['schedule', orgId, missionId]);
+        return { tasks: [] };
+      },
+      replan: async (_o: string, _m: string, input: unknown) => {
+        seen.push(['replan', input]);
+        return { ok: true };
+      },
+      gauntlet: async () => ({ total: 0 }),
+    };
+    const app = await createTestApp(undefined, undefined, { demo });
+    const { browser, orgId } = await openWorkspace(app);
+    expect((await browser.call('POST', '/v1/demo/rogue-capture', { json: {} })).json).toEqual({
+      captured: true,
+    });
+    await browser.call('GET', '/v1/missions/mis_1/schedule');
+    expect(
+      (await browser.call('POST', '/v1/missions/mis_1/replan', { json: { days: 4, apply: true } }))
+        .status,
+    ).toBe(200);
+    expect(
+      (await browser.call('POST', '/v1/missions/mis_1/replan', { json: { days: 99 } })).status,
+    ).toBe(400);
+    expect(
+      (await browser.call('POST', '/v1/missions/mis_1/replan', { json: { days: 4, extra: 1 } }))
+        .status,
+    ).toBe(400);
+    expect(seen).toEqual([
+      ['rogue', orgId],
+      ['schedule', orgId, 'mis_1'],
+      ['replan', { days: 4, apply: true }],
+    ]);
+    await app.close();
+  });
+});

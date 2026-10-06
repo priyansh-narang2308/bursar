@@ -258,7 +258,7 @@ describe('the dashboard', () => {
 
   it('lists pages that are not built yet without pretending', async () => {
     signedIn();
-    renderAt('/dashboard/policy');
+    renderAt('/dashboard/studio');
     expect(await screen.findByText('Not built yet')).toBeInTheDocument();
   });
 });

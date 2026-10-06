@@ -33,8 +33,9 @@ const NAV: { label: string; items: NavEntry[] }[] = [
     label: 'Controls',
     items: [
       { to: '/dashboard/mandate', label: 'Mandate', icon: 'shield' },
-      { to: '/dashboard/policy', label: 'Policy', icon: 'file', soon: true },
-      { to: '/dashboard/incidents', label: 'Incidents', icon: 'alert', soon: true },
+      { to: '/dashboard/policy', label: 'Policy', icon: 'file' },
+      { to: '/dashboard/incidents', label: 'Incidents', icon: 'alert' },
+      { to: '/dashboard/integrations', label: 'Integrations', icon: 'grid' },
     ],
   },
   {
@@ -42,14 +43,14 @@ const NAV: { label: string; items: NavEntry[] }[] = [
     items: [
       { to: '/dashboard/agents', label: 'Agents & keys', icon: 'key' },
       { to: '/dashboard/studio', label: 'Studio', icon: 'grid', soon: true },
-      { to: '/dashboard/schedule', label: 'Schedule', icon: 'cal', soon: true },
+      { to: '/dashboard/schedule', label: 'Schedule', icon: 'cal' },
     ],
   },
   {
     label: 'Prove',
     items: [
       { to: '/dashboard/lab', label: 'Policy lab', icon: 'flask', soon: true },
-      { to: '/dashboard/gauntlet', label: 'Gauntlet', icon: 'shield', soon: true },
+      { to: '/dashboard/gauntlet', label: 'Gauntlet', icon: 'shield' },
     ],
   },
 ];

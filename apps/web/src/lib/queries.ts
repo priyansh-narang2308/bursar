@@ -6,10 +6,14 @@ import type {
   Agent,
   ApprovalRow,
   AuditVerdict,
+  Incident,
+  IntegrationsView,
   Mandate,
   Me,
   Mission,
+  PolicyView,
   Receipt,
+  ScheduleView,
 } from './types';
 
 export const useMe = () =>
@@ -56,6 +60,24 @@ export const useAuditVerdict = () =>
     queryFn: () => api.get<AuditVerdict>('/v1/audit/verify'),
     retry: false,
   });
+export const usePolicy = () =>
+  useQuery({ queryKey: ['policy'], queryFn: () => api.get<PolicyView>('/v1/policy') });
+export const useIncidents = () =>
+  useQuery({
+    queryKey: ['incidents'],
+    queryFn: () => api.get<{ items: Incident[] }>('/v1/incidents').then((r) => r.items),
+  });
+export const useIntegrations = () =>
+  useQuery({
+    queryKey: ['integrations'],
+    queryFn: () => api.get<IntegrationsView>('/v1/integrations'),
+  });
+export const useSchedule = (missionId: string | undefined) =>
+  useQuery({
+    queryKey: ['schedule', missionId],
+    enabled: missionId !== undefined,
+    queryFn: () => api.get<ScheduleView>(`/v1/missions/${missionId}/schedule`),
+  });
 export const useReceipt = (actionId: string | null) =>
   useQuery({
     queryKey: ['receipt', actionId],
@@ -81,12 +103,27 @@ export function useLiveEvents(enabled: boolean) {
   useEffect(() => {
     if (!enabled || typeof EventSource === 'undefined') return;
     const source = new EventSource('/v1/events');
-    const refresh = () =>
-      void Promise.all(
-        ['actions', 'approvals', 'mandates', 'missions', 'audit-verify', 'receipt'].map((key) =>
-          client.invalidateQueries({ queryKey: [key] }),
-        ),
+    // A purchase emits a handful of events at once; refresh once, shortly after the last of them.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const refresh = () => {
+      clearTimeout(timer);
+      timer = setTimeout(
+        () =>
+          void Promise.all(
+            [
+              'actions',
+              'approvals',
+              'mandates',
+              'missions',
+              'audit-verify',
+              'receipt',
+              'incidents',
+              'schedule',
+            ].map((key) => client.invalidateQueries({ queryKey: [key] })),
+          ),
+        300,
       );
+    };
     source.onmessage = refresh;
     // Every topic is its own event name, so listen to the ones the money loop emits.
     for (const topic of [
@@ -105,6 +142,9 @@ export function useLiveEvents(enabled: boolean) {
       'incident.opened',
     ])
       source.addEventListener(topic, refresh);
-    return () => source.close();
+    return () => {
+      clearTimeout(timer);
+      source.close();
+    };
   }, [enabled, client]);
 }

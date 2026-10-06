@@ -618,3 +618,61 @@ kbd {
   border-color: var(--bad);
   background: var(--bad);
 }
+
+/* Gantt: bars on a day scale ------------------------------------------------------------------------- */
+.gantt {
+  display: grid;
+  gap: 0;
+}
+.gantt-row {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  align-items: center;
+  min-height: 30px;
+  border-bottom: 1px solid var(--border);
+}
+.gantt-row:last-child {
+  border-bottom: 0;
+}
+.gantt-name {
+  padding: 0 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gantt-track {
+  position: relative;
+  height: 30px;
+}
+.gantt-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--border);
+}
+.gantt-bar {
+  position: absolute;
+  top: 9px;
+  height: 12px;
+  min-width: 4px;
+  border-radius: 3px;
+  background: var(--border-strong);
+}
+.gantt-bar[data-critical="true"] {
+  background: var(--text-2);
+}
+.gantt-bar[data-late="true"] {
+  background: var(--bad);
+}
+.gantt-deadline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--warn);
+}
+.gantt-axis {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  height: 24px;
+  border-bottom: 1px solid var(--border);
+}

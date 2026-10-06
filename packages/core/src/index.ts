@@ -2,6 +2,7 @@ import { standardPolicy } from '@bursar/policy';
 import { CircuitBreaker } from './breaker';
 import { buildCart, createMission, createSupplier, recordOffer } from './catalog';
 import { recordDelivery } from './deliveries';
+import { describePolicy } from './describe';
 import { execute } from './executor';
 import { changeMandate, completeMandate, expireMandates, startMandate } from './mandates';
 import { decide, expireApprovals, propose } from './pipeline';
@@ -56,6 +57,7 @@ export function createCore(options: CoreOptions) {
       resolve: resolveIncident.bind(null, deps),
       reconcile: reconcile.bind(null, deps),
     },
+    policy: { describe: describePolicy.bind(null, deps) },
     receipts: {
       get: receipt.bind(null, deps),
       replay: replayDecision.bind(null, deps),

@@ -120,10 +120,10 @@ interface ReplanInput {
  * A carrier delay in, a recovery out. The swaps become a new cart and a new proposal, so the replacement goes
  * through the same decision pipeline as any purchase: the Replanner has no way to order anything itself.
  */
-async function replanSchedule(ctx: TaskContext, input: JsonObject): Promise<JsonValue> {
+export async function recoveryFor(ctx: Pick<TaskContext, 'db' | 'orgId'>, input: JsonObject) {
   const missionId = str(input, 'missionId') as MissionId;
   const request = input['replan'] as unknown as ReplanInput;
-  const { mission, lines } = await basketOf(ctx, missionId);
+  const { mission, lines } = await basketOf(ctx as TaskContext, missionId);
   if (mission.deadline === null)
     throw new CoreError('VALIDATION_FAILED', 'The mission has no deadline.');
   const start = new Date(String(input['start']));
@@ -138,15 +138,17 @@ async function replanSchedule(ctx: TaskContext, input: JsonObject): Promise<Json
     deadline: dayOf(start, mission.deadline),
     alternatives: request.alternatives,
   });
+  return { recovery, lines, missionId };
+}
+
+async function replanSchedule(ctx: TaskContext, input: JsonObject): Promise<JsonValue> {
+  const { recovery, lines, missionId } = await recoveryFor(ctx, input);
   const base = {
     finishDelta: recovery.delayDiff.finishDelta,
     deadlineSlack: recovery.delayed.deadlineSlack,
   };
   if (recovery.swaps.length === 0)
-    return asJson({
-      ...base,
-      status: recovery.recovered === null ? 'UNRECOVERABLE' : 'ON_TIME',
-    });
+    return asJson({ ...base, status: recovery.recovered === null ? 'UNRECOVERABLE' : 'ON_TIME' });
   const swapped = new Map(recovery.swaps.map((s) => [s.taskId.replace(':deliver', ''), s.offerId]));
   const cart = await ctx.core.catalog.buildCart(
     ctx.orgId,

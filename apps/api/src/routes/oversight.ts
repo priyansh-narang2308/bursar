@@ -5,6 +5,7 @@ import { asc, desc, gt } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { streamSSE } from 'hono/streaming';
 import { z } from 'zod';
+import type { Integrations } from '../app';
 import { can, requirePrincipal } from '../auth';
 import type { AppEnv } from '../types';
 import { asTenant, readBody } from './support';
@@ -35,7 +36,7 @@ function resumeAfter(header: string | undefined, query: string | undefined): num
  * What a person or an auditor looks at: the live event stream, the receipt for an action, whether the audit
  * chain and a ruling still hold, incidents and deliveries.
  */
-export function oversightRoutes(db: Db, core: Core) {
+export function oversightRoutes(db: Db, core: Core, integrations: Integrations) {
   return new Hono<AppEnv>()
     .get('/events', can('workspace:read'), (c) => {
       const { orgId } = requirePrincipal(c);
@@ -69,6 +70,12 @@ export function oversightRoutes(db: Db, core: Core) {
         } while (live && open);
       });
     })
+    .get('/policy', can('workspace:read'), (c) =>
+      c.json(core.policy.describe(requirePrincipal(c).orgId)),
+    )
+    .get('/integrations', can('workspace:read'), (c) =>
+      c.json({ ...integrations, mcp: { path: '/v1/mcp' } }),
+    )
     .get('/receipts/:actionId', can('audit:read'), async (c) =>
       c.json(
         await core.receipts.get(
