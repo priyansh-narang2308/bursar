@@ -20,6 +20,14 @@ async function noViolations(page: import('@playwright/test').Page, exclude: stri
 }
 
 test.describe('accessibility (WCAG 2.1 A and AA)', () => {
+  for (const path of ['/', '/security', '/limits']) {
+    test(`the public page ${path} has no violations`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+      await noViolations(page);
+    });
+  }
+
   test('the dashboard pages have no violations', async ({ page }) => {
     await openWorkspace(page);
     for (const name of [

@@ -1,5 +1,5 @@
 import { type AgReportState, AgStudioAiModule, type AgStudioApi } from 'ag-studio';
-import { AgStudio } from 'ag-studio-react';
+import { AgStudio, AgStudioProvider } from 'ag-studio-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { EmptyState, ErrorNote, Panel, SimBadge, Skeleton } from '../components/ui';
 import { useCockpit, useMe } from '../lib/queries';
@@ -14,6 +14,8 @@ import { PageHead } from './parts';
  * The cockpit: AG Studio, themed with Bursar's tokens, drawing figures the server worked out. A person can
  * rearrange it in edit mode; the layout is kept in this browser and survives refreshes and live updates.
  */
+/** A licence hides Studio's trial notice. Without one everything still works. */
+const LICENCE = import.meta.env['VITE_AG_STUDIO_LICENSE_KEY'] as string | undefined;
 const MODULES = [AgStudioAiModule];
 const harness = ({ api }: { api: AgStudioApi }) => createTreasurerHarness(api);
 
@@ -40,6 +42,25 @@ export function Cockpit() {
     saveLayout(orgId, null);
     setGeneration((n) => n + 1);
   };
+
+  const view = data !== undefined && (
+    <AgStudio<BursarRegistry>
+      key={generation}
+      style={{ height: '100%', width: '100%' }}
+      data={data}
+      mode={mode}
+      theme={bursarStudioTheme}
+      widgets={bursarWidgets}
+      modules={MODULES}
+      ai={harness as never}
+      aiToolDisplay={treasurerToolDisplay}
+      initialState={initialState}
+      onApiReady={(event) => {
+        studio.current = event.api;
+      }}
+      onStateUpdated={remember}
+    />
+  );
 
   return (
     <div className="content cockpit">
@@ -89,22 +110,7 @@ export function Cockpit() {
       )}
       {data !== undefined && (
         <div className="studio-host">
-          <AgStudio<BursarRegistry>
-            key={generation}
-            style={{ height: '100%', width: '100%' }}
-            data={data}
-            mode={mode}
-            theme={bursarStudioTheme}
-            widgets={bursarWidgets}
-            modules={MODULES}
-            ai={harness as never}
-            aiToolDisplay={treasurerToolDisplay}
-            initialState={initialState}
-            onApiReady={(event) => {
-              studio.current = event.api;
-            }}
-            onStateUpdated={remember}
-          />
+          {LICENCE ? <AgStudioProvider licenseKey={LICENCE}>{view}</AgStudioProvider> : view}
         </div>
       )}
     </div>

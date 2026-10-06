@@ -15,6 +15,7 @@ vi.mock('ag-studio', () => ({
 }));
 vi.mock('ag-studio-react', () => ({
   createWidgets: () => ({}),
+  AgStudioProvider: ({ children }: { children: unknown }) => children,
   AgStudio: ({ data }: { data: { sources: { id: string; data: unknown[] }[] } }) => (
     <div data-testid="studio">{data.sources.map((s) => `${s.id}:${s.data.length}`).join(' ')}</div>
   ),
