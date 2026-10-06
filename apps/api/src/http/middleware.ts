@@ -75,7 +75,21 @@ export const sameOrigin =
   (allowed: string): MiddlewareHandler<AppEnv> =>
   async (c, next) => {
     const origin = c.req.header('origin');
-    if (WRITES.has(c.req.method) && origin !== undefined && origin !== new URL(allowed).origin)
+    if (
+      WRITES.has(c.req.method) &&
+      origin !== undefined &&
+      !isOurs(origin, allowed, c.req.header('host'))
+    )
       throw new ApiError('FORBIDDEN', { detail: 'This request came from another site.' });
     await next();
   };
+
+/** Ours if it is the configured address, or the very host the request was sent to (a proxy may hide the scheme). */
+function isOurs(origin: string, allowed: string, host: string | undefined): boolean {
+  try {
+    const given = new URL(origin);
+    return given.origin === new URL(allowed).origin || (host !== undefined && given.host === host);
+  } catch {
+    return false;
+  }
+}

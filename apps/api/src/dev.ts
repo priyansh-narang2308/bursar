@@ -82,6 +82,7 @@ const config = loadConfig({
   DATABASE_URL: 'memory',
   SESSION_SECRET: randomBytes(32).toString('hex'),
   DEMO_MODE: 'true',
+  ...(process.env['PUBLIC_BASE_URL'] ? { PUBLIC_BASE_URL: process.env['PUBLIC_BASE_URL'] } : {}),
   PORT: process.env['PORT'] ?? '8787',
 });
 const logger = createLogger(config.logLevel);
