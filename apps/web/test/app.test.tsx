@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -94,6 +94,33 @@ function renderAt(path: string) {
     </QueryClientProvider>,
   );
 }
+
+describe('the public pages', () => {
+  it('serve the security model and the limits without a session', async () => {
+    routes['GET /v1/me'] = () => ({
+      status: 401,
+      json: { code: 'UNAUTHENTICATED', title: 'Sign in' },
+    });
+    renderAt('/security');
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
+      'Bursar keeps agents',
+    );
+    cleanup();
+    renderAt('/limits');
+    expect(await screen.findByRole('heading', { name: /what this demo is/i })).toBeInTheDocument();
+    expect(screen.getByText(/sandbox money only/i)).toBeInTheDocument();
+  });
+
+  it('sets out what is real and what is simulated in a table', async () => {
+    routes['GET /v1/me'] = () => ({
+      status: 401,
+      json: { code: 'UNAUTHENTICATED', title: 'Sign in' },
+    });
+    renderAt('/');
+    const table = await screen.findByRole('table', { name: /real and simulated/i });
+    expect(within(table).getByRole('rowheader', { name: 'PayPal' })).toBeInTheDocument();
+  });
+});
 
 describe('the landing page', () => {
   it('opens a populated demo workspace in one click and lands on the dashboard', async () => {
