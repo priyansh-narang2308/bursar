@@ -441,21 +441,26 @@ export function labTasks(
       const results: JsonObject[] = [];
       for (let i = 0; i < scenarios.length; i += batch) {
         const runs = await Promise.all(
-          scenarios
-            .slice(i, i + batch)
-            .map((scenario, j) =>
-              ctx.start(
-                ctx.orgId,
-                'lab_scenario',
-                { scenario: asJson(scenario), config: asJson(config) } as JsonObject,
-                `lab/${seed}/${i + j}`,
-              ),
+          scenarios.slice(i, i + batch).map((scenario, j) =>
+            ctx.start(
+              ctx.orgId,
+              'lab_scenario',
+              {
+                scenario: asJson(scenario),
+                config: asJson(config),
+              } as JsonObject,
+              `lab/${seed}/${i + j}`,
             ),
+          ),
         );
         results.push(...runs.map((r) => r.result as JsonObject));
       }
       const broken = results.filter((r) => (r['violations'] as unknown[]).length > 0);
-      return asJson({ total: results.length, broken: broken.length, findings: broken });
+      return asJson({
+        total: results.length,
+        broken: broken.length,
+        findings: broken,
+      });
     },
   };
 }

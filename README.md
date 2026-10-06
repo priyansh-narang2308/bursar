@@ -53,6 +53,7 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `packages/lab` | The Policy Lab: adversarial scenarios, invariants, a minimiser, patch proposals and frozen regressions | ready |
 | `packages/mcp-gateway` | The MCP seatbelt: guarded tools for agents, PayPal's money tools blocked, deny by default | ready |
 | `apps/workflows` | Idempotent background tasks with a durable run record | ready |
+| `apps/web` | The landing page and dashboard: a dark, dense interface for the mandate, agents, approvals and receipts | in progress |
 | `packages/audit` | The tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |

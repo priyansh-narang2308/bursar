@@ -23,7 +23,9 @@
     "db:reset": "docker compose down -v && pnpm db:up && pnpm db:migrate",
     "dev:doctor": "tsx scripts/dev/verify-tooling.ts",
     "dev:skills": "tsx scripts/dev/install-skills.ts",
-    "prepare": "lefthook install || echo 'lefthook unavailable: skipping git hooks'"
+    "prepare": "lefthook install || echo 'lefthook unavailable: skipping git hooks'",
+    "dev:demo": "pnpm --filter @bursar/api dev:demo",
+    "dev:web": "pnpm --filter @bursar/web dev"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

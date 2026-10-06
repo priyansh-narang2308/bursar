@@ -24,6 +24,13 @@ const HOUR = 3_600_000;
 /** After goods are inspected, a payout waits this long in case of a dispute. */
 export const COOLING_OFF_HOURS = 24;
 
+/**
+ * An authorization reserves its amount when it is approved. When it is asked again at the moment of execution
+ * that reservation is already in the envelope's held figure, so it must not be counted a second time.
+ */
+const ownReservation = (action: ActionRow): bigint =>
+  action.type === 'AUTHORIZE' && action.state === 'SUBMITTING' ? (action.amountMinor ?? 0n) : 0n;
+
 /** A cart read back from the database in the shape its hash is made from. */
 export async function loadCart(tx: Tx, cartId: string) {
   const [cart] = await tx
@@ -253,7 +260,7 @@ export async function buildContext(
         : {
             orgId: envelope.orgId,
             ceiling: amountJson(envelope.ceilingMinor, envelope.currency),
-            held: amountJson(envelope.heldMinor, envelope.currency),
+            held: amountJson(envelope.heldMinor - ownReservation(action), envelope.currency),
             captured: amountJson(envelope.capturedMinor, envelope.currency),
           },
     cart:

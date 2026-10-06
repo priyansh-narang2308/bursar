@@ -4,6 +4,7 @@ import {
   approvals,
   carts,
   type Db,
+  decisions,
   mandates,
   missions,
   offers,
@@ -249,21 +250,32 @@ export function moneyRoutes(db: Db, core: Core) {
         ),
       ),
     )
-    .get('/approvals', can('approvals:decide'), async (c) =>
-      c.json({
-        items: await asTenant(db, c, (tx) =>
-          tx
-            .select({
-              id: approvals.id,
-              status: approvals.status,
-              expiresAt: approvals.expiresAt,
-              decisionId: approvals.decisionId,
-            })
-            .from(approvals)
-            .where(eq(approvals.status, 'PENDING')),
-        ),
-      }),
-    )
+    .get('/approvals', can('approvals:decide'), async (c) => {
+      const rows = await asTenant(db, c, (tx) =>
+        tx
+          .select({ approval: approvals, action: actions })
+          .from(approvals)
+          .innerJoin(decisions, eq(decisions.id, approvals.decisionId))
+          .innerJoin(actions, eq(actions.id, decisions.actionId))
+          .where(eq(approvals.status, 'PENDING'))
+          .orderBy(desc(approvals.expiresAt)),
+      );
+      return c.json({
+        items: rows.map(({ approval, action }) => ({
+          id: approval.id,
+          status: approval.status,
+          expiresAt: approval.expiresAt,
+          decisionId: approval.decisionId,
+          actionId: action.id,
+          type: action.type,
+          amountMinor: action.amountMinor === null ? null : String(action.amountMinor),
+          currency: action.currency,
+          proposedBy: action.proposedBy,
+          missionId: action.missionId,
+          createdAt: action.createdAt,
+        })),
+      });
+    })
     .post('/approvals/:id/decide', can('approvals:decide'), async (c) => {
       const { orgId } = requirePrincipal(c);
       const { decision } = await readBody(

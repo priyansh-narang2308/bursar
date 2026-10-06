@@ -4,6 +4,20 @@ packages:
 
 # One place for every shared dependency version. Packages reference these as `catalog:`.
 catalog:
+  '@fontsource-variable/inter': ^5.3.0 # the interface typeface, bundled so the app needs no font CDN
+  '@fontsource-variable/jetbrains-mono': ^5.3.0 # ids, hashes and amounts in a fixed-width face
+  '@tanstack/react-query': ^5.104.0 # server state in the web app: caching, refetching, mutations
+  '@testing-library/jest-dom': ^7.0.0
+  '@testing-library/react': ^16.3.0
+  '@testing-library/user-event': ^14.6.0
+  '@types/react': ^19.3.0
+  '@types/react-dom': ^19.3.0
+  '@vitejs/plugin-react': ^6.1.0
+  jsdom: ^30.1.0 # a DOM for component tests
+  react: ^19.3.0
+  react-dom: ^19.3.0
+  react-router-dom: ^7.18.0 # routes for the landing page and the dashboard
+  vite: ^8.3.0 # dev server and bundler for the web app
   '@biomejs/biome': ^2.5.0
   '@modelcontextprotocol/sdk': ^1.32.1
   '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)
