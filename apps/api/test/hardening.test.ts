@@ -78,3 +78,16 @@ describe('request size', () => {
     expect(await response.json()).toMatchObject({ code: 'VALIDATION_FAILED' });
   });
 });
+
+describe('roles in a demo workspace', () => {
+  it('are different people, so one cannot approve what another proposed', async () => {
+    const { browser } = await openWorkspace(t);
+    const owner = (await browser.call('GET', '/v1/me')).json.userId;
+    await browser.call('POST', '/v1/demo/role', { json: { role: 'APPROVER' } });
+    const approver = (await browser.call('GET', '/v1/me')).json;
+    expect(approver.role).toBe('APPROVER');
+    expect(approver.userId).not.toBe(owner);
+    await browser.call('POST', '/v1/demo/role', { json: { role: 'OWNER' } });
+    expect((await browser.call('GET', '/v1/me')).json.userId).toBe(owner); // and back again
+  });
+});
