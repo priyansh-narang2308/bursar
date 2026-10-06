@@ -1,5 +1,5 @@
 import { provenanceTag } from '@bursar/crypto';
-import { actions, envelopes, executions, mandates, type Tx, withOrg } from '@bursar/db';
+import { actions, envelopes, executions, mandates, suppliers, type Tx, withOrg } from '@bursar/db';
 import { PayPalError } from '@bursar/paypal';
 import type { OrganizationId } from '@bursar/schemas';
 import { and, eq } from 'drizzle-orm';
@@ -31,6 +31,35 @@ export interface ExecuteResult {
 
 type Call = () => Promise<string>;
 type Plan = { readonly step: string; readonly requestId: string; readonly call: Call };
+
+/** The receiver comes from the supplier registry and nowhere else. */
+async function payoutPlan(
+  tx: Tx,
+  deps: CoreDeps,
+  action: ActionRow,
+  amount: ReturnType<typeof money>,
+  step: string,
+  requestId: string,
+): Promise<Plan> {
+  const [supplier] =
+    action.supplierId === null
+      ? []
+      : await tx.select().from(suppliers).where(eq(suppliers.id, action.supplierId));
+  if (supplier === undefined || supplier.status !== 'ACTIVE')
+    throw new PayPalError('rejected', 'The payee is not an active supplier in the registry.');
+  return {
+    step,
+    requestId,
+    call: async () =>
+      (
+        await deps.paypal.payouts.create({
+          requestId,
+          batchId: `b_${action.id}`,
+          items: [{ itemId: `i_${action.id}`, receiver: supplier.payoutEmail, amount }],
+        })
+      ).batchId,
+  };
+}
 
 /** What to ask PayPal for, built from the server's records. Nothing about it comes from the caller. */
 async function plan(
@@ -85,6 +114,7 @@ async function plan(
       },
     };
   }
+  if (action.type === 'PAYOUT') return payoutPlan(tx, deps, action, amount, step, requestId);
   if (action.type === 'CAPTURE')
     return {
       step,

@@ -459,7 +459,7 @@ describe('webhooks and the Verifier', () => {
       .select()
       .from(incidents)
       .where(eq(incidents.type, 'UNEXPLAINED_MOVEMENT'));
-    expect(incident).toMatchObject({ severity: 'HIGH', status: 'OPEN' });
+    expect(incident).toMatchObject({ severity: 'HIGH', status: 'CONTAINED' }); // the Verifier has already acted (see verifier.test.ts)
   });
 
   it('records a capture it cannot attribute to anyone, without inventing an owner', async () => {

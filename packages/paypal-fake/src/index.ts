@@ -68,6 +68,7 @@ class FakeError extends Error {
 }
 
 interface Req {
+  readonly query: URLSearchParams;
   readonly params: string[];
   readonly body: Record<string, unknown>;
   readonly headers: Headers;
@@ -126,6 +127,15 @@ export function createFakePayPal(options: FakeOptions = {}) {
   const webhooks = new Map<string, { url: string; types: string[] }>();
   const cached = new Map<string, Res>();
   const events: FakeEvent[] = [];
+  const ledger: {
+    id: string;
+    code: string;
+    amount: Money;
+    customId: string | undefined;
+    at: Date;
+  }[] = [];
+  const log = (id: string, code: string, amount: Money, customId?: string) =>
+    ledger.push({ id, code, amount, customId, at: now() });
   let balance: Money | undefined;
 
   function credit(amount: Money): void {
@@ -240,6 +250,7 @@ export function createFakePayPal(options: FakeOptions = {}) {
       customId: a.customId,
     };
     captures.set(taken.id, taken);
+    log(taken.id, 'T0006', amount, a.customId);
     credit(amount.subtract(taken.fee));
     await emit('PAYMENT.CAPTURE.COMPLETED', 'capture', {
       id: taken.id,
@@ -293,7 +304,13 @@ export function createFakePayPal(options: FakeOptions = {}) {
       amount: amountOf(amount),
       custom_id: taken.customId,
     });
-    return reply(201, { id: id('REF'), status: 'COMPLETED', amount: amountOf(amount) });
+    const refundId = id('REF');
+    log(refundId, 'T1107', amount, taken.customId);
+    return reply(201, {
+      id: refundId,
+      status: 'COMPLETED',
+      amount: amountOf(amount),
+    });
   }
 
   // -- payouts ----------------------------------------------------------------------------------
@@ -433,6 +450,28 @@ export function createFakePayPal(options: FakeOptions = {}) {
       },
     ],
     [
+      'GET',
+      /^\/v1\/reporting\/transactions$/,
+      ({ query }) => {
+        const [from, to] = [
+          Date.parse(query.get('start_date') ?? ''),
+          Date.parse(query.get('end_date') ?? ''),
+        ];
+        const inside = ledger.filter((t) => t.at.getTime() >= from && t.at.getTime() <= to);
+        return reply(200, {
+          transaction_details: inside.map((t) => ({
+            transaction_info: {
+              transaction_id: t.id,
+              transaction_event_code: t.code,
+              transaction_amount: amountOf(t.amount),
+              custom_field: t.customId,
+              transaction_initiation_date: t.at.toISOString(),
+            },
+          })),
+        });
+      },
+    ],
+    [
       'POST',
       /^\/v1\/notifications\/webhooks$/,
       ({ body }) => {
@@ -536,6 +575,7 @@ export function createFakePayPal(options: FakeOptions = {}) {
     if (replay !== undefined) return replay;
     const text = await request.text();
     const result = await handler({
+      query: url.searchParams,
       params,
       body: text === '' ? {} : (JSON.parse(text) as Record<string, unknown>),
       headers: request.headers,
@@ -568,6 +608,7 @@ export function createFakePayPal(options: FakeOptions = {}) {
       for (const batch of payouts.values()) {
         if (batch.status !== 'PENDING') continue;
         batch.status = 'SUCCESS';
+        log(batch.id, 'T0400', batch.total);
         debit(batch.total);
         await emit('PAYMENT.PAYOUTSBATCH.SUCCESS', 'payouts', {
           batch_header: { payout_batch_id: batch.id, batch_status: 'SUCCESS' },
@@ -575,6 +616,19 @@ export function createFakePayPal(options: FakeOptions = {}) {
       }
     },
     events,
+    /** Puts money in the fake merchant's balance, as the platform's own float that payouts draw on. */
+    fund(amount: Money): void {
+      credit(amount);
+    },
+    /** The payouts it has accepted, with their receivers. */
+    payouts: () =>
+      [...payouts.values()].map((p) => ({
+        id: p.id,
+        status: p.status,
+        items: p.items.map((i) => ({ receiver: i.receiver, amount: i.amount })),
+      })),
+    /** Money PayPal has moved, as Transaction Search reports it. A test can add one the gateway never made. */
+    transactions: ledger,
     /** What the fake merchant holds: captures less fees, refunds and settled payouts. */
     balance: () => balance,
     config: { clientId: config.clientId, clientSecret: config.clientSecret },

@@ -23,6 +23,7 @@ async function applyToEnvelope(tx: Tx, action: ActionRow, amount: bigint): Promi
       capturedMinor: envelope.capturedMinor + amount,
     },
     REFUND: { refundedMinor: envelope.refundedMinor + amount },
+    PAYOUT: { settledMinor: envelope.settledMinor + amount },
   }[action.type];
   if (change !== undefined)
     await tx.update(envelopes).set(change).where(eq(envelopes.id, envelope.id));
@@ -48,7 +49,7 @@ export async function confirm(
   if (action.amountMinor === null || action.currency === null) return true;
   await applyToEnvelope(tx, action, action.amountMinor);
   const amount = money(action.amountMinor, action.currency);
-  const type = action.type as 'AUTHORIZE' | 'VOID' | 'CAPTURE' | 'REFUND';
+  const type = action.type as 'AUTHORIZE' | 'VOID' | 'CAPTURE' | 'REFUND' | 'PAYOUT';
   const entries: Entry[] = post(
     type === 'CAPTURE' ? { type, amount, fee: money(0n, action.currency) } : { type, amount },
   );

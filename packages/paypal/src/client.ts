@@ -46,6 +46,21 @@ const payoutBatch = z.object({
     )
     .default([]),
 });
+const transactions = z.object({
+  transaction_details: z
+    .array(
+      z.object({
+        transaction_info: z.object({
+          transaction_id: z.string(),
+          transaction_event_code: z.string(),
+          transaction_amount: amountSchema,
+          custom_field: z.string().optional(),
+          transaction_initiation_date: z.string(),
+        }),
+      }),
+    )
+    .default([]),
+});
 const verification = z.object({ verification_status: z.enum(['SUCCESS', 'FAILURE']) });
 const webhook = z.object({ id: z.string() });
 
@@ -243,6 +258,22 @@ export function createPayPalClient(config: PayPalConfig) {
             status: i.transaction_status,
           })),
         };
+      },
+    },
+    transactions: {
+      /** Everything PayPal says moved between two instants (Transaction Search), for reconciliation. */
+      async search(input: { start: Date; end: Date }) {
+        const query = `start_date=${encodeURIComponent(input.start.toISOString())}&end_date=${encodeURIComponent(input.end.toISOString())}&fields=all`;
+        const raw = await call('GET', `/v1/reporting/transactions?${query}`, {
+          schema: transactions,
+        });
+        return raw.transaction_details.map(({ transaction_info: t }) => ({
+          id: t.transaction_id,
+          code: t.transaction_event_code,
+          amount: money(t.transaction_amount),
+          customId: t.custom_field,
+          at: t.transaction_initiation_date,
+        }));
       },
     },
     webhooks: {

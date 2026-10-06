@@ -3,18 +3,20 @@ import { actions, executions, paypalEvents, webhookInbox } from '@bursar/db';
 import { fromPayPalAmount } from '@bursar/money';
 import { PayPalError } from '@bursar/paypal';
 import { newId, type OrganizationId } from '@bursar/schemas';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { confirm } from './confirm';
 import type { ActionRow } from './context';
 import { openIncident } from './incidents';
 import type { CoreDeps } from './types';
 import { amountJson } from './util';
+import { contain } from './verifier';
 
 /** The money events Bursar acts on, and the action each one should be explained by. */
 const EXPECTS = {
   'PAYMENT.CAPTURE.COMPLETED': 'CAPTURE',
   'PAYMENT.CAPTURE.REFUNDED': 'REFUND',
   'PAYMENT.AUTHORIZATION.VOIDED': 'VOID',
+  'PAYMENT.PAYOUTSBATCH.SUCCESS': 'PAYOUT',
 } as const;
 
 interface PayPalEvent {
@@ -26,6 +28,7 @@ interface PayPalEvent {
     custom_id?: string;
     capture_id?: string;
     amount?: { currency_code: string; value: string };
+    batch_header?: { payout_batch_id?: string };
   };
   create_time?: string;
 }
@@ -41,16 +44,61 @@ export type IngestStatus =
 type Match = 'MATCHED' | 'UNMATCHED' | 'EARLY' | 'MISMATCH';
 type Db = CoreDeps['db'];
 type Tx = Parameters<Parameters<Db['transaction']>[0]>[0];
+interface Result {
+  status: Match;
+  action?: ActionRow;
+  orgId?: OrganizationId;
+  /** An incident this event opened. The Verifier answers it once the transaction has committed. */
+  incidentId?: string;
+}
+
+/** What to do with an event that does match an action of ours, by where that action has got to. */
+async function settle(
+  tx: Tx,
+  deps: CoreDeps,
+  event: PayPalEvent,
+  action: ActionRow,
+  orgId: OrganizationId,
+): Promise<Result> {
+  if (['SUBMITTING', 'APPROVED', 'UNKNOWN'].includes(action.state))
+    return { status: 'EARLY', action, orgId };
+  if (['SUBMITTED', 'CONFIRMED'].includes(action.state)) {
+    await confirm(tx, deps, orgId, action, 'webhook');
+    return { status: 'MATCHED', action, orgId };
+  }
+  const incidentId = await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
+    actionId: action.id,
+    why: `Money moved for an action in state ${action.state}.`,
+    eventId: event.id,
+  });
+  return { status: 'MISMATCH', action, orgId, incidentId };
+}
+
+/** A payout event carries no tag, so it is matched by the batch id PayPal gave us when we asked for it. */
+async function matchPayout(tx: Tx, deps: CoreDeps, event: PayPalEvent): Promise<Result> {
+  const batchId = event.resource.batch_header?.payout_batch_id;
+  const [execution] =
+    batchId === undefined
+      ? []
+      : await tx
+          .select()
+          .from(executions)
+          .where(and(eq(executions.step, 'payout'), eq(executions.paypalResourceId, batchId)));
+  const [action] =
+    execution === undefined
+      ? []
+      : await tx.select().from(actions).where(eq(actions.id, execution.actionId));
+  return action === undefined
+    ? { status: 'UNMATCHED' }
+    : settle(tx, deps, event, action, action.orgId);
+}
 
 /**
  * Decides what a verified event means. Every money event must trace, through the provenance tag in its
  * `custom_id`, to an approved action of ours, for the amount we approved; anything else is an incident.
  */
-async function match(
-  tx: Tx,
-  deps: CoreDeps,
-  event: PayPalEvent,
-): Promise<{ status: Match; action?: ActionRow; orgId?: OrganizationId }> {
+async function match(tx: Tx, deps: CoreDeps, event: PayPalEvent): Promise<Result> {
+  if (event.event_type === 'PAYMENT.PAYOUTSBATCH.SUCCESS') return matchPayout(tx, deps, event);
   const expected = EXPECTS[event.event_type as keyof typeof EXPECTS];
   const tag = event.resource.custom_id;
   const tagged = tag === undefined ? undefined : actionIdFromTag(tag);
@@ -64,18 +112,25 @@ async function match(
   )
     return { status: 'UNMATCHED' };
   const orgId = origin.orgId;
-  const genuine = verifyProvenanceTag(deps.provenanceKeys, tag, {
-    orgId,
-    actionId: origin.id as never,
-    amount: amountJson(origin.amountMinor, origin.currency),
-  });
-  if (!genuine) {
-    await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
-      actionId: origin.id,
+  const seen = {
+    actionId: origin.id,
+    eventId: event.id,
+    eventType: event.event_type,
+    resourceId: event.resource.id ?? event.resource.capture_id ?? null,
+    amount: event.resource.amount ?? null,
+  };
+  if (
+    !verifyProvenanceTag(deps.provenanceKeys, tag, {
+      orgId,
+      actionId: origin.id as never,
+      amount: amountJson(origin.amountMinor, origin.currency),
+    })
+  ) {
+    const incidentId = await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
+      ...seen,
       why: 'The provenance tag does not verify.',
-      eventId: event.id,
     });
-    return { status: 'UNMATCHED', orgId };
+    return { status: 'UNMATCHED', orgId, incidentId };
   }
   const candidates =
     origin.cartId === null
@@ -86,12 +141,11 @@ async function match(
           .where(and(eq(actions.cartId, origin.cartId), eq(actions.type, expected)));
   const action = candidates[0];
   if (action === undefined) {
-    await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
-      actionId: origin.id,
+    const incidentId = await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
+      ...seen,
       why: `Money moved (${event.event_type}) with no approved ${expected} action to explain it.`,
-      eventId: event.id,
     });
-    return { status: 'UNMATCHED', orgId };
+    return { status: 'UNMATCHED', orgId, incidentId };
   }
   const reported =
     event.resource.amount === undefined
@@ -102,33 +156,22 @@ async function match(
     action.amountMinor !== null &&
     (reported.currency !== action.currency || reported.minor !== action.amountMinor)
   ) {
-    await openIncident(tx, deps, orgId, 'AMOUNT_MISMATCH', 'HIGH', {
+    const incidentId = await openIncident(tx, deps, orgId, 'AMOUNT_MISMATCH', 'HIGH', {
+      ...seen,
       actionId: action.id,
       approved: amountJson(action.amountMinor, action.currency ?? ''),
       reported: { currency: reported.currency, minor: reported.minor.toString() },
-      eventId: event.id,
     });
-    return { status: 'MISMATCH', action, orgId };
+    return { status: 'MISMATCH', action, orgId, incidentId };
   }
-  if (['SUBMITTING', 'APPROVED', 'UNKNOWN'].includes(action.state))
-    return { status: 'EARLY', action, orgId };
-  if (!['SUBMITTED', 'CONFIRMED'].includes(action.state)) {
-    await openIncident(tx, deps, orgId, 'UNEXPLAINED_MOVEMENT', 'HIGH', {
-      actionId: action.id,
-      why: `Money moved for an action in state ${action.state}.`,
-      eventId: event.id,
-    });
-    return { status: 'MISMATCH', action, orgId };
-  }
-  await confirm(tx, deps, orgId, action, 'webhook');
-  return { status: 'MATCHED', action, orgId };
+  return settle(tx, deps, event, action, orgId);
 }
 
 async function store(
   tx: Tx,
   deps: CoreDeps,
   event: PayPalEvent,
-  result: Awaited<ReturnType<typeof match>>,
+  result: Result,
   rowId?: string,
 ): Promise<void> {
   const latency =
@@ -139,7 +182,11 @@ async function store(
     orgId: result.orgId ?? null,
     eventType: event.event_type,
     resourceType: event.resource_type ?? 'unknown',
-    resourceId: event.resource.id ?? event.resource.capture_id ?? 'unknown',
+    resourceId:
+      event.resource.id ??
+      event.resource.capture_id ??
+      event.resource.batch_header?.payout_batch_id ??
+      'unknown',
     customId: event.resource.custom_id ?? null,
     verificationStatus: 'SUCCESS',
     matchStatus: result.status,
@@ -161,7 +208,8 @@ async function store(
 /**
  * Takes in a webhook: raw body first, then signature (PayPal's own verify endpoint), then dedupe, then
  * meaning. A forged or repeated delivery changes nothing. Respond 200 for every status returned here;
- * only a thrown error (PayPal could not be asked) should make PayPal deliver again.
+ * only a thrown error (PayPal could not be asked) should make PayPal deliver again. An incident opened
+ * by the event is answered by the Verifier straight away.
  */
 export async function ingest(
   deps: CoreDeps,
@@ -186,18 +234,19 @@ export async function ingest(
     .onConflictDoNothing();
   if (!genuine || event === undefined) return 'rejected';
   if (!(event.event_type in EXPECTS)) return 'ignored';
-  const status = await deps.db.transaction(async (tx) => {
-    const result = await match(tx, deps, event);
-    await store(tx, deps, event, result);
-    return result.status;
+  const result = await deps.db.transaction(async (tx) => {
+    const found = await match(tx, deps, event);
+    await store(tx, deps, event, found);
+    return found;
   });
   await deps.db
     .update(webhookInbox)
     .set({ processedAt: deps.now() })
     .where(eq(webhookInbox.eventId, eventId));
+  if (result.incidentId !== undefined) await contain(deps, result.incidentId);
   return (
     { MATCHED: 'processed', UNMATCHED: 'unmatched', EARLY: 'parked', MISMATCH: 'mismatch' } as const
-  )[status];
+  )[result.status];
 }
 
 /** Re-reads events that arrived before the executor had recorded its own call, now that it has. */
@@ -250,7 +299,7 @@ export async function pollSubmitted(
         .where(
           and(
             eq(executions.orgId, orgId),
-            inArray(executions.step, ['authorize']),
+            eq(executions.step, 'authorize'),
             eq(executions.status, 'SUCCEEDED'),
           ),
         );

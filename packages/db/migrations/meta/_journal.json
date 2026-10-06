@@ -22,6 +22,20 @@
       "when": 1791218656997,
       "tag": "0002_mandate_setup_token_and_proposer",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791221774204,
+      "tag": "0003_deliveries_channel3_inputs",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791221774665,
+      "tag": "0004_rls_new_tables",
+      "breakpoints": true
     }
   ]
 }

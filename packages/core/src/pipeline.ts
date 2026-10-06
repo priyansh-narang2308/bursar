@@ -20,6 +20,7 @@ import {
   type MissionId,
   newId,
   type OrganizationId,
+  type SupplierId,
 } from '@bursar/schemas';
 import { and, desc, eq } from 'drizzle-orm';
 import { emit, record } from './audit';
@@ -30,9 +31,11 @@ import { amountJson, money } from './util';
 const APPROVAL_HOURS = 24;
 
 export interface ProposeInput {
-  readonly type: 'AUTHORIZE' | 'CAPTURE' | 'VOID' | 'REFUND';
+  readonly type: 'AUTHORIZE' | 'CAPTURE' | 'VOID' | 'REFUND' | 'PAYOUT';
   readonly missionId: MissionId;
   readonly cartId: CartId;
+  /** For a PAYOUT: which supplier is paid. It must be on the cart and in the registry. */
+  readonly supplierId?: SupplierId | undefined;
   /** Only a person may name a refund amount; for everyone else a refund is the whole capture. */
   readonly refundAmount?: AmountJSON | undefined;
   /** Tells apart actions of the same kind on the same cart, such as two refunds. */
@@ -139,7 +142,8 @@ export async function rule(
   phase: 'PROPOSE' | 'EXECUTE',
 ) {
   const policy = deps.policyFor(orgId);
-  const evaluation = evaluate(policy, await buildContext(tx, deps, orgId, action, policy));
+  const context = await buildContext(tx, deps, orgId, action, policy);
+  const evaluation = evaluate(policy, context);
   const [envelope] =
     action.missionId === null
       ? []
@@ -160,6 +164,7 @@ export async function rule(
     outcome: evaluation.outcome,
     requiredApprovals: evaluation.requiredApprovals,
     trace: evaluation.trace as never,
+    inputs: context,
     inputsHash: evaluation.inputsHash,
     evaluatedAt: deps.now(),
   });
@@ -213,6 +218,7 @@ type Target = {
   amount: ReturnType<typeof money>;
   compensates: string | null;
   cartHash: string;
+  supplierId?: string | undefined;
 };
 
 const confirmedOf = async (tx: Tx, cart: Cart, type: ActionType) =>
@@ -248,6 +254,25 @@ async function resolveRefund(
   return { cart, amount, compensates: captured.id, cartHash: cart.hash };
 }
 
+/** What a supplier is owed: its lines on the cart, once the cart has been captured. */
+async function resolvePayout(tx: Tx, cart: Cart, input: ProposeInput): Promise<Target> {
+  if (input.supplierId === undefined)
+    throw new CoreError('VALIDATION_FAILED', 'A payout names the supplier it pays.');
+  if ((await confirmedOf(tx, cart, 'CAPTURE')) === undefined)
+    throw new CoreError('ILLEGAL_STATE_TRANSITION', 'Nothing is captured for this cart yet.');
+  const lines = cart.rows.filter((row) => row.supplier.id === input.supplierId);
+  if (lines.length === 0)
+    throw new CoreError('UNKNOWN_REFERENCE', 'This supplier is not on the cart.');
+  const owed = lines.reduce((sum, row) => sum + row.line.lineTotalMinor, 0n);
+  return {
+    cart,
+    amount: money(owed, cart.cart.currency),
+    compensates: null,
+    cartHash: cart.hash,
+    supplierId: input.supplierId,
+  };
+}
+
 async function resolveFollowUp(tx: Tx, cart: Cart, input: ProposeInput): Promise<Target> {
   const authorized = await confirmedOf(tx, cart, 'AUTHORIZE');
   if (authorized === undefined || authorized.amountMinor === null)
@@ -268,6 +293,7 @@ async function resolve(tx: Tx, input: ProposeInput, actor: Actor): Promise<Targe
   if (cart === undefined || cart.cart.missionId !== input.missionId)
     throw new CoreError('UNKNOWN_REFERENCE', 'No such cart on this mission.');
   if (input.type === 'REFUND') return resolveRefund(tx, cart, input, actor);
+  if (input.type === 'PAYOUT') return resolvePayout(tx, cart, input);
   if (input.type !== 'AUTHORIZE') return resolveFollowUp(tx, cart, input);
   if (cart.cart.status !== 'PROPOSED')
     throw new CoreError('CONFLICT', 'This cart has been superseded.');
@@ -329,7 +355,7 @@ export async function propose(
       type: input.type,
       missionId: mission.id,
       mandateId: null,
-      supplierId: null,
+      supplierId: (target.supplierId ?? null) as never,
       cartHash: target.cartHash as never,
       compensatesActionId: target.compensates as never,
       ordinal: input.ordinal ?? 1,
@@ -357,6 +383,7 @@ export async function propose(
         currency: target.amount.currency,
         amountMinor: target.amount.minor,
         cartId: target.cart.cart.id,
+        supplierId: (target.supplierId ?? null) as never,
         cartHash: target.cartHash,
         createdAt: deps.now(),
         updatedAt: deps.now(),
