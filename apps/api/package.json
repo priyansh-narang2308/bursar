@@ -13,10 +13,14 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@bursar/agent-tools": "workspace:*",
+    "@bursar/channel3": "workspace:*",
     "@bursar/core": "workspace:*",
     "@bursar/crypto": "workspace:*",
     "@bursar/db": "workspace:*",
+    "@bursar/mcp-gateway": "workspace:*",
     "@bursar/paypal": "workspace:*",
+    "@bursar/policy": "workspace:*",
     "@bursar/schemas": "workspace:*",
     "@hono/node-server": "catalog:",
     "drizzle-orm": "catalog:",
@@ -27,6 +31,7 @@
   },
   "devDependencies": {
     "@bursar/paypal-fake": "workspace:*",
+    "@modelcontextprotocol/sdk": "catalog:",
     "@bursar/tooling": "workspace:*",
     "@electric-sql/pglite": "catalog:",
     "@types/node": "catalog:",

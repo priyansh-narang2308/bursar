@@ -1,0 +1,32 @@
+{
+  "name": "@bursar/mcp-gateway",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The seatbelt: an MCP server that gives an agent Bursar's guarded tools, and blocks PayPal's own money tools so every spend goes through policy and a person.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/agent-tools": "workspace:*",
+    "@bursar/schemas": "workspace:*",
+    "@modelcontextprotocol/sdk": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/channel3": "workspace:*",
+    "@bursar/core": "workspace:*",
+    "@bursar/policy": "workspace:*",
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

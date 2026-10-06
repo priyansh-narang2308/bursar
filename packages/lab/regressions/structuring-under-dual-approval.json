@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "invariant": "AUTO_SPEND_BOUNDED",
+  "scenario": {
+    "id": "structuring-3-0",
+    "family": "structuring",
+    "budgetCents": 5000000,
+    "steps": [
+      {
+        "supplier": "A",
+        "unitCents": 48914,
+        "quantity": 1,
+        "afterMinutes": 6
+      },
+      {
+        "supplier": "A",
+        "unitCents": 48921,
+        "quantity": 1,
+        "afterMinutes": 24
+      },
+      {
+        "supplier": "A",
+        "unitCents": 48928,
+        "quantity": 1,
+        "afterMinutes": 17
+      },
+      {
+        "supplier": "A",
+        "unitCents": 48935,
+        "quantity": 1,
+        "afterMinutes": 17
+      },
+      {
+        "supplier": "A",
+        "unitCents": 48942,
+        "quantity": 1,
+        "afterMinutes": 9
+      },
+      {
+        "supplier": "A",
+        "unitCents": 48949,
+        "quantity": 1,
+        "afterMinutes": 11
+      },
+      {
+        "supplier": "A",
+        "unitCents": 48956,
+        "quantity": 1,
+        "afterMinutes": 19
+      }
+    ]
+  },
+  "before": {
+    "without": ["R-NEW-VENDOR", "R-VELOCITY"],
+    "overrides": {}
+  },
+  "after": {
+    "without": ["R-NEW-VENDOR"],
+    "overrides": {}
+  },
+  "note": "Restore R-VELOCITY: it caps what is approved without a person in a day."
+}

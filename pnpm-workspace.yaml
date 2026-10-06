@@ -5,6 +5,7 @@ packages:
 # One place for every shared dependency version. Packages reference these as `catalog:`.
 catalog:
   '@biomejs/biome': ^2.5.0
+  '@modelcontextprotocol/sdk': ^1.32.1
   '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)
   '@types/pg': ^8.23.1
   '@vitest/coverage-v8': ^5.0.0
@@ -31,3 +32,6 @@ allowBuilds:
 
 # Refuse to install on a Node version outside `engines`.
 engineStrict: true
+
+minimumReleaseAgeExclude:
+  - '@modelcontextprotocol/sdk@1.32.1'

@@ -289,6 +289,13 @@ export const OPERATIONS: readonly Operation[] = [
   },
   {
     method: 'post',
+    path: '/v1/mcp',
+    summary: 'MCP over Streamable HTTP for agent keys: Bursar’s guarded tools, scoped to the key',
+    permission: 'missions:read',
+    status: 200,
+  },
+  {
+    method: 'post',
     path: '/webhooks/paypal',
     summary: 'PayPal’s webhook door: signed events in, always 200 unless PayPal must retry',
     permission: 'public',

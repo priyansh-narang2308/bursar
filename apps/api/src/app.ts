@@ -12,6 +12,7 @@ import { openApiDocument } from './openapi';
 import { agentRoutes } from './routes/agents';
 import { demoRoutes } from './routes/demo';
 import { healthRoutes } from './routes/health';
+import { type AgentToolsDeps, mcpRoutes } from './routes/mcp';
 import { moneyRoutes } from './routes/money';
 import { oversightRoutes } from './routes/oversight';
 import { webhookRoutes } from './routes/webhooks';
@@ -25,6 +26,8 @@ export interface AppDeps {
   readonly now?: () => Date;
   /** The money loop. Without it the money routes are not served. */
   readonly core?: Core;
+  /** What agents may use over MCP. Without it the MCP door is closed. */
+  readonly agentTools?: AgentToolsDeps;
 }
 
 /** The whole API as a value, so tests and the server build it the same way. */
@@ -54,6 +57,7 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
   if (deps.core !== undefined) {
     v1.route('/', moneyRoutes(db, deps.core));
     v1.route('/', oversightRoutes(db, deps.core));
+    if (deps.agentTools !== undefined) v1.route('/', mcpRoutes(db, deps.core, deps.agentTools));
   }
   app.route('/v1', v1);
   if (deps.core !== undefined) app.route('/', webhookRoutes(deps.core));
