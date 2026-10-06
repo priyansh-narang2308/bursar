@@ -91,3 +91,37 @@ describe('roles in a demo workspace', () => {
     expect((await browser.call('GET', '/v1/me')).json.userId).toBe(owner); // and back again
   });
 });
+
+describe('the scheduler door', () => {
+  const knock = (app: TestApp, token?: string) =>
+    app.app.request('/internal/jobs', {
+      method: 'POST',
+      headers: token === undefined ? {} : { 'x-job-token': token },
+    });
+
+  it('does not exist unless a job token is configured', async () => {
+    expect((await knock(t, 'anything')).status).toBe(404);
+  });
+
+  it('runs the job for the right token, and for no one else', async () => {
+    let runs = 0;
+    const app = await createTestApp(undefined, undefined, {
+      jobs: {
+        token: 'a-long-shared-secret',
+        run: async () => {
+          runs++;
+          return { reconciled: 3 };
+        },
+      },
+    });
+    expect((await knock(app)).status).toBe(403);
+    expect((await knock(app, 'a-long-shared-secreT')).status).toBe(403);
+    expect((await knock(app, 'short')).status).toBe(403);
+    expect(runs).toBe(0);
+    const ok = await knock(app, 'a-long-shared-secret');
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toMatchObject({ ok: true, result: { reconciled: 3 } });
+    expect(runs).toBe(1);
+    await app.close();
+  });
+});

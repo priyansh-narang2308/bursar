@@ -157,6 +157,8 @@ export interface RunTrace {
     error?: { code: string; message: string };
   } | null;
   problems: string[];
+  /** Where the agents ran: on a Render Workflow (one instance per need) or on the server itself. */
+  ranOn?: 'render-workflow' | 'in-process';
   calls: {
     tool: string;
     role: string;

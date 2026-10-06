@@ -54,6 +54,7 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `packages/mcp-gateway` | The MCP seatbelt: guarded tools for agents, PayPal's money tools blocked, deny by default | ready |
 | `apps/workflows` | Idempotent background tasks with a durable run record | ready |
 | `apps/web` | The landing page and dashboard: a dark, dense interface for the mandate, agents, approvals and receipts | in progress |
+| `apps/render-workflow` | The mission pipeline as a Render Workflow: one parallel run per need, each on its own instance | ready (needs the dashboard step in its README) |
 | `packages/audit` | The tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |

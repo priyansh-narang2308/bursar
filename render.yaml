@@ -42,6 +42,22 @@ services:
       - key: BURSAR_PAYER_POOL
         sync: false # the sealed contents of .bursar/payers.json
 
+  # Every 15 minutes: reconcile PayPal with the ledger, expire what ran out, and keep the free service awake.
+  - type: cron
+    name: bursar-jobs
+    runtime: node
+    plan: starter
+    region: oregon
+    branch: main
+    schedule: "*/15 * * * *"
+    buildCommand: echo ready
+    startCommand: node -e "fetch(process.env.JOB_URL,{method:'POST',headers:{'x-job-token':process.env.JOB_TOKEN}}).then(async r=>{console.log(r.status,await r.text());process.exit(r.ok?0:1)})"
+    envVars:
+      - key: JOB_URL
+        value: https://bursar-demo.onrender.com/internal/jobs
+      - key: JOB_TOKEN
+        sync: false # the same value as on the web service
+
 databases:
   - name: bursar-db
     databaseName: bursar

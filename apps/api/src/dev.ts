@@ -53,6 +53,7 @@ import { Money } from '@bursar/money';
 import { createPayPalClient, PayPalError } from '@bursar/paypal';
 import { createFakePayPal } from '@bursar/paypal-fake';
 import { standardPolicy } from '@bursar/policy';
+import { runMissionOnRender } from '@bursar/render-workflow/client';
 import { dayOf, planFromBasket, type Schedule, schedule as scheduleOf } from '@bursar/schedule';
 import { type MissionId, newId, type OrganizationId } from '@bursar/schemas';
 import { createWorkflows, recoveryFor } from '@bursar/workflows';
@@ -470,6 +471,66 @@ async function withLab<T>(work: () => Promise<T>): Promise<T> {
   }
 }
 
+async function runAgentsHere(orgId: string, missionId: string) {
+  const id = orgId as OrganizationId;
+  const calls: ToolCallLog[] = [];
+  const toolbox = (role: AgentRole) =>
+    createToolbox({
+      db,
+      core,
+      catalog,
+      policy: standardPolicy(),
+      orgId: id,
+      agentId: 'agt_demo',
+      role,
+      missionId: missionId as MissionId,
+      onCall: (c) => void calls.push(c),
+    });
+  const runtime = createRuntime({
+    provider: demoModel(),
+    onRun: (meta, report) => persistRun(db, id, meta, report),
+  });
+  const outcome = await runMission({
+    runtime,
+    missionId: missionId as MissionId,
+    toolbox,
+    agentId: 'agt_demo',
+  });
+  const picked = outcome.picks.flatMap((r) => (r.pick?.offerId ? [r.pick.offerId] : []));
+  const rows =
+    picked.length === 0
+      ? []
+      : await withOrg(db, id, (tx) =>
+          tx
+            .select()
+            .from(offers)
+            .where(inArray(offers.id, picked as never)),
+        );
+  const byId = new Map(rows.map((o) => [o.id as string, o]));
+  return {
+    needs: outcome.needs.map((n) => ({ label: n.label, query: n.query, quantity: n.quantity })),
+    steps: outcome.picks.map((r) => {
+      const offer = r.pick?.offerId ? byId.get(r.pick.offerId) : undefined;
+      return {
+        need: r.need.label,
+        quantity: r.need.quantity,
+        offer: offer && {
+          id: offer.id,
+          title: offer.title,
+          unitMinor: String(offer.priceMinor),
+          currency: offer.currency,
+        },
+        rationale: r.pick?.rationale ?? null,
+        citation: r.cited,
+        problem: r.problem,
+      };
+    }),
+    proposal: outcome.proposal,
+    problems: outcome.problems,
+    calls,
+  };
+}
+
 const demo: DemoHooks = {
   seed: seedWorkspace,
 
@@ -491,63 +552,20 @@ const demo: DemoHooks = {
   },
 
   async runAgents(orgId, missionId) {
-    const id = orgId as OrganizationId;
-    const calls: ToolCallLog[] = [];
-    const toolbox = (role: AgentRole) =>
-      createToolbox({
-        db,
-        core,
-        catalog,
-        policy: standardPolicy(),
-        orgId: id,
-        agentId: 'agt_demo',
-        role,
-        missionId: missionId as MissionId,
-        onCall: (c) => void calls.push(c),
-      });
-    const runtime = createRuntime({
-      provider: demoModel(),
-      onRun: (meta, report) => persistRun(db, id, meta, report),
-    });
-    const outcome = await runMission({
-      runtime,
-      missionId: missionId as MissionId,
-      toolbox,
-      agentId: 'agt_demo',
-    });
-    const picked = outcome.picks.flatMap((r) => (r.pick?.offerId ? [r.pick.offerId] : []));
-    const rows =
-      picked.length === 0
-        ? []
-        : await withOrg(db, id, (tx) =>
-            tx
-              .select()
-              .from(offers)
-              .where(inArray(offers.id, picked as never)),
-          );
-    const byId = new Map(rows.map((o) => [o.id as string, o]));
-    return {
-      needs: outcome.needs.map((n) => ({ label: n.label, query: n.query, quantity: n.quantity })),
-      steps: outcome.picks.map((r) => {
-        const offer = r.pick?.offerId ? byId.get(r.pick.offerId) : undefined;
-        return {
-          need: r.need.label,
-          quantity: r.need.quantity,
-          offer: offer && {
-            id: offer.id,
-            title: offer.title,
-            unitMinor: String(offer.priceMinor),
-            currency: offer.currency,
-          },
-          rationale: r.pick?.rationale ?? null,
-          citation: r.cited,
-          problem: r.problem,
-        };
-      }),
-      proposal: outcome.proposal,
-      problems: outcome.problems,
-      calls,
-    };
+    // On a Render Workflow each need is researched on its own instance, in parallel. If that is not set up, or
+    // the run fails, the mission runs here instead, so the demo never depends on it.
+    const slug = process.env['RENDER_WORKFLOW_SLUG'];
+    if (process.env['BURSAR_WORKFLOWS'] === 'render' && slug && process.env['RENDER_API_KEY']) {
+      try {
+        return await runMissionOnRender({ slug, orgId, missionId });
+      } catch (error) {
+        logger.warn(
+          { err: error instanceof Error ? error.message : 'unknown' },
+          'the Render workflow did not run; running here',
+        );
+      }
+    }
+    return { ...(await runAgentsHere(orgId, missionId)), ranOn: 'in-process' };
   },
 
   async rogueCapture(orgId) {
@@ -701,6 +719,39 @@ const demo: DemoHooks = {
   gauntlet: runGauntlet,
 };
 
+/**
+ * What a scheduled run does, one step at a time so a failing step is reported and does not stop the rest:
+ * reconcile PayPal's records with ours, expire approvals and mandates that ran out, and (against the sandbox,
+ * which has no webhook for it) ask PayPal about captures still waiting. Reconciliation is cross-tenant, which
+ * is why it runs here and not behind a tenant route.
+ */
+async function runScheduledJobs() {
+  const step = async <T>(work: () => Promise<T>) =>
+    work().then(
+      (value) => ({ ok: true as const, value }),
+      (error: unknown) => ({
+        ok: false as const,
+        error: error instanceof Error ? error.message.slice(0, 160) : 'failed',
+      }),
+    );
+  const orgs = await db.select({ id: organizations.id }).from(organizations);
+  const sweep = async (work: (id: OrganizationId) => Promise<number>) => {
+    let total = 0;
+    for (const { id } of orgs) total += await work(id).catch(() => 0);
+    return total;
+  };
+  return {
+    organisations: orgs.length,
+    reconcile: await step(async () => {
+      const report = await core.incidents.reconcile();
+      return { checked: report.checked, gaps: report.gaps.length };
+    }),
+    expiredApprovals: await step(() => sweep((id) => core.actions.expireApprovals(id))),
+    expiredMandates: await step(() => sweep((id) => core.mandates.expire(id))),
+    confirmedCaptures: await step(() => sweep((id) => core.webhooks.pollSubmitted(id, 60_000))),
+  };
+}
+
 const app = createApp({
   config,
   db,
@@ -708,6 +759,9 @@ const app = createApp({
   core,
   demo,
   agentTools: { catalog, policy: standardPolicy() },
+  ...(process.env['JOB_TOKEN']
+    ? { jobs: { token: process.env['JOB_TOKEN'], run: runScheduledJobs } }
+    : {}),
   integrations: {
     paypal: sandbox
       ? {

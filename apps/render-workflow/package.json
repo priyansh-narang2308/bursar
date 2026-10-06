@@ -1,0 +1,40 @@
+{
+  "name": "@bursar/render-workflow",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bursar's tasks as a Render Workflow: a mission fans out into one parallel run per need, each on its own instance, against the shared database.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/tasks.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "start": "node --import tsx src/main.ts"
+  },
+  "dependencies": {
+    "@bursar/agent-tools": "workspace:*",
+    "@bursar/agents": "workspace:*",
+    "@bursar/channel3": "workspace:*",
+    "@bursar/core": "workspace:*",
+    "@bursar/crypto": "workspace:*",
+    "@bursar/db": "workspace:*",
+    "@bursar/paypal": "workspace:*",
+    "@bursar/policy": "workspace:*",
+    "@bursar/schemas": "workspace:*",
+    "@renderinc/sdk": "catalog:",
+    "drizzle-orm": "catalog:",
+    "tsx": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/llm": "workspace:*",
+    "@bursar/paypal-fake": "workspace:*",
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
