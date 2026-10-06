@@ -74,4 +74,15 @@ test.describe('the scripted demo', () => {
     await page.getByRole('button', { name: 'Run the lab' }).click();
     await expect(page.getByText('Broke the policy').first()).toBeVisible({ timeout: 60_000 });
   });
+
+  test('draws the delivery schedule under the page policy, with nothing refused', async ({
+    page,
+  }) => {
+    const problems = watchConsole(page);
+    await openWorkspace(page);
+    await runAgents(page);
+    await visit(page, 'Schedule');
+    await expect(page.locator('.b-gantt')).toBeVisible({ timeout: 30_000 });
+    expect(problems).toEqual([]);
+  });
 });

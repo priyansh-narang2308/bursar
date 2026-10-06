@@ -80,6 +80,7 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 ### Web
 - The app is dark only, and the landing page and the dashboard share one set of tokens and components in `apps/web/src/styles` and `components/ui.tsx`. Add a colour only when it means something (green healthy, amber waiting, red dangerous).
 - The web app never does arithmetic on money: it formats minor units with `@bursar/money` and sends typed amounts as exact cents (`minorFromInput`). A screen that shows something simulated says so with `SimBadge`.
+- The page loads only its own scripts and connects only to its own origin (`apps/api/src/http/headers.ts`). Widen the policy only there, in a reviewed change; no `unsafe-eval`, no framing. `docs/threat-model.md` maps each threat to a control and a test, and a test checks that every test it cites exists.
 - Anything the demo server fakes (the buyer's PayPal approval, the scripted model) is behind `DemoHooks` and answers 404 outside demo mode.
 
 - AG Studio draws the cockpit (ADR-0017). Every figure comes from `GET /v1/cockpit`, already summed; Studio's tables hold no amounts to add up, and its custom widgets read a store, not context.

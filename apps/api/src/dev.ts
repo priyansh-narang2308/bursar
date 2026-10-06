@@ -66,6 +66,7 @@ import { Hono } from 'hono';
 import { Pool } from 'pg';
 import { createApp, type DemoHooks } from './app';
 import { loadConfig } from './config';
+import { webHeaders } from './http/headers';
 import { createLogger } from './logger';
 
 /*
@@ -801,6 +802,7 @@ const dist = relative(process.cwd(), WEB_DIST);
 const isApi = (path: string) => /^\/(v1|webhooks|healthz|readyz|openapi\.json)(\/|$)/.test(path);
 const server = new Hono();
 if (hasWeb) {
+  server.use('*', webHeaders());
   server.use('*', (c, next) => (isApi(c.req.path) ? next() : serveStatic({ root: dist })(c, next)));
   server.get('*', (c, next) =>
     isApi(c.req.path) ? next() : serveStatic({ path: `${dist}/index.html` })(c, next),
