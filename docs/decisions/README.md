@@ -13,6 +13,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0007](0007-ledger-and-policy-engine.md)        | Ledger and policy engine as pure functions  | Accepted |
 | [0008](0008-api-and-paypal-client.md)           | API, sessions and the PayPal client         | Accepted |
 | [0009](0009-the-money-loop.md)                  | The money loop                              | Accepted |
+| [0010](0010-oversight-catalog-and-agents.md)    | Oversight, the catalog and the agents       | Accepted |
 
 ## Template
 

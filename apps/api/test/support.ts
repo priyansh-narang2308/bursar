@@ -15,9 +15,13 @@ export function testConfig(over: Record<string, string> = {}): Config {
   return loadConfig({ DATABASE_URL: 'pglite', SESSION_SECRET, LOG_LEVEL: 'info', ...over });
 }
 
+/** JSON when the body is JSON; an event stream or an empty body has none. */
+const parseJson = (text: string) => (/^[[{]/.test(text) ? JSON.parse(text) : undefined);
+
 export interface Reply {
   readonly status: number;
   readonly headers: Headers;
+  readonly text: string;
   // biome-ignore lint/suspicious/noExplicitAny: a test client reads untyped JSON
   readonly json: any;
 }
@@ -87,7 +91,8 @@ export async function createTestApp(
         return {
           status: response.status,
           headers: response.headers,
-          json: text === '' ? undefined : JSON.parse(text),
+          text,
+          json: parseJson(text),
         };
       },
     };
