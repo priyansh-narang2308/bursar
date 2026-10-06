@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuroraBackground } from '../components/AuroraBackground';
 import { PrimaryAction, REPO_URL, Reveal, SiteFooter, SiteNav } from '../components/Site';
-import { Badge, Icon, StateLadder } from '../components/ui';
+import { Badge, StateLadder } from '../components/ui';
 
 const PROBLEMS = [
   [
@@ -179,10 +179,6 @@ export function Landing() {
       <SiteNav />
       <main>
         <section className="lp-hero lp-wrap">
-          <a className="lp-pill" href={REPO_URL} target="_blank" rel="noreferrer">
-            <span className="lp-pill-dot" /> Built for the PayPal AI Hackathon
-            <Icon name="arrow" size={12} />
-          </a>
           <h1>Let agents spend. Keep the control.</h1>
           <p className="lp-lede">
             Bursar sits between your AI agents and PayPal. Agents propose, a deterministic policy
