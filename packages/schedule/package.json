@@ -1,0 +1,23 @@
+{
+  "name": "@bursar/schedule",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Delivery schedules as pure functions: forward and backward pass, critical path, slack against a deadline, baseline diffs, a carrier-delay simulator and a replanner.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

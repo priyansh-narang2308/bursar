@@ -1,10 +1,12 @@
 import { Writable } from 'node:stream';
+import { createCatalog, createFixtureApi } from '@bursar/channel3';
 import { createCore, WEBHOOK_EVENT_TYPES } from '@bursar/core';
 import { parseKeyring } from '@bursar/crypto';
 import type { Db } from '@bursar/db';
 import { createTestDb } from '@bursar/db/testing';
 import { createPayPalClient } from '@bursar/paypal';
 import { createFakePayPal } from '@bursar/paypal-fake';
+import { standardPolicy } from '@bursar/policy';
 import { createApp } from '../src/app';
 import { type Config, loadConfig } from '../src/config';
 import { createLogger } from '../src/logger';
@@ -30,6 +32,7 @@ export interface Reply {
 export async function createTestApp(
   config: Config = testConfig(),
   clock: () => Date = () => new Date(),
+  extra: Partial<Parameters<typeof createApp>[0]> = {},
 ) {
   const { db, close } = await createTestDb();
   const logs: string[] = [];
@@ -63,7 +66,15 @@ export async function createTestApp(
     url: 'https://app.test/webhooks/paypal',
     eventTypes: WEBHOOK_EVENT_TYPES,
   });
-  const app = createApp({ config, db, logger: createLogger('info', sink), now: clock, core });
+  const app = createApp({
+    config,
+    db,
+    logger: createLogger('info', sink),
+    now: clock,
+    core,
+    agentTools: { catalog: createCatalog({ api: createFixtureApi([]) }), policy: standardPolicy() },
+    ...extra,
+  });
 
   /** A client with its own cookie jar, like one browser or one agent. */
   function client(initialCookie?: string) {

@@ -1,0 +1,36 @@
+{
+  "name": "@bursar/workflows",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Background tasks with a durable, idempotent run record: plan, research, buy, execute, settle, replan. Runs in process today; the same tasks are what a Render Workflow will call.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/agents": "workspace:*",
+    "@bursar/core": "workspace:*",
+    "@bursar/db": "workspace:*",
+    "@bursar/lab": "workspace:*",
+    "@bursar/schedule": "workspace:*",
+    "@bursar/schemas": "workspace:*",
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/agent-tools": "workspace:*",
+    "@bursar/channel3": "workspace:*",
+    "@bursar/llm": "workspace:*",
+    "@bursar/policy": "workspace:*",
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

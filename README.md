@@ -49,6 +49,10 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `packages/agent-tools` | What an LLM agent may call: amount-free tools behind per-role allow-lists, with web content fenced as untrusted | ready |
 | `packages/llm` | The LLM runtime: a thin Claude client, structured answers, budgets, a cache, run logging, mock and record/replay | ready |
 | `packages/agents` | The Planner, Researcher and Buyer, and an offline eval harness | ready |
+| `packages/schedule` | Delivery schedules as pure functions: critical path, slack against a deadline, diffs, carrier delays and a replanner | ready |
+| `packages/lab` | The Policy Lab: adversarial scenarios, invariants, a minimiser, patch proposals and frozen regressions | ready |
+| `packages/mcp-gateway` | The MCP seatbelt: guarded tools for agents, PayPal's money tools blocked, deny by default | ready |
+| `apps/workflows` | Idempotent background tasks with a durable run record | ready |
 | `packages/audit` | The tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |

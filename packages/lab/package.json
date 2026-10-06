@@ -1,0 +1,32 @@
+{
+  "name": "@bursar/lab",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Policy Lab: generates adversarial spending scenarios, runs them against a policy, checks invariants, minimises what breaks, proposes patches and freezes the fix as a regression.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bursar/policy": "workspace:*",
+    "@bursar/schemas": "workspace:*"
+  },
+  "devDependencies": {
+    "@bursar/core": "workspace:*",
+    "@bursar/db": "workspace:*",
+    "@bursar/paypal": "workspace:*",
+    "@bursar/paypal-fake": "workspace:*",
+    "@bursar/crypto": "workspace:*",
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

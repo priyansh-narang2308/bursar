@@ -20,7 +20,7 @@
     "scenario": "structuring across suppliers that share a payee",
     "outcome": "REQUIRE_APPROVAL",
     "requiredApprovals": 1,
-    "explanation": "Needs approval from one person: Too much buying in 24 hours for payee:a@pay.example.",
+    "explanation": "Needs approval from one person: Too much buying in 24 hours for payee:a@pay.example, organisation.",
     "notAllowed": [
       "R-VELOCITY: REQUIRE_APPROVAL"
     ]

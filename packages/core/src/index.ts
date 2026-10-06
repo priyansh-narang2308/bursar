@@ -11,7 +11,7 @@ import type { CoreDeps } from './types';
 import { contain, resolveIncident } from './verifier';
 import { ingest, pollSubmitted, WEBHOOK_EVENT_TYPES } from './webhooks';
 
-export { record as recordAudit } from './audit';
+export { emit as emitEvent, record as recordAudit } from './audit';
 export { CircuitBreaker } from './breaker';
 export type { ExecuteResult } from './executor';
 export { MANDATE_TRANSITIONS } from './mandates';

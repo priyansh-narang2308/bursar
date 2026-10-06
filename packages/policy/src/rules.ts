@@ -309,13 +309,15 @@ export const duplicate = defineRule({
 
 export const velocity = defineRule({
   id: 'R-VELOCITY',
-  version: 1,
+  version: 2,
   summary:
-    'Orders and spend in a rolling window, counted by supplier and by payee, stay within limits. Splitting an order across suppliers that share a payee does not escape it.',
+    'Orders and spend in a rolling window, counted by supplier and by payee, stay within limits. Splitting an order across suppliers that share a payee does not escape it, and an optional organisation-wide limit stops it being split across suppliers that do not.',
   params: z.strictObject({
     windowHours: z.int().min(1).default(24),
     maxOrders: z.int().min(1).default(5),
     max: amountSchema,
+    /** If set, all buying together, whatever the supplier, stays within this in the window. */
+    orgMax: amountSchema.optional(),
   }),
   check: (context, params) => {
     if (!commitsCart(context)) return notApplicable();
@@ -347,6 +349,10 @@ export const velocity = defineRule({
         ? [key]
         : [];
     });
+    const spentAll = recent.reduce((sum, o) => sum + money(o.amount).minor, 0n);
+    const addingAll = lines.reduce((sum, l) => sum + money(l.lineTotal).minor, 0n);
+    if (params.orgMax !== undefined && spentAll + addingAll > money(params.orgMax).minor)
+      exceeded.push('organisation');
     return exceeded.length > 0
       ? ask(
           context,

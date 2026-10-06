@@ -336,6 +336,31 @@ describe('R-VELOCITY', () => {
   });
 });
 
+describe('R-VELOCITY across the organisation', () => {
+  const at = new Date(Date.parse('2026-10-05T12:00:00Z') - 3_600_000).toISOString();
+  const spread = Array.from({ length: 4 }, (_, i) => ({
+    at,
+    supplierId: `sup_01ARZ3NDEKTSV4RRFFQ69G5FA${'XYZ0'[i]}`,
+    payee: `p${i}@pay.example`,
+    offerIds: [],
+    amount: usd(2_000),
+  }));
+  const limits = { windowHours: 24, maxOrders: 5, max: usd(10_000) };
+
+  it('stops buying split across unrelated suppliers, but only when an organisation limit is set', () => {
+    expect(outcome('R-VELOCITY', ctx(['recent', spread]), limits)).toBe('ALLOW'); // each supplier alone is fine
+    expect(outcome('R-VELOCITY', ctx(['recent', spread]), { ...limits, orgMax: usd(10_000) })).toBe(
+      'REQUIRE_APPROVAL',
+    ); // 8,000 + 3,000 together
+    expect(
+      outcome('R-VELOCITY', ctx(['recent', spread.slice(0, 2)]), {
+        ...limits,
+        orgMax: usd(10_000),
+      }),
+    ).toBe('ALLOW');
+  });
+});
+
 describe('R-DUAL', () => {
   const big = (...more: Edit[]) =>
     ctx(['action.amount', usd(150_000)], ['cart.total', usd(150_000)], ...more);

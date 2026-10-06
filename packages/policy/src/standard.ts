@@ -38,7 +38,7 @@ export const DEFAULT_PARAMS: Readonly<Record<RuleId, unknown>> = {
   'R-QTY': {},
   'R-PRICE-DRIFT': {},
   'R-DUPLICATE': {},
-  'R-VELOCITY': { max: usd(3_000) },
+  'R-VELOCITY': { max: usd(3_000), orgMax: usd(3_000) },
   'R-DELIVERY': {},
   'R-DUAL': { above: usd(1_000) },
   'R-REFUND-AUTH': { agentMax: usd(50) },

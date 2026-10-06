@@ -66,6 +66,10 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - Catalog prices are never trusted: re-quote before buying, and keep only offers from registered suppliers.
 - Reconciliation is cross-tenant: run it from a job, never from a tenant route.
 
+- Any tool reachable over MCP goes through `@bursar/mcp-gateway`. PayPal's own toolkit tools are deny by default: classify a new one before it can be reached, and never register one that moves money.
+- Work that may run twice (a queue, a retry) is a task in `@bursar/workflows`, keyed so a repeat does nothing. A replan or recovery proposes through the decision pipeline and never orders.
+- When the Policy Lab finds a hole, freeze it in `packages/lab/regressions/` with the patch that fixes it.
+
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).
 - PayPal credentials exist only in the executor and workflow service.

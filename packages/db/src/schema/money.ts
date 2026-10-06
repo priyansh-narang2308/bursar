@@ -441,3 +441,25 @@ export const agentRuns = pgTable('agent_runs', {
   error: text(),
   createdAt: createdAt(),
 });
+
+/** One task run by the workflow runner. A task name plus its key is one run, so repeating it is safe. */
+export const workflowRuns = pgTable(
+  'workflow_runs',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    orgId: orgId(),
+    task: text().notNull(),
+    idempotencyKey: text().notNull(),
+    status: text().notNull().default('RUNNING'),
+    attempts: integer().notNull().default(1),
+    input: jsonb().notNull(),
+    result: jsonb(),
+    error: text(),
+    startedAt: createdAt(),
+    finishedAt: timestamptz(),
+  },
+  (t) => [
+    unique('workflow_runs_task_key').on(t.orgId, t.task, t.idempotencyKey),
+    check('workflow_runs_status', oneOf(t.status, ['RUNNING', 'SUCCEEDED', 'FAILED'])),
+  ],
+);

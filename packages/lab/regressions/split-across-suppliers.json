@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "invariant": "AUTO_SPEND_BOUNDED",
+  "scenario": {
+    "id": "split-suppliers-3-0",
+    "family": "split-suppliers",
+    "budgetCents": 5000000,
+    "steps": [
+      {
+        "supplier": "S3",
+        "unitCents": 48733,
+        "quantity": 1,
+        "afterMinutes": 32
+      },
+      {
+        "supplier": "S4",
+        "unitCents": 48744,
+        "quantity": 1,
+        "afterMinutes": 22
+      },
+      {
+        "supplier": "S0",
+        "unitCents": 48755,
+        "quantity": 1,
+        "afterMinutes": 22
+      },
+      {
+        "supplier": "S1",
+        "unitCents": 48766,
+        "quantity": 1,
+        "afterMinutes": 10
+      },
+      {
+        "supplier": "S2",
+        "unitCents": 48777,
+        "quantity": 1,
+        "afterMinutes": 14
+      },
+      {
+        "supplier": "S3",
+        "unitCents": 48788,
+        "quantity": 1,
+        "afterMinutes": 24
+      },
+      {
+        "supplier": "S4",
+        "unitCents": 48799,
+        "quantity": 1,
+        "afterMinutes": 12
+      }
+    ]
+  },
+  "before": {
+    "without": ["R-NEW-VENDOR"],
+    "overrides": {
+      "R-VELOCITY": {
+        "max": {
+          "currency": "USD",
+          "minor": "300000"
+        }
+      }
+    }
+  },
+  "after": {
+    "without": ["R-NEW-VENDOR"],
+    "overrides": {
+      "R-VELOCITY": {
+        "max": {
+          "currency": "USD",
+          "minor": "300000"
+        },
+        "orgMax": {
+          "currency": "USD",
+          "minor": "300000"
+        }
+      }
+    }
+  },
+  "note": "Set R-VELOCITY to 300000 cents a day, per supplier and across the whole organisation."
+}
