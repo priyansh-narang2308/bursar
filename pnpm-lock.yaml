@@ -145,6 +145,95 @@ importers:
         specifier: 'catalog:'
         version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
 
+  packages/agent-tools:
+    dependencies:
+      '@bursar/channel3':
+        specifier: workspace:*
+        version: link:../channel3
+      '@bursar/core':
+        specifier: workspace:*
+        version: link:../core
+      '@bursar/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bursar/money':
+        specifier: workspace:*
+        version: link:../money
+      '@bursar/policy':
+        specifier: workspace:*
+        version: link:../policy
+      '@bursar/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.1)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
+    devDependencies:
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../tooling
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/agents:
+    dependencies:
+      '@bursar/agent-tools':
+        specifier: workspace:*
+        version: link:../agent-tools
+      '@bursar/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bursar/llm':
+        specifier: workspace:*
+        version: link:../llm
+      '@bursar/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.3(@electric-sql/pglite@0.5.8)(@types/pg@8.23.1)(pg@8.23.1)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
+    devDependencies:
+      '@bursar/channel3':
+        specifier: workspace:*
+        version: link:../channel3
+      '@bursar/core':
+        specifier: workspace:*
+        version: link:../core
+      '@bursar/policy':
+        specifier: workspace:*
+        version: link:../policy
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../tooling
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
+
   packages/audit:
     dependencies:
       '@bursar/crypto':
@@ -339,6 +428,37 @@ importers:
       fast-check:
         specifier: 'catalog:'
         version: 4.10.2
+      typescript:
+        specifier: 'catalog:'
+        version: 7.0.2
+      vitest:
+        specifier: 'catalog:'
+        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@24.19.1)(esbuild@0.28.2)(tsx@4.23.15))
+
+  packages/llm:
+    dependencies:
+      '@bursar/crypto':
+        specifier: workspace:*
+        version: link:../crypto
+      '@bursar/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bursar/schemas':
+        specifier: workspace:*
+        version: link:../schemas
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.5
+    devDependencies:
+      '@bursar/tooling':
+        specifier: workspace:*
+        version: link:../tooling
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.1
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 5.0.3(vitest@5.0.3)
       typescript:
         specifier: 'catalog:'
         version: 7.0.2

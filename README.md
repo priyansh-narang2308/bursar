@@ -45,6 +45,10 @@ pnpm dev:doctor   # optional: verify the AI tooling setup
 | `packages/paypal` | A typed, retrying, idempotent, sandbox-only PayPal client with classified errors | ready |
 | `packages/paypal-fake` | A fake PayPal for tests, with a fidelity table and a contract suite | ready |
 | `packages/core` | The money loop: mandates, carts, the decision pipeline, the executor and webhook verification | ready |
+| `packages/channel3` | The product catalog: exact-decimal offers, a credit budget, caching, 429 handling and re-quotes that detect price drift | ready |
+| `packages/agent-tools` | What an LLM agent may call: amount-free tools behind per-role allow-lists, with web content fenced as untrusted | ready |
+| `packages/llm` | The LLM runtime: a thin Claude client, structured answers, budgets, a cache, run logging, mock and record/replay | ready |
+| `packages/agents` | The Planner, Researcher and Buyer, and an offline eval harness | ready |
 | `packages/audit` | The tamper-evident audit log: a per-organisation hash chain, appended and verified by pure functions | ready |
 | `packages/tooling` | Shared test configuration, repository-quality checks and the AI-tooling rules | ready |
 | `scripts/dev` | `pnpm dev:doctor` and `pnpm dev:skills` | ready |

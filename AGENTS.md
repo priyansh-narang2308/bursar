@@ -60,6 +60,12 @@ Bursar is a policy-enforced, PayPal-verified control plane for AI agents that sp
 - An action moves money only through `execute` (claim, call, record), with the request id derived from the action. Confirmation of a capture or refund comes from a verified webhook or a poll, never from the caller.
 - Anything that moves money for no approved action is an incident. Add to the incident path, not around it.
 
+### Agents
+- An LLM holds tools, never a decision. Give it a tool only through `LLM_TOOLS` in `@bursar/schemas`, add it to a role's allow-list in `@bursar/agent-tools`, and keep its input free of amounts, currencies and payees.
+- Anything from outside (product titles, user text) reaches a model only through `untrusted()`. A model's pick must name an id the tools returned.
+- Catalog prices are never trusted: re-quote before buying, and keep only offers from registered suppliers.
+- Reconciliation is cross-tenant: run it from a job, never from a tenant route.
+
 ### Hygiene
 - No secrets in git. `.env` is local only; `.env.example` holds placeholders (a test enforces this).
 - PayPal credentials exist only in the executor and workflow service.

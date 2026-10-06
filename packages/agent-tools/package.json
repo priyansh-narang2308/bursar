@@ -1,13 +1,12 @@
 {
-  "name": "@bursar/core",
+  "name": "@bursar/agent-tools",
   "version": "0.0.0",
   "private": true,
-  "description": "Bursar's money loop: mandates, missions and carts, the decision pipeline, the executor, and webhook verification.",
+  "description": "What an LLM agent may do: amount-free tools that read, search and propose, behind per-agent allow-lists, with untrusted content fenced.",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./testing": "./test/support.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -15,20 +14,17 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@bursar/audit": "workspace:*",
-    "@bursar/crypto": "workspace:*",
+    "@bursar/channel3": "workspace:*",
+    "@bursar/core": "workspace:*",
     "@bursar/db": "workspace:*",
-    "@bursar/ledger": "workspace:*",
     "@bursar/money": "workspace:*",
-    "@bursar/paypal": "workspace:*",
     "@bursar/policy": "workspace:*",
     "@bursar/schemas": "workspace:*",
-    "drizzle-orm": "catalog:"
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@bursar/paypal-fake": "workspace:*",
     "@bursar/tooling": "workspace:*",
-    "@electric-sql/pglite": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",

@@ -13,6 +13,7 @@ import { agentRoutes } from './routes/agents';
 import { demoRoutes } from './routes/demo';
 import { healthRoutes } from './routes/health';
 import { moneyRoutes } from './routes/money';
+import { oversightRoutes } from './routes/oversight';
 import { webhookRoutes } from './routes/webhooks';
 import { workspaceRoutes } from './routes/workspace';
 import type { AppEnv } from './types';
@@ -50,7 +51,10 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
   v1.route('/', demoRoutes({ db, config, now }));
   v1.route('/', workspaceRoutes(db));
   v1.route('/', agentRoutes(db));
-  if (deps.core !== undefined) v1.route('/', moneyRoutes(db, deps.core));
+  if (deps.core !== undefined) {
+    v1.route('/', moneyRoutes(db, deps.core));
+    v1.route('/', oversightRoutes(db, deps.core));
+  }
   app.route('/v1', v1);
   if (deps.core !== undefined) app.route('/', webhookRoutes(deps.core));
   return app;

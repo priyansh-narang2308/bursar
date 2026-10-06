@@ -1,13 +1,13 @@
 {
-  "name": "@bursar/core",
+  "name": "@bursar/agents",
   "version": "0.0.0",
   "private": true,
-  "description": "Bursar's money loop: mandates, missions and carts, the decision pipeline, the executor, and webhook verification.",
+  "description": "The Planner, Researcher and Buyer: plan a goal into needs, research each, and propose one cart. With an eval harness that scores them offline.",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./testing": "./test/support.ts"
+    "./eval": "./src/eval.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -15,20 +15,18 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@bursar/audit": "workspace:*",
-    "@bursar/crypto": "workspace:*",
+    "@bursar/agent-tools": "workspace:*",
     "@bursar/db": "workspace:*",
-    "@bursar/ledger": "workspace:*",
-    "@bursar/money": "workspace:*",
-    "@bursar/paypal": "workspace:*",
-    "@bursar/policy": "workspace:*",
+    "@bursar/llm": "workspace:*",
     "@bursar/schemas": "workspace:*",
-    "drizzle-orm": "catalog:"
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@bursar/paypal-fake": "workspace:*",
+    "@bursar/channel3": "workspace:*",
+    "@bursar/core": "workspace:*",
+    "@bursar/policy": "workspace:*",
     "@bursar/tooling": "workspace:*",
-    "@electric-sql/pglite": "catalog:",
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "typescript": "catalog:",

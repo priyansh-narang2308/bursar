@@ -45,6 +45,10 @@ export interface OfferInput {
   readonly price: AmountJSON;
   readonly availability?: 'IN_STOCK' | 'LIMITED' | 'OUT_OF_STOCK' | 'UNKNOWN' | undefined;
   readonly source?: 'SEARCH' | 'DETAIL' | undefined;
+  /** The catalog's own id for the product, so a later re-quote can find it. */
+  readonly quoteId?: string | undefined;
+  readonly brand?: string | undefined;
+  readonly imageUrl?: string | undefined;
 }
 
 /** A frozen price quote. Carts use these, never a live price. */
@@ -64,6 +68,9 @@ export async function recordOffer(deps: CoreDeps, orgId: OrganizationId, input: 
         priceMinor: price.minor,
         availability: input.availability ?? 'IN_STOCK',
         source: input.source ?? 'DETAIL',
+        quoteId: input.quoteId ?? null,
+        brand: input.brand ?? null,
+        imageUrl: input.imageUrl ?? null,
         observedAt: deps.now(),
       })
       .returning();

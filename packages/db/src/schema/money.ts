@@ -425,3 +425,19 @@ export const channel3Calls = pgTable('channel3_calls', {
   status: text().notNull(),
   createdAt: createdAt(),
 });
+
+/** One run of an LLM agent: what it cost and how it ended. The conversation itself is not kept here. */
+export const agentRuns = pgTable('agent_runs', {
+  id: uuid().primaryKey().defaultRandom(),
+  orgId: orgId(),
+  agentId: text().notNull(),
+  role: text().notNull(),
+  missionId: text(),
+  status: text().notNull(),
+  steps: integer().notNull(),
+  inputTokens: integer().notNull(),
+  outputTokens: integer().notNull(),
+  cacheHits: integer().notNull(),
+  error: text(),
+  createdAt: createdAt(),
+});
