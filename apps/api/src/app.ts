@@ -1,11 +1,12 @@
 import type { Core } from '@bursar/core';
 import type { Db } from '@bursar/db';
 import { Hono } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { cors } from 'hono/cors';
 import { secureHeaders } from 'hono/secure-headers';
 import { authenticate } from './auth';
 import type { Config } from './config';
-import { accessLog, rateLimit, requestId } from './http/middleware';
+import { accessLog, rateLimit, requestId, sameOrigin } from './http/middleware';
 import { ApiError, handleError } from './http/problem';
 import type { Logger } from './logger';
 import { openApiDocument } from './openapi';
@@ -37,6 +38,8 @@ export interface DemoHooks {
     input: { days: number; apply: boolean },
   ): Promise<unknown>;
   gauntlet(): Promise<unknown>;
+  labRun(input: { policy: 'standard' | 'no-velocity'; count: number }): Promise<unknown>;
+  labFix(input: { policy: 'standard' | 'no-velocity'; scenario: unknown }): Promise<unknown>;
 }
 
 /** Which real services are behind the product and which are stand-ins. */
@@ -92,6 +95,16 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
   app.get('/openapi.json', (c) => c.json(openApiDocument()));
 
   const v1 = new Hono<AppEnv>();
+  // A request body is a few hundred bytes; anything near this size is not a person or an agent.
+  v1.use(
+    bodyLimit({
+      maxSize: 64 * 1024,
+      onError: () => {
+        throw new ApiError('VALIDATION_FAILED', { detail: 'That request is too large.' });
+      },
+    }),
+  );
+  v1.use(sameOrigin(config.publicBaseUrl));
   v1.use(rateLimit({ windowMs: 60_000, max: 600 }));
   v1.use(authenticate({ db, config, now }));
   v1.route('/', demoRoutes({ db, config, now, hooks: deps.demo }));
@@ -103,6 +116,18 @@ export function createApp(deps: AppDeps): Hono<AppEnv> {
     if (deps.agentTools !== undefined) v1.route('/', mcpRoutes(db, deps.core, deps.agentTools));
   }
   app.route('/v1', v1);
-  if (deps.core !== undefined) app.route('/', webhookRoutes(deps.core));
+  if (deps.core !== undefined) {
+    // PayPal's events are small; refuse anything else before it is read and its signature checked.
+    app.use(
+      '/webhooks/*',
+      bodyLimit({
+        maxSize: 256 * 1024,
+        onError: () => {
+          throw new ApiError('VALIDATION_FAILED', { detail: 'That request is too large.' });
+        },
+      }),
+    );
+    app.route('/', webhookRoutes(deps.core));
+  }
   return app;
 }

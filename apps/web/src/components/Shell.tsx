@@ -49,7 +49,7 @@ const NAV: { label: string; items: NavEntry[] }[] = [
   {
     label: 'Prove',
     items: [
-      { to: '/dashboard/lab', label: 'Policy lab', icon: 'flask', soon: true },
+      { to: '/dashboard/lab', label: 'Policy lab', icon: 'flask' },
       { to: '/dashboard/gauntlet', label: 'Gauntlet', icon: 'shield' },
     ],
   },

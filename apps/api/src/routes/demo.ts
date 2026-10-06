@@ -13,6 +13,24 @@ import { readBody } from './support';
  * The demo front door: anyone can open a workspace and try the roles, with no sign-up. It exists only
  * while `DEMO_MODE` is on, and creating a workspace is system code, because there is no tenant yet.
  */
+const labPolicy = z.enum(['standard', 'no-velocity']);
+const labScenario = z.strictObject({
+  id: z.string().max(80),
+  family: z.string().max(40),
+  budgetCents: z.int().min(0).max(100_000_000),
+  steps: z
+    .array(
+      z.strictObject({
+        supplier: z.string().min(1).max(40),
+        unitCents: z.int().min(1).max(10_000_000),
+        quantity: z.int().min(1).max(99),
+        afterMinutes: z.int().min(0).max(10_000),
+      }),
+    )
+    .min(1)
+    .max(16),
+});
+
 export function demoRoutes(deps: {
   db: Db;
   config: Config;
@@ -71,6 +89,24 @@ export function demoRoutes(deps: {
         );
         return c.json(await hooks().replan(requirePrincipal(c).orgId, c.req.param('id'), input));
       })
+      // The Policy Lab: adversarial spending scenarios against the real pipeline, and shrinking one that breaks it.
+      .post('/demo/lab/run', can('audit:read'), async (c) =>
+        c.json(
+          await hooks().labRun(
+            await readBody(
+              c,
+              z.strictObject({ policy: labPolicy, count: z.int().min(8).max(48).default(24) }),
+            ),
+          ),
+        ),
+      )
+      .post('/demo/lab/fix', can('audit:read'), async (c) =>
+        c.json(
+          await hooks().labFix(
+            await readBody(c, z.strictObject({ policy: labPolicy, scenario: labScenario })),
+          ),
+        ),
+      )
       // Attacks a naive agent and the guarded one with the same payloads.
       .post('/demo/gauntlet', can('missions:read'), async (c) => c.json(await hooks().gauntlet()))
       // Runs the agents on a mission (plan, research, one cart) and returns what they did.

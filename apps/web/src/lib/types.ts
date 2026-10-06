@@ -231,3 +231,34 @@ export interface GauntletView {
     guardedPayPalCalls: number;
   }[];
 }
+
+export interface LabStep {
+  supplier: string;
+  unitCents: number;
+  quantity: number;
+  afterMinutes: number;
+}
+export interface LabScenario {
+  id: string;
+  family: string;
+  budgetCents: number;
+  steps: LabStep[];
+}
+export interface LabViolation {
+  invariant: string;
+  detail: string;
+}
+export interface LabRun {
+  policy: string;
+  total: number;
+  byFamily: Record<string, number>;
+  brokenByFamily: Record<string, number>;
+  broken: number;
+  findings: { scenario: LabScenario; violations: LabViolation[] }[];
+}
+export interface LabFix {
+  minimal: LabScenario;
+  violation: LabViolation | null;
+  patch: string | null;
+  cleanAfter: boolean;
+}

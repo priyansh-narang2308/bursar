@@ -22,6 +22,7 @@
     "@bursar/core": "workspace:*",
     "@bursar/crypto": "workspace:*",
     "@bursar/db": "workspace:*",
+    "@bursar/lab": "workspace:*",
     "@bursar/llm": "workspace:*",
     "@bursar/mcp-gateway": "workspace:*",
     "@bursar/money": "workspace:*",

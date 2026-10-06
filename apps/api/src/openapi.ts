@@ -102,6 +102,20 @@ export const OPERATIONS: readonly Operation[] = [
   },
   {
     method: 'post',
+    path: '/v1/demo/lab/run',
+    summary: 'Run adversarial spending scenarios against a policy (demo mode only)',
+    permission: 'audit:read',
+    status: 200,
+  },
+  {
+    method: 'post',
+    path: '/v1/demo/lab/fix',
+    summary: 'Shrink a scenario that broke the policy and propose a patch (demo mode only)',
+    permission: 'audit:read',
+    status: 200,
+  },
+  {
+    method: 'post',
     path: '/v1/demo/role',
     summary: 'Switch role in the demo',
     permission: 'signed-in',

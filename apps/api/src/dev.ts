@@ -34,6 +34,19 @@ import {
   withOrg,
 } from '@bursar/db';
 import { createTestDb } from '@bursar/db/testing';
+import {
+  createCoreLab,
+  DEFAULT_LIMITS,
+  generate,
+  invariants,
+  judge,
+  minimize,
+  type PolicyConfig,
+  policyBook,
+  proposePatches,
+  runLab,
+  type Scenario,
+} from '@bursar/lab';
 import { createRuntime, persistRun } from '@bursar/llm';
 import { Money } from '@bursar/money';
 import { createPayPalClient } from '@bursar/paypal';
@@ -105,6 +118,9 @@ const paypal = createPayPalClient(
 const vaultKeys = parseKeyring(
   sandbox ? need('VAULT_ENC_KEY') : Buffer.from(bytes(1)).toString('hex'),
 );
+/** How far the clock has been moved on for the lab. It is put back after every run. */
+let labSkewMs = 0;
+const book = policyBook(standardPolicy());
 const core = createCore({
   db,
   paypal,
@@ -119,6 +135,9 @@ const core = createCore({
   webhookId: sandbox ? (process.env['PAYPAL_WEBHOOK_ID'] ?? 'unset') : 'WH-0001',
   // A pooled buyer's token is shared by every workspace, so one workspace revoking must not delete it.
   keepVaultTokens: sandbox,
+  // The Policy Lab runs scenarios in a made-up future (a day's limit has to mean a day), in organisations of its own.
+  now: () => new Date(Date.now() + labSkewMs),
+  policyFor: book.policyFor as never,
 });
 if (fake !== undefined)
   await paypal.webhooks.register({
@@ -399,6 +418,34 @@ async function runGauntlet() {
   return gauntletResult;
 }
 
+// The Policy Lab. First-supplier approvals are off in its organisations so an order can be approved on its own,
+// which is what makes a hole in the other rules visible. "no-velocity" is the seeded hole: nothing limits a day.
+const LAB_POLICIES: Record<'standard' | 'no-velocity', PolicyConfig> = {
+  standard: { without: ['R-NEW-VENDOR'], overrides: {} },
+  'no-velocity': { without: ['R-NEW-VENDOR', 'R-VELOCITY'], overrides: {} },
+};
+const labEnv = createCoreLab({
+  core,
+  db,
+  book,
+  advance: (minutes) => {
+    labSkewMs += minutes * 60_000;
+  },
+});
+let labBusy = false;
+/** One lab run at a time, and the clock put back afterwards, so a visitor cannot pile them up. */
+async function withLab<T>(work: () => Promise<T>): Promise<T> {
+  if (labBusy)
+    throw new CoreError('CONFLICT', 'The lab is already running. Try again in a moment.');
+  labBusy = true;
+  try {
+    return await work();
+  } finally {
+    labBusy = false;
+    labSkewMs = 0;
+  }
+}
+
 const demo: DemoHooks = {
   seed: seedWorkspace,
 
@@ -574,6 +621,50 @@ const demo: DemoHooks = {
       applied: applied?.result ?? null,
     };
   },
+
+  labRun: ({ policy, count }) =>
+    withLab(async () => {
+      const config = LAB_POLICIES[policy];
+      const report = await runLab(
+        (scenario) => labEnv(config, scenario),
+        await generate({ seed: 2026, count }),
+        invariants(),
+      );
+      const brokenByFamily: Record<string, number> = {};
+      for (const f of report.findings)
+        brokenByFamily[f.scenario.family] = (brokenByFamily[f.scenario.family] ?? 0) + 1;
+      return {
+        policy,
+        total: report.total,
+        byFamily: report.byFamily,
+        brokenByFamily,
+        broken: report.findings.length,
+        findings: report.findings.slice(0, 8),
+      };
+    }),
+
+  labFix: ({ policy, scenario }) =>
+    withLab(async () => {
+      const config = LAB_POLICIES[policy];
+      const rules = invariants();
+      const broken = async (s: Scenario) =>
+        (await judge(await labEnv(config, s), s, rules)).length > 0;
+      const found = scenario as Scenario;
+      if (!(await broken(found)))
+        throw new CoreError('VALIDATION_FAILED', 'That scenario does not break this policy.');
+      const minimal = await minimize(found, broken);
+      const [violation] = await judge(await labEnv(config, minimal), minimal, rules);
+      const [patch] = violation ? proposePatches(violation, config, DEFAULT_LIMITS) : [];
+      const cleanAfter = patch
+        ? (await judge(await labEnv(patch.apply(config), minimal), minimal, rules)).length === 0
+        : false;
+      return {
+        minimal,
+        violation: violation ?? null,
+        patch: patch?.description ?? null,
+        cleanAfter,
+      };
+    }),
 
   gauntlet: runGauntlet,
 };

@@ -264,3 +264,72 @@ describe('gauntlet', () => {
     expect(screen.getAllByText('Held')).toHaveLength(2);
   });
 });
+
+describe('policy lab', () => {
+  const scenario = {
+    id: 'structuring-1',
+    family: 'structuring',
+    budgetCents: 5_000_000,
+    steps: Array.from({ length: 8 }, (_, i) => ({
+      supplier: 'A',
+      unitCents: 48_900 + i,
+      quantity: 1,
+      afterMinutes: 10,
+    })),
+  };
+  const run = (broken: boolean) => ({
+    policy: 'no-velocity',
+    total: 24,
+    byFamily: { structuring: 3, 'split-suppliers': 3 },
+    brokenByFamily: broken ? { structuring: 2 } : {},
+    broken: broken ? 2 : 0,
+    findings: broken
+      ? [
+          {
+            scenario,
+            violations: [
+              {
+                invariant: 'AUTO_SPEND_BOUNDED',
+                detail: '342496 cents approved without a person in 24 hours.',
+              },
+            ],
+          },
+        ]
+      : [],
+  });
+
+  it('finds nothing on the standard policy, and says each family held', async () => {
+    routes['POST /v1/demo/lab/run'] = () => ({ json: run(false) });
+    renderAt('/dashboard/lab');
+    await userEvent.click(await screen.findByRole('button', { name: 'Run the lab' }));
+    expect((await screen.findAllByText('Held')).length).toBe(2);
+    expect(calls.find((c) => c.path === '/v1/demo/lab/run')?.body).toEqual({
+      policy: 'standard',
+      count: 24,
+    });
+  });
+
+  it('finds the seeded hole, shrinks it to the fewest orders and shows the patch holding', async () => {
+    routes['POST /v1/demo/lab/run'] = () => ({ json: run(true) });
+    routes['POST /v1/demo/lab/fix'] = () => ({
+      json: {
+        minimal: { ...scenario, steps: scenario.steps.slice(0, 7) },
+        violation: { invariant: 'AUTO_SPEND_BOUNDED', detail: '' },
+        patch: 'Restore R-VELOCITY: it caps a day.',
+        cleanAfter: true,
+      },
+    });
+    renderAt('/dashboard/lab');
+    await userEvent.selectOptions(await screen.findByLabelText('Policy'), 'no-velocity');
+    await userEvent.click(screen.getByRole('button', { name: 'Run the lab' }));
+    expect(await screen.findByText('2 broke it')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Shrink and fix' }));
+    expect(await screen.findByText('7 orders')).toBeInTheDocument();
+    expect(screen.getByText('Restore R-VELOCITY: it caps a day.')).toBeInTheDocument();
+    expect(screen.getByText('Re-run with the patch: no violation')).toBeInTheDocument();
+    expect(
+      (calls.find((c) => c.path === '/v1/demo/lab/fix')?.body as { policy: string } | undefined)
+        ?.policy,
+    ).toBe('no-velocity');
+  });
+});
