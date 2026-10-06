@@ -50,7 +50,7 @@ import {
 } from '@bursar/lab';
 import { createRuntime, persistRun } from '@bursar/llm';
 import { Money } from '@bursar/money';
-import { createPayPalClient } from '@bursar/paypal';
+import { createPayPalClient, PayPalError } from '@bursar/paypal';
 import { createFakePayPal } from '@bursar/paypal-fake';
 import { standardPolicy } from '@bursar/policy';
 import { dayOf, planFromBasket, type Schedule, schedule as scheduleOf } from '@bursar/schedule';
@@ -564,12 +564,20 @@ const demo: DemoHooks = {
         'Approve a purchase first, so there is a hold to capture.',
       );
     // Straight to PayPal, with no action behind it: nothing in Bursar asked for this.
-    await paypal.payments.capture({
-      requestId: `rogue-${randomBytes(8).toString('hex')}`,
-      authorizationId: held.paypalAuthorizationId,
-      amount: Money.of(5_000n, 'USD'),
-      finalCapture: false,
-    });
+    await paypal.payments
+      .capture({
+        requestId: `rogue-${randomBytes(8).toString('hex')}`,
+        authorizationId: held.paypalAuthorizationId,
+        amount: Money.of(5_000n, 'USD'),
+        finalCapture: false,
+      })
+      .catch((error: unknown) => {
+        if (!(error instanceof PayPalError)) throw error;
+        throw new CoreError(
+          'CONFLICT',
+          'That hold is already used up. Try the kill switch after approving a purchase and before capturing it.',
+        );
+      });
     return { captured: true };
   },
 

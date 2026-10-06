@@ -188,7 +188,8 @@ export function Incidents() {
             Pretend something outside Bursar (a leaked credential, a bug) captures $50.00 straight
             from PayPal. The signed webhook arrives, nothing in the records explains it, and the
             Verifier contains it. This revokes the demo mandate; open a new workspace to start
-            again. You need an approved purchase first, so there is a hold to capture.
+            again. Do it after approving a purchase and before capturing it, so there is a hold to
+            capture.
           </p>
         </Panel>
       )}
