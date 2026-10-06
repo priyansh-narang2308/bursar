@@ -26,6 +26,7 @@ import { decodeKey, decryptSecret, parseKeyring } from '@bursar/crypto';
 import {
   cartLines,
   carts,
+  createDb,
   envelopes,
   mandates,
   missions,
@@ -34,7 +35,6 @@ import {
   users,
   withOrg,
 } from '@bursar/db';
-import { createTestDb } from '@bursar/db/testing';
 import {
   createCoreLab,
   DEFAULT_LIMITS,
@@ -59,7 +59,10 @@ import { createWorkflows, recoveryFor } from '@bursar/workflows';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { and, desc, eq, inArray, isNotNull } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Hono } from 'hono';
+import { Pool } from 'pg';
 import { createApp, type DemoHooks } from './app';
 import { loadConfig } from './config';
 import { createLogger } from './logger';
@@ -82,7 +85,20 @@ const config = loadConfig({
   PORT: process.env['PORT'] ?? '8787',
 });
 const logger = createLogger(config.logLevel);
-const { db } = await createTestDb();
+// With BURSAR_DATABASE_URL the demo uses a real Postgres (migrated at start, so workspaces survive a restart and
+// the server stays small); without it, an in-memory one that needs nothing.
+const databaseUrl = process.env['BURSAR_DATABASE_URL'];
+const { db } = databaseUrl
+  ? await connect(databaseUrl)
+  : await (await import('@bursar/db/testing')).createTestDb();
+
+async function connect(url: string) {
+  const pool = new Pool({ connectionString: url });
+  await migrate(drizzle({ client: pool }), {
+    migrationsFolder: fileURLToPath(new URL('../../../packages/db/migrations', import.meta.url)),
+  });
+  return createDb(url);
+}
 
 // `BURSAR_PAYPAL=sandbox` uses PayPal's real sandbox with the keys in `.env` and the buyers in the payer pool
 // (`pnpm dev:payer`). Without it, everything runs against an in-process fake and needs no keys.

@@ -8,7 +8,7 @@ services:
     region: oregon
     branch: main
     autoDeploy: true
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @bursar/web build
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @bursar/web build
     startCommand: pnpm start:demo
     healthCheckPath: /healthz
     envVars:
