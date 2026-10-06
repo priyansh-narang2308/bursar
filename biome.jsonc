@@ -10,7 +10,8 @@
       "!**/coverage",
       "!**/dist",
       "!**/__snapshots__",
-      "!packages/schemas/json-schema"
+      "!packages/schemas/json-schema",
+      "!**/.claude"
     ]
   },
   "formatter": {

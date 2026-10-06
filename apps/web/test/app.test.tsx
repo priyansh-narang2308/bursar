@@ -188,7 +188,7 @@ describe('the landing page', () => {
       return { status: 201, json: { orgId: 'org_1' } };
     };
     renderAt('/');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Let agents spend');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Smart agents');
     await userEvent.click(
       (await screen.findAllByRole('button', { name: 'Open demo workspace' }))[0] as HTMLElement,
     );

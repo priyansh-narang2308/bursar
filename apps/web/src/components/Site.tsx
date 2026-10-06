@@ -1,4 +1,5 @@
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import { type ReactNode, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useMe } from '../lib/queries';
 import { OpenDemoButton } from '../lib/session';
@@ -17,32 +18,16 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(typeof IntersectionObserver === 'undefined');
-  useEffect(() => {
-    const node = ref.current;
-    if (shown || node === null) return;
-    const watcher = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setShown(true);
-          watcher.disconnect();
-        }
-      },
-      { rootMargin: '0px 0px -8% 0px' },
-    );
-    watcher.observe(node);
-    return () => watcher.disconnect();
-  }, [shown]);
   return (
-    <div
-      ref={ref}
-      className={`reveal ${className}`}
-      data-shown={shown}
-      style={{ transitionDelay: `${delay}ms` }}
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '0px 0px -8% 0px' }}
+      transition={{ duration: 0.6, delay: delay / 1000, ease: 'easeOut' }}
+      className={className}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 

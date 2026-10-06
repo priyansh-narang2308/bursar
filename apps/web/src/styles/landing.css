@@ -160,6 +160,9 @@
 .lp-hero h1 {
   max-width: 14ch;
   margin-top: 26px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 800;
+  font-style: normal;
   font-size: clamp(40px, 7vw, 72px);
   line-height: 1.02;
   letter-spacing: -0.055em;
