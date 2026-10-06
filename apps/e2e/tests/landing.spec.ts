@@ -7,7 +7,7 @@ test.describe('the landing page', () => {
       if (response.url().endsWith('.js')) scripts.push((await response.body()).length);
     });
     await page.goto('/', { waitUntil: 'networkidle' });
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Let agents spend');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Smart agents');
     // Studio and the Gantt are several megabytes; the front page must not carry them.
     expect(scripts.reduce((sum, bytes) => sum + bytes, 0)).toBeLessThan(500_000);
   });
