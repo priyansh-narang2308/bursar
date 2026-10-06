@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import {
@@ -57,9 +57,50 @@ const NAV: { label: string; items: NavEntry[] }[] = [
 
 const ROLES = ['OWNER', 'APPROVER', 'OPERATOR', 'AUDITOR'] as const;
 
+const SIDEBAR_KEY = 'bursar.sidebar';
+
+/**
+ * Whether the sidebar is shown. It remembers the choice in this browser, starts closed on a phone, and answers
+ * the keyboard shortcut (Cmd or Ctrl and B) from anywhere on the page.
+ */
+function useSidebar() {
+  const [open, setOpen] = useState(() => {
+    try {
+      const saved = window.localStorage.getItem(SIDEBAR_KEY);
+      if (saved !== null) return saved === 'open';
+    } catch {
+      // Storage can be blocked; the sidebar then simply opens by default.
+    }
+    return (
+      typeof window.matchMedia !== 'function' || !window.matchMedia('(max-width: 900px)').matches
+    );
+  });
+  const toggle = useCallback(() => {
+    setOpen((was) => {
+      try {
+        window.localStorage.setItem(SIDEBAR_KEY, was ? 'closed' : 'open');
+      } catch {
+        // Not remembered, still toggled.
+      }
+      return !was;
+    });
+  }, []);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggle();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [toggle]);
+  return { open, toggle };
+}
+
 function Sidebar({ pending, name }: { pending: number; name: string | undefined }) {
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" id="sidebar">
       <Link to="/" className="brand" aria-label="Bursar home">
         <Logo /> Bursar
       </Link>
@@ -265,7 +306,15 @@ function Palette({ onClose }: { onClose: () => void }) {
   );
 }
 
-function Topbar({ title }: { title: ReactNode }) {
+function Topbar({
+  title,
+  sidebarOpen,
+  onToggleSidebar,
+}: {
+  title: ReactNode;
+  sidebarOpen: boolean;
+  onToggleSidebar: () => void;
+}) {
   const me = useMe();
   const mandates = useMandates();
   const audit = useAuditVerdict();
@@ -284,7 +333,20 @@ function Topbar({ title }: { title: ReactNode }) {
   const canFreeze = me.data?.role === 'OWNER';
   return (
     <header className="topbar">
-      <span className="muted">{title}</span>
+      <span className="topbar-left">
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm btn-icon"
+          aria-label="Toggle sidebar"
+          aria-expanded={sidebarOpen}
+          aria-controls="sidebar"
+          title="Toggle sidebar (⌘B)"
+          onClick={onToggleSidebar}
+        >
+          <Icon name="sidebar" />
+        </button>
+        <span className="muted">{title}</span>
+      </span>
       <div className="topbar-right">
         <button type="button" className="btn btn-ghost btn-sm" onClick={() => setPalette(true)}>
           <Icon name="search" /> Go to <kbd>⌘K</kbd>
@@ -318,11 +380,16 @@ export function Shell() {
   const workspace = useWorkspace();
   const approvals = useApprovals(me.data?.role === 'OWNER' || me.data?.role === 'APPROVER');
   useLiveEvents(me.isSuccess);
+  const sidebar = useSidebar();
   return (
-    <div className="app">
+    <div className="app" data-sidebar={sidebar.open ? 'open' : 'closed'}>
       <Sidebar pending={approvals.data?.length ?? 0} name={workspace.data?.name} />
       <div className="main">
-        <Topbar title={workspace.data?.name ?? 'Dashboard'} />
+        <Topbar
+          title={workspace.data?.name ?? 'Dashboard'}
+          sidebarOpen={sidebar.open}
+          onToggleSidebar={sidebar.toggle}
+        />
         <Outlet />
       </div>
     </div>

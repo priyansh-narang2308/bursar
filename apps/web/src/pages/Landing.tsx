@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { AuroraBackground } from '../components/AuroraBackground';
 import { PrimaryAction, REPO_URL, Reveal, SiteFooter, SiteNav } from '../components/Site';
 import { Badge, Icon, StateLadder } from '../components/ui';
 
@@ -174,7 +175,7 @@ export function Landing() {
     document.title = 'Bursar - spend control for AI agents';
   }, []);
   return (
-    <div className="lp">
+    <AuroraBackground className="lp">
       <SiteNav />
       <main>
         <section className="lp-hero lp-wrap">
@@ -378,6 +379,6 @@ export function Landing() {
         </section>
       </main>
       <SiteFooter />
-    </div>
+    </AuroraBackground>
   );
 }

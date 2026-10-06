@@ -147,6 +147,36 @@ describe('the public pages', () => {
   });
 });
 
+describe('the sidebar trigger', () => {
+  beforeEach(() => window.localStorage.removeItem('bursar.sidebar'));
+
+  it('closes and opens the sidebar, remembers the choice, and answers Ctrl+B', async () => {
+    signedIn();
+    const { container } = renderAt('/dashboard');
+    const trigger = await screen.findByRole('button', { name: 'Toggle sidebar' });
+    const app = () => container.querySelector('.app');
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    expect(app()).toHaveAttribute('data-sidebar', 'open');
+
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(app()).toHaveAttribute('data-sidebar', 'closed');
+    expect(window.localStorage.getItem('bursar.sidebar')).toBe('closed');
+
+    await userEvent.keyboard('{Control>}b{/Control}');
+    expect(app()).toHaveAttribute('data-sidebar', 'open');
+    expect(window.localStorage.getItem('bursar.sidebar')).toBe('open');
+  });
+
+  it('starts closed when the person last left it closed', async () => {
+    window.localStorage.setItem('bursar.sidebar', 'closed');
+    signedIn();
+    const { container } = renderAt('/dashboard');
+    await screen.findByRole('button', { name: 'Toggle sidebar' });
+    expect(container.querySelector('.app')).toHaveAttribute('data-sidebar', 'closed');
+  });
+});
+
 describe('the landing page', () => {
   it('opens a populated demo workspace in one click and lands on the dashboard', async () => {
     routes['GET /v1/me'] = () => ({

@@ -85,4 +85,19 @@ test.describe('the scripted demo', () => {
     await expect(page.locator('.b-gantt')).toBeVisible({ timeout: 30_000 });
     expect(problems).toEqual([]);
   });
+
+  test('hides and shows the sidebar from its trigger, and remembers it across a reload', async ({
+    page,
+  }) => {
+    await openWorkspace(page);
+    const nav = page.getByRole('navigation', { name: 'Workspace' });
+    await expect(nav).toBeVisible();
+    await page.getByRole('button', { name: 'Toggle sidebar' }).click();
+    await expect(nav).toBeHidden();
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
+    await expect(nav).toBeHidden();
+    await page.keyboard.press('Control+b');
+    await expect(nav).toBeVisible();
+  });
 });

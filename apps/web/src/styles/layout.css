@@ -4,6 +4,16 @@
   grid-template-columns: 224px minmax(0, 1fr);
   min-height: 100%;
 }
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.btn-icon {
+  width: 28px;
+  padding: 0;
+}
 .sidebar {
   position: sticky;
   top: 0;
@@ -182,5 +192,29 @@
   .grid-3,
   .grid-2 {
     grid-template-columns: 1fr;
+  }
+}
+
+/* The sidebar trigger: these come last so that closing wins over the sidebar's own rules ----------------- */
+.app {
+  transition: grid-template-columns 0.18s ease;
+}
+.app[data-sidebar="closed"] {
+  grid-template-columns: 0 minmax(0, 1fr);
+}
+.app[data-sidebar="closed"] .sidebar {
+  visibility: hidden; /* out of the tab order and the accessibility tree while it is closed */
+  padding-right: 0;
+  padding-left: 0;
+  border-right: 0;
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  .app,
+  .app[data-sidebar="closed"] {
+    grid-template-columns: 1fr;
+  }
+  .app[data-sidebar="closed"] .sidebar {
+    display: none;
   }
 }

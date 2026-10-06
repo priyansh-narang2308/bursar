@@ -8,6 +8,68 @@
   font-size: 15px;
   line-height: 1.6;
 }
+/* The aurora behind the top of the page ----------------------------------------------------------------- */
+.aurora-stage {
+  position: relative;
+  isolation: isolate;
+}
+.aurora {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 1100px;
+  overflow: hidden;
+  pointer-events: none;
+  background: #0a0c0f;
+  mask-image: linear-gradient(#000 52%, transparent);
+  -webkit-mask-image: linear-gradient(#000 52%, transparent);
+}
+.aurora i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+}
+.aurora i:nth-child(1) {
+  top: -18%;
+  left: -12%;
+  width: 68%;
+  height: 68%;
+  background: #2dd4bf;
+  opacity: 0.22;
+}
+.aurora i:nth-child(2) {
+  top: 8%;
+  right: -10%;
+  width: 62%;
+  height: 62%;
+  background: #22d3ee;
+  opacity: 0.18;
+}
+.aurora i:nth-child(3) {
+  bottom: -28%;
+  left: 18%;
+  width: 70%;
+  height: 70%;
+  background: #34d399;
+  opacity: 0.16;
+}
+.aurora i:nth-child(4) {
+  right: 8%;
+  bottom: -16%;
+  width: 56%;
+  height: 56%;
+  background: #38bdf8;
+  opacity: 0.14;
+}
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at center, #fff 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.04;
+}
+
 .lp-wrap {
   width: 100%;
   max-width: 1120px;
@@ -72,15 +134,6 @@
   align-items: center;
   padding-top: 88px;
   text-align: center;
-}
-.lp-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0 -100vw;
-  z-index: -1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='1.5' cy='1.5' r='1' fill='%23ffffff' fill-opacity='.09'/%3E%3C/svg%3E");
-  mask-image: linear-gradient(#000 40%, transparent 92%);
-  -webkit-mask-image: linear-gradient(#000 40%, transparent 92%);
 }
 .lp-pill {
   display: inline-flex;
