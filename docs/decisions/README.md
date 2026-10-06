@@ -17,6 +17,7 @@ Short records of decisions that shape the architecture: the context, the choice,
 | [0011](0011-schedules-workflows-lab-and-the-mcp-gateway.md) | Schedules, workflows, the lab and the MCP gateway | Accepted |
 | [0012](0012-web-app-and-demo-server.md) | The web app and the demo server | Accepted |
 | [0013](0013-live-services-and-the-payer-pool.md) | Live services and the payer pool | Accepted |
+| [0014](0014-hardening-and-the-policy-lab-screen.md) | Hardening, and the Policy Lab on screen | Accepted |
 
 ## Template
 

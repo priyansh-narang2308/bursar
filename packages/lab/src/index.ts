@@ -413,3 +413,4 @@ export function freeze(input: Omit<Regression, 'version'>): string {
 }
 
 export const thaw = (text: string): Regression => JSON.parse(text) as Regression;
+export { createCoreLab, type PolicyBook, policyBook } from './core-env';

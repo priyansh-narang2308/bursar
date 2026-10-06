@@ -63,3 +63,19 @@ export function rateLimit(options: {
     await next();
   };
 }
+
+const WRITES = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+/**
+ * Refuses a browser's cross-site write. A cookie session is sent along with a request from any page, so a
+ * write whose `Origin` is not ours is somebody else's page speaking as the signed-in person. Callers that are
+ * not browsers (an agent key, a webhook, a test) send no `Origin` and are unaffected.
+ */
+export const sameOrigin =
+  (allowed: string): MiddlewareHandler<AppEnv> =>
+  async (c, next) => {
+    const origin = c.req.header('origin');
+    if (WRITES.has(c.req.method) && origin !== undefined && origin !== new URL(allowed).origin)
+      throw new ApiError('FORBIDDEN', { detail: 'This request came from another site.' });
+    await next();
+  };

@@ -155,6 +155,11 @@ describe('the demo hooks, when a demo server supplies them', () => {
         return { ok: true };
       },
       gauntlet: async () => ({ total: 0 }),
+      labRun: async (input: unknown) => {
+        seen.push(['lab', input]);
+        return {};
+      },
+      labFix: async () => ({}),
     };
     const app = await createTestApp(undefined, undefined, { demo });
     const { browser, orgId } = await openWorkspace(app);
@@ -173,10 +178,29 @@ describe('the demo hooks, when a demo server supplies them', () => {
       (await browser.call('POST', '/v1/missions/mis_1/replan', { json: { days: 4, extra: 1 } }))
         .status,
     ).toBe(400);
+    const run = (json: unknown) => browser.call('POST', '/v1/demo/lab/run', { json });
+    expect((await run({ policy: 'standard', count: 24 })).status).toBe(200);
+    expect((await run({ policy: 'standard' })).status).toBe(200); // the count has a default
+    expect((await run({ policy: 'open-bar', count: 24 })).status).toBe(400);
+    expect((await run({ policy: 'standard', count: 5_000 })).status).toBe(400); // bounded: it is real work
+    const step = { supplier: 'A', unitCents: 100, quantity: 1, afterMinutes: 1 };
+    const fix = (scenario: unknown) =>
+      browser.call('POST', '/v1/demo/lab/fix', { json: { policy: 'standard', scenario } });
+    expect((await fix({ id: 's', family: 'f', budgetCents: 100, steps: [step] })).status).toBe(200);
+    expect(
+      (await fix({ id: 's', family: 'f', budgetCents: 100, steps: [{ ...step, quantity: 1_000 }] }))
+        .status,
+    ).toBe(400);
+    expect((await fix({ id: 's', family: 'f', budgetCents: 100, steps: [] })).status).toBe(400);
+    expect(
+      (await fix({ id: 's', family: 'f', budgetCents: 100, steps: [step], extra: 1 })).status,
+    ).toBe(400);
     expect(seen).toEqual([
       ['rogue', orgId],
       ['schedule', orgId, 'mis_1'],
       ['replan', { days: 4, apply: true }],
+      ['lab', { policy: 'standard', count: 24 }],
+      ['lab', { policy: 'standard', count: 24 }],
     ]);
     await app.close();
   });

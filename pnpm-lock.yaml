@@ -164,6 +164,9 @@ importers:
       '@bursar/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@bursar/lab':
+        specifier: workspace:*
+        version: link:../../packages/lab
       '@bursar/llm':
         specifier: workspace:*
         version: link:../../packages/llm
@@ -630,6 +633,12 @@ importers:
 
   packages/lab:
     dependencies:
+      '@bursar/core':
+        specifier: workspace:*
+        version: link:../core
+      '@bursar/db':
+        specifier: workspace:*
+        version: link:../db
       '@bursar/policy':
         specifier: workspace:*
         version: link:../policy
@@ -637,15 +646,9 @@ importers:
         specifier: workspace:*
         version: link:../schemas
     devDependencies:
-      '@bursar/core':
-        specifier: workspace:*
-        version: link:../core
       '@bursar/crypto':
         specifier: workspace:*
         version: link:../crypto
-      '@bursar/db':
-        specifier: workspace:*
-        version: link:../db
       '@bursar/paypal':
         specifier: workspace:*
         version: link:../paypal

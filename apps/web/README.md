@@ -20,8 +20,14 @@ Open http://localhost:5173 and press **Open demo workspace**. No keys, no sign-u
 | `/dashboard/activity`  | Every action with its state ladder. A row opens its **receipt**: rulings (with Replay), approvals, PayPal calls and webhooks, ledger and audit trail. |
 | `/dashboard/mandate`   | Limits, freeze, revoke, and a new-mandate flow with the buyer's approval simulated.                                                                   |
 | `/dashboard/agents`    | Agents and keys, shown once, with the `claude mcp add` command.                                                                                       |
+| `/dashboard/policy` | The rules in force with their parameters and the policy hash, read from the server. |
+| `/dashboard/incidents` | What moved money outside an approved action and how the Verifier contained it. Owners resolve with a note. A **Simulate a rogue capture** button makes PayPal move $50 directly so you can watch the kill switch work. |
+| `/dashboard/integrations` | Which services are real and which are stand-ins, and the MCP endpoint. |
+| `/dashboard/schedule` | The delivery plan as a Gantt chart. **Delay the longest delivery** shows the late plan and a recovery; proposing it goes through the same policy as any purchase. |
+| `/dashboard/gauntlet` | 27 prompt-injection payloads against the same gullible agent twice: raw payment tools, then through Bursar. |
+| `/dashboard/lab` | Adversarial spending scenarios against the real pipeline. On the standard policy nothing breaks; with the daily limit removed it finds the hole, shrinks it to the fewest orders, and shows the patch holding. |
 | `/_ui`                 | The design system in one page.                                                                                                                        |
 
-Policy, incidents, Studio, schedule, lab and Gauntlet are in the sidebar marked _soon_.
+Studio is in the sidebar marked _soon_.
 
 The role switcher in the top bar changes who you are (`/v1/demo/role`), so an auditor sees the same screens with the buttons that role cannot use taken away.

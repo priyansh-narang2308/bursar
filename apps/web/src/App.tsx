@@ -10,6 +10,7 @@ import { Gallery } from './pages/Gallery';
 import { Gauntlet } from './pages/Gauntlet';
 import { Incidents } from './pages/Incidents';
 import { Integrations } from './pages/Integrations';
+import { Lab } from './pages/Lab';
 import { Landing } from './pages/Landing';
 import { Mandate } from './pages/Mandate';
 import { MissionDetail, Missions } from './pages/Missions';
@@ -19,29 +20,9 @@ import { Schedule } from './pages/Schedule';
 
 const SOON: [string, string, string][] = [
   [
-    'policy',
-    'Policy',
-    'The rules that decide every proposal, with their parameters and the version in force.',
-  ],
-  [
-    'incidents',
-    'Incidents',
-    'Anything that moved money outside an approved action, and how it was contained.',
-  ],
-  [
     'studio',
     'Studio',
     'A workbench to talk to the agents and see their work as tables and charts.',
-  ],
-  [
-    'schedule',
-    'Schedule',
-    'The delivery plan as a Gantt chart, and recovery when a carrier is late.',
-  ],
-  [
-    'lab',
-    'Policy lab',
-    'Adversarial scenarios run against the policy, with what broke and how it was fixed.',
   ],
 ];
 
@@ -71,6 +52,7 @@ export function App() {
           <Route path="integrations" element={<Integrations />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="gauntlet" element={<Gauntlet />} />
+          <Route path="lab" element={<Lab />} />
           {SOON.map(([path, title, text]) => (
             <Route key={path} path={path} element={<ComingSoon title={title} text={text} />} />
           ))}

@@ -14,12 +14,12 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@bursar/core": "workspace:*",
+    "@bursar/db": "workspace:*",
     "@bursar/policy": "workspace:*",
     "@bursar/schemas": "workspace:*"
   },
   "devDependencies": {
-    "@bursar/core": "workspace:*",
-    "@bursar/db": "workspace:*",
     "@bursar/paypal": "workspace:*",
     "@bursar/paypal-fake": "workspace:*",
     "@bursar/crypto": "workspace:*",
