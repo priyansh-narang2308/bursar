@@ -5,6 +5,8 @@ packages:
 # One place for every shared dependency version. Packages reference these as `catalog:`.
 catalog:
   '@renderinc/sdk': ^1.2.0 # Render Workflows: define tasks, and start them from the API
+  '@axe-core/playwright': 4.13.0 # accessibility checks inside the browser tests
+  '@playwright/test': 1.63.0 # browser tests of the whole product
   ag-studio: 3.0.0
   ag-studio-react: 3.0.0
   '@bryntum/gantt': npm:@bryntum/gantt-trial@7.3.7 # Bryntum Gantt, the public trial build (swap for the licensed package with a token)

@@ -144,6 +144,55 @@ describe('the money loop over HTTP', () => {
     expect((await t.client().call('GET', '/v1/cockpit')).status).toBe(401);
   });
 
+  it('survives a burst: one hundred copies of a webhook arriving at once change the books exactly once', async () => {
+    const w = await workspace();
+    const cart = await w.call(w.bot, 'POST', `/v1/missions/${w.mission.id}/carts`, {
+      lines: [{ offerId: w.offer.id, quantity: 3, rationale: 'Running low' }],
+    });
+    const proposed = await w.call(w.bot, 'POST', '/v1/actions', {
+      type: 'AUTHORIZE',
+      missionId: w.mission.id,
+      cartId: cart.json.cartId,
+    });
+    const [approvalId] = proposed.json.proposal.approvalIds as [string];
+    await w.call(w.browser, 'POST', `/v1/approvals/${approvalId}/decide`, { decision: 'APPROVE' });
+    // A capture is the step PayPal confirms by webhook.
+    await w.call(w.bot, 'POST', '/v1/actions', {
+      type: 'CAPTURE',
+      missionId: w.mission.id,
+      cartId: cart.json.cartId,
+    });
+    const first = t.fake.events.splice(0)[0];
+    if (first === undefined) throw new Error('PayPal sent no event to repeat');
+
+    const deliveries = await Promise.all(
+      Array.from({ length: 100 }, async () => {
+        const response = await t.app.request('/webhooks/paypal', {
+          method: 'POST',
+          headers: first.headers,
+          body: JSON.stringify(first.event),
+        });
+        return { status: response.status, body: (await response.json()) as { status: string } };
+      }),
+    );
+    // Copies that arrive while the first is being verified are told to come back (503, retryable): PayPal does.
+    expect(deliveries.every((d) => d.status === 200 || d.status === 503)).toBe(true);
+    const processed = deliveries.filter((d) => d.status === 200 && d.body.status !== 'duplicate');
+    expect(processed).toHaveLength(1);
+    const tryAgain = deliveries.filter((d) => d.status === 503).length;
+    expect(tryAgain + deliveries.filter((d) => d.body.status === 'duplicate').length).toBe(99);
+    for (let i = 0; i < tryAgain; i += 1) {
+      const again = await t.app.request('/webhooks/paypal', {
+        method: 'POST',
+        headers: first.headers,
+        body: JSON.stringify(first.event),
+      });
+      expect(((await again.json()) as { status: string }).status).toBe('duplicate');
+    }
+    const cockpit = (await w.call(w.browser, 'GET', '/v1/cockpit')).json;
+    expect(cockpit.verification.unexplained).toBe(0);
+  });
+
   it('refuses any field that would let a caller name an amount, a price or a payee', async () => {
     const w = await workspace();
     const cart = await w.call(w.bot, 'POST', `/v1/missions/${w.mission.id}/carts`, {
