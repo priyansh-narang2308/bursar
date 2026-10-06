@@ -1,0 +1,180 @@
+1
+00:00:00,403 --> 00:00:02,725
+AI agents can finally buy things.
+
+2
+00:00:02,725 --> 00:00:06,209
+The hard question is not whether they can pay.
+
+3
+00:00:06,209 --> 00:00:10,080
+It is whether you would let one spend your money.
+
+4
+00:00:10,983 --> 00:00:11,738
+Meet Bursar.
+
+5
+00:00:11,738 --> 00:00:15,137
+A workspace opens in one click on PayPal's sandbox.
+
+6
+00:00:15,137 --> 00:00:18,536
+The owner sets a mandate: a cap of $10,000.
+
+7
+00:00:18,536 --> 00:00:21,557
+00, a limit per mission, and a window.
+
+8
+00:00:21,557 --> 00:00:26,467
+It is tied to a PayPal Vault token, so revoking it is real.
+
+9
+00:00:27,369 --> 00:00:31,097
+A mission states a goal and a budget of $1,000.
+
+10
+00:00:31,097 --> 00:00:31,470
+00.
+
+11
+00:00:31,470 --> 00:00:39,671
+The Planner splits it into 4 needs, and a researcher per need searches real products through tools that cannot name a price.
+
+12
+00:00:39,671 --> 00:00:44,890
+Bursar re-quotes every offer and proposes one cart, priced by the server at $251.
+
+13
+00:00:44,890 --> 00:00:45,263
+96.
+
+14
+00:00:45,263 --> 00:00:47,500
+The model never types an amount.
+
+15
+00:00:48,399 --> 00:00:49,560
+Nothing moves yet.
+
+16
+00:00:49,560 --> 00:00:56,140
+17 pure rules rule on the cart, and one wants a person, because the supplier is new.
+
+17
+00:00:56,140 --> 00:00:58,463
+The owner approves this exact cart.
+
+18
+00:00:58,463 --> 00:01:04,269
+The approval is signed over its hash, so change one line and it is void.
+
+19
+00:01:04,269 --> 00:01:06,204
+Then PayPal places the hold.
+
+20
+00:01:07,107 --> 00:01:15,623
+Every action ends in a receipt: the rules that ran, who approved, what was sent to PayPal, and a tamper-evident audit chain.
+
+21
+00:01:15,623 --> 00:01:19,107
+Replay the ruling, and it reproduces, byte for byte.
+
+22
+00:01:20,009 --> 00:01:21,170
+Now an attack.
+
+23
+00:01:21,170 --> 00:01:25,428
+Product titles are written by sellers, so they can carry instructions.
+
+24
+00:01:25,428 --> 00:01:29,299
+27 injection payloads, read by the same gullible agent twice.
+
+25
+00:01:29,299 --> 00:01:34,331
+With raw payment tools it is talked into paying or ordering 24 times.
+
+26
+00:01:34,331 --> 00:01:37,041
+Through Bursar, it makes 0 PayPal calls.
+
+27
+00:01:37,942 --> 00:01:41,343
+Before any agent runs, Bursar attacks its own policy.
+
+28
+00:01:41,343 --> 00:01:46,633
+Remove the daily limit, and the lab finds 6 ways through, spending about $3,424.
+
+29
+00:01:46,633 --> 00:01:48,522
+47 with no person involved.
+
+30
+00:01:48,522 --> 00:01:53,812
+It shrinks one to the fewest orders that still works, and proposes the fix.
+
+31
+00:01:54,714 --> 00:02:01,682
+The cockpit shows the whole workspace at once: the envelope, which rules fire, and where the money went.
+
+32
+00:02:01,682 --> 00:02:07,101
+Ask the Treasurer in plain words and it answers from figures the server summed.
+
+33
+00:02:07,101 --> 00:02:09,811
+It can read, and it can chart.
+
+34
+00:02:09,811 --> 00:02:11,359
+It cannot move money.
+
+35
+00:02:12,261 --> 00:02:13,035
+Reality changes.
+
+36
+00:02:13,035 --> 00:02:16,519
+A carrier says a delivery is 3 days late.
+
+37
+00:02:16,519 --> 00:02:21,938
+The scheduler finds the fewest swaps that still meet the deadline, and proposes them.
+
+38
+00:02:21,938 --> 00:02:24,648
+A recovery is only ever a proposal.
+
+39
+00:02:25,550 --> 00:02:27,815
+And if something bypasses Bursar entirely?
+
+40
+00:02:27,815 --> 00:02:31,589
+A capture appears at PayPal with no decision behind it.
+
+41
+00:02:31,589 --> 00:02:35,363
+The signed webhook arrives, nothing explains it, and within 2.
+
+42
+00:02:35,363 --> 00:02:40,647
+3 seconds the Verifier freezes the mandate, refunds the charge, and revokes the token.
+
+43
+00:02:41,549 --> 00:02:41,936
+Bursar.
+
+44
+00:02:41,936 --> 00:02:47,355
+Spend authority for AI agents: governed by code, bound by PayPal, verified by webhooks.
+
+45
+00:02:47,355 --> 00:02:50,452
+Sandbox only, and honest about what is simulated.
+

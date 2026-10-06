@@ -1,0 +1,87 @@
+{
+  "mode": "local",
+  "base": "http://localhost:8790",
+  "at": "2026-10-06T18:46:38.170Z",
+  "runtimeMs": 171099,
+  "runtime": "2:51",
+  "wallMs": 171170,
+  "values": {
+    "cap": "$10,000.00",
+    "budget": "$1,000.00",
+    "runMs": "1197",
+    "needs": "4",
+    "cart": "$251.96",
+    "calls": "6",
+    "toolMs": "125",
+    "rules": "17",
+    "approveMs": "1200",
+    "payloads": "27",
+    "naive": "24",
+    "guarded": "0",
+    "broken": "6",
+    "leak": "$3,424.47",
+    "leakOrders": "8",
+    "treasurer": "25% of the ceiling is in use. Ceiling $1,000.00, held $251.96, captured $0.00, refunded $0.00.",
+    "late": "3 days",
+    "containMs": "2277",
+    "contain": "2.3 seconds"
+  },
+  "beats": [
+    {
+      "id": "title",
+      "atMs": 3,
+      "endMs": 10583
+    },
+    {
+      "id": "mandate",
+      "atMs": 10583,
+      "endMs": 26969
+    },
+    {
+      "id": "plan",
+      "atMs": 26969,
+      "endMs": 47999
+    },
+    {
+      "id": "approve",
+      "atMs": 47999,
+      "endMs": 66707
+    },
+    {
+      "id": "receipt",
+      "atMs": 66707,
+      "endMs": 79609
+    },
+    {
+      "id": "attack",
+      "atMs": 79609,
+      "endMs": 97542
+    },
+    {
+      "id": "lab",
+      "atMs": 97542,
+      "endMs": 114314
+    },
+    {
+      "id": "studio",
+      "atMs": 114314,
+      "endMs": 131861
+    },
+    {
+      "id": "schedule",
+      "atMs": 131861,
+      "endMs": 145149
+    },
+    {
+      "id": "rogue",
+      "atMs": 145150,
+      "endMs": 161149
+    },
+    {
+      "id": "close",
+      "atMs": 161149,
+      "endMs": 170953
+    }
+  ],
+  "spedUp": []
+}

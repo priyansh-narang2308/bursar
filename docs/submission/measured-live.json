@@ -1,0 +1,108 @@
+{
+  "mode": "live",
+  "base": "https://bursar-demo.onrender.com",
+  "at": "2026-10-06T18:43:29.720Z",
+  "runtimeMs": 171158,
+  "runtime": "2:51",
+  "wallMs": 245592,
+  "values": {
+    "cap": "$10,000.00",
+    "budget": "$1,000.00",
+    "runMs": "2972",
+    "needs": "4",
+    "cart": "$251.96",
+    "calls": "6",
+    "toolMs": "2063",
+    "rules": "17",
+    "approveMs": "6530",
+    "payloads": "27",
+    "naive": "24",
+    "guarded": "0",
+    "broken": "6",
+    "leak": "$3,424.47",
+    "leakOrders": "8",
+    "treasurer": "25% of the ceiling is in use. Ceiling $1,000.00, held $251.96, captured $0.00, refunded $0.00.",
+    "late": "3 days",
+    "containMs": "18402",
+    "contain": "18 seconds"
+  },
+  "beats": [
+    {
+      "id": "title",
+      "atMs": 13,
+      "endMs": 10592
+    },
+    {
+      "id": "mandate",
+      "atMs": 10592,
+      "endMs": 26978
+    },
+    {
+      "id": "plan",
+      "atMs": 26978,
+      "endMs": 48009
+    },
+    {
+      "id": "approve",
+      "atMs": 48009,
+      "endMs": 66718
+    },
+    {
+      "id": "receipt",
+      "atMs": 66718,
+      "endMs": 79620
+    },
+    {
+      "id": "attack",
+      "atMs": 79620,
+      "endMs": 97553
+    },
+    {
+      "id": "lab",
+      "atMs": 97553,
+      "endMs": 114326
+    },
+    {
+      "id": "studio",
+      "atMs": 114326,
+      "endMs": 131873
+    },
+    {
+      "id": "schedule",
+      "atMs": 131874,
+      "endMs": 145164
+    },
+    {
+      "id": "rogue",
+      "atMs": 145164,
+      "endMs": 161177
+    },
+    {
+      "id": "close",
+      "atMs": 161177,
+      "endMs": 170982
+    }
+  ],
+  "spedUp": [
+    {
+      "at": "0:56",
+      "realMs": 5338,
+      "shownMs": 1500
+    },
+    {
+      "at": "1:45",
+      "realMs": 58932,
+      "shownMs": 5893
+    },
+    {
+      "at": "3:14",
+      "realMs": 3328,
+      "shownMs": 1500
+    },
+    {
+      "at": "3:27",
+      "realMs": 17407,
+      "shownMs": 1741
+    }
+  ]
+}
