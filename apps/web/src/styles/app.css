@@ -279,6 +279,7 @@ kbd {
   padding: 0 14px;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+  overflow-wrap: anywhere;
 }
 .table tr:last-child td {
   border-bottom: 0;
@@ -512,11 +513,6 @@ kbd {
 }
 .drawer-body table {
   width: 100%;
-}
-.drawer-body td,
-.drawer-body th {
-  overflow-wrap: anywhere;
-  word-break: break-word;
 }
 .dialog {
   position: fixed;
