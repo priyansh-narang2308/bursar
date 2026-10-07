@@ -60,6 +60,8 @@ function loadThings(): Promise<ThingsKit | null> {
 
 let canDraw: boolean | undefined;
 function webgl(): boolean {
+  // Automated browsers (the test suite) have no GPU, so a 3D cast would be rendered on the CPU and slow every test.
+  if (navigator.webdriver) return false;
   if (canDraw === undefined) {
     try {
       canDraw = !!document.createElement('canvas').getContext('webgl');
