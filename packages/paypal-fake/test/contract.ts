@@ -98,7 +98,38 @@ export function contract(name: string, make: () => Promise<Harness> | Harness): 
       expect((await h.client.payments.getAuthorization(authorizationId)).status).toBe('VOIDED');
       expect(
         await attempt(h.client.payments.void({ requestId: 'v-2', authorizationId })),
+      ).toMatchObject({ issue: 'PREVIOUSLY_VOIDED' }); // seen on the sandbox
+      expect(
+        await attempt(
+          h.client.payments.capture({
+            requestId: 'c-2',
+            authorizationId,
+            amount: usd(100),
+            finalCapture: true,
+          }),
+        ),
       ).toMatchObject({ issue: 'AUTHORIZATION_VOIDED' });
+    });
+
+    it('refuses to capture more than is left', async () => {
+      const h = await make();
+      const { authorizationId } = await hold(h, 10_000);
+      await h.client.payments.capture({
+        requestId: 'c-1',
+        authorizationId,
+        amount: usd(4_000),
+        finalCapture: false,
+      });
+      expect(
+        await attempt(
+          h.client.payments.capture({
+            requestId: 'c-2',
+            authorizationId,
+            amount: usd(8_000),
+            finalCapture: false,
+          }),
+        ),
+      ).toMatchObject({ issue: 'MAX_CAPTURE_AMOUNT_EXCEEDED' }); // seen on the sandbox
     });
 
     it('refunds a capture, never more than was captured', async () => {

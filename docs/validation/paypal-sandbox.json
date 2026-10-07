@@ -1,0 +1,105 @@
+{
+  "at": "2026-10-06T17:30:06.752Z",
+  "holds": 3,
+  "findings": [
+    {
+      "check": "A vaulted AUTHORIZE order returns its authorization inline",
+      "assumed": "Yes (the plan flagged this for a spike)",
+      "observed": "Yes: status COMPLETED, authorization …473C"
+    },
+    {
+      "check": "PayPal-Request-Id replays the first answer",
+      "assumed": "The same order id comes back",
+      "observed": "Yes: the same order id"
+    },
+    {
+      "check": "A partial capture leaves the authorization open",
+      "assumed": "Yes",
+      "observed": "Yes: capture …7618, COMPLETED"
+    },
+    {
+      "check": "Capturing more than is left",
+      "assumed": "AUTHORIZATION_AMOUNT_EXCEEDED (a guess)",
+      "observed": "rejected, HTTP 422, MAX_CAPTURE_AMOUNT_EXCEEDED",
+      "debugId": "ca466638b3859"
+    },
+    {
+      "check": "final_capture closes the authorization",
+      "assumed": "Yes",
+      "observed": "Yes: capture …7919, COMPLETED"
+    },
+    {
+      "check": "Capturing after the final capture",
+      "assumed": "AUTHORIZATION_ALREADY_CAPTURED",
+      "observed": "rejected, HTTP 422, AUTHORIZATION_ALREADY_CAPTURED",
+      "debugId": "ca466639e8aed"
+    },
+    {
+      "check": "A partial refund within the capture",
+      "assumed": "Yes",
+      "observed": "Yes: COMPLETED"
+    },
+    {
+      "check": "Refunding more than the capture",
+      "assumed": "REFUND_AMOUNT_EXCEEDED (🔶)",
+      "observed": "rejected, HTTP 422, REFUND_AMOUNT_EXCEEDED",
+      "debugId": "ca46663af8be3"
+    },
+    {
+      "check": "Refunding the rest of a capture",
+      "assumed": "Yes",
+      "observed": "Yes: COMPLETED"
+    },
+    {
+      "check": "Refunding a capture that is fully refunded",
+      "assumed": "CAPTURE_FULLY_REFUNDED (🔶)",
+      "observed": "rejected, HTTP 422, CAPTURE_FULLY_REFUNDED",
+      "debugId": "ca46663c1ae50"
+    },
+    {
+      "check": "Void releases the hold",
+      "assumed": "Yes, with 204",
+      "observed": "Yes"
+    },
+    {
+      "check": "Voiding twice",
+      "assumed": "An error",
+      "observed": "rejected, HTTP 422, PREVIOUSLY_VOIDED",
+      "debugId": "ca46663e78bbb"
+    },
+    {
+      "check": "Capturing a voided authorization",
+      "assumed": "AUTHORIZATION_VOIDED",
+      "observed": "rejected, HTTP 422, AUTHORIZATION_VOIDED",
+      "debugId": "ca46663edcf15"
+    },
+    {
+      "check": "Reauthorizing inside the honor period",
+      "assumed": "REAUTHORIZATION_TOO_SOON",
+      "observed": "rejected, HTTP 422, REAUTHORIZATION_TOO_SOON",
+      "debugId": "ca4666405bcc3"
+    },
+    {
+      "check": "PayPal-Mock-Response forces INSTRUMENT_DECLINED",
+      "assumed": "A 422 the client reads as a decline",
+      "observed": "HTTP 422, INSTRUMENT_DECLINED",
+      "debugId": "70c28ae654da"
+    },
+    {
+      "check": "A payout to a registered supplier",
+      "assumed": "PENDING, then SUCCESS in about 30 seconds",
+      "observed": "rejected, HTTP 403, PAYOUT_NOT_AVAILABLE",
+      "debugId": "ca46664144d67"
+    },
+    {
+      "check": "Transaction Search lists a capture, and carries custom_field",
+      "assumed": "Yes, after a lag",
+      "observed": "rejected, HTTP 403, NOT_AUTHORIZED"
+    },
+    {
+      "check": "The capture webhook carries custom_id",
+      "assumed": "Yes (the provenance tag depends on it)",
+      "observed": "Yes: the event carries the custom_id we sent"
+    }
+  ]
+}
