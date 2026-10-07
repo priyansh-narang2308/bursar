@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuroraBackground } from '../components/AuroraBackground';
-import { Mascots } from '../components/Mascots';
+import { CAST, Mascots, Plush } from '../components/Mascots';
 import { PrimaryAction, REPO_URL, Reveal, SiteFooter, SiteNav } from '../components/Site';
 import { Badge, StateLadder } from '../components/ui';
 
@@ -239,6 +239,7 @@ export function Landing() {
         </section>
 
         <section className="lp-section lp-wrap">
+          <Plush character={CAST.problem} className="lp-plush-section" />
           <Reveal>
             <span className="eyebrow">The problem</span>
             <h2>Agents can already move money. Nothing stops them moving the wrong money.</h2>
@@ -260,6 +261,7 @@ export function Landing() {
         </section>
 
         <section className="lp-section lp-wrap" id="how">
+          <Plush character={CAST.how} className="lp-plush-section" />
           <Reveal>
             <span className="eyebrow">How it works</span>
             <h2>Four locks between an agent's idea and your money.</h2>
@@ -287,6 +289,7 @@ export function Landing() {
         </section>
 
         <section className="lp-section lp-wrap">
+          <Plush character={CAST.flow} className="lp-plush-section" />
           <Reveal>
             <span className="eyebrow">One purchase, end to end</span>
             <h2>Every step leaves evidence.</h2>
@@ -305,6 +308,7 @@ export function Landing() {
         </section>
 
         <section className="lp-section lp-wrap" id="proof">
+          <Plush character={CAST.proof} className="lp-plush-section" />
           <Reveal>
             <span className="eyebrow">Proof</span>
             <h2>Tested the way an attacker would.</h2>
@@ -326,6 +330,7 @@ export function Landing() {
         </section>
 
         <section className="lp-section lp-wrap">
+          <Plush character={CAST.honest} className="lp-plush-section" />
           <Reveal>
             <span className="eyebrow">Honest by design</span>
             <h2>What is real, and what is simulated.</h2>
@@ -368,6 +373,7 @@ export function Landing() {
               <div className="lp-actions">
                 <PrimaryAction />
               </div>
+              <Plush character={CAST.tryIt} className="lp-plush-inline" />
             </Reveal>
             <Reveal delay={100}>
               <ol className="lp-steps">
@@ -380,6 +386,7 @@ export function Landing() {
         </section>
 
         <section className="lp-section lp-wrap">
+          <Plush character={CAST.builtOn} className="lp-plush-section" />
           <Reveal>
             <span className="eyebrow">Built on</span>
             <h2>Five sponsors, each doing real work.</h2>
@@ -397,6 +404,8 @@ export function Landing() {
         </section>
 
         <section className="lp-cta lp-wrap">
+          <Plush character={CAST.ctaLeft} className="lp-plush-cta lp-plush-cta-left" />
+          <Plush character={CAST.ctaRight} className="lp-plush-cta lp-plush-cta-right" />
           <Reveal>
             <h2>Give your agents a budget, not a blank cheque.</h2>
             <div className="lp-actions lp-actions-center">

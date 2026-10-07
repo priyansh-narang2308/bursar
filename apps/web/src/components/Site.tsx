@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useMe } from '../lib/queries';
 import { OpenDemoButton } from '../lib/session';
 import { AuroraBackground } from './AuroraBackground';
+import { FooterCast } from './Mascots';
 import { Icon, Logo } from './ui';
 
 export const REPO_URL = 'https://github.com/priyansh-narang2308/bursar';
@@ -74,6 +75,9 @@ export function SiteNav() {
 export function SiteFooter() {
   return (
     <footer className="lp-foot">
+      <div className="lp-wrap">
+        <FooterCast />
+      </div>
       <div className="lp-wrap lp-foot-grid">
         <div className="lp-foot-brand">
           <span className="lp-brand">
