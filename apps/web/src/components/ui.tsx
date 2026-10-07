@@ -378,6 +378,14 @@ export function Dialog({
       <div className="dialog" role="dialog" aria-modal="true" aria-label={title}>
         <header className="panel-head">
           <h2 className="panel-title">{title}</h2>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={onClose}
+            aria-label="Close dialog"
+          >
+            <Icon name="close" />
+          </button>
         </header>
         <div className="dialog-body">{children}</div>
         <footer className="dialog-foot">{footer}</footer>

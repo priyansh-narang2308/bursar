@@ -451,7 +451,18 @@ kbd {
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgb(0 0 0 / 60%);
+  background: rgb(0 0 0 / 70%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: scrim-fade 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes scrim-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 .drawer {
   position: fixed;
@@ -464,6 +475,7 @@ kbd {
   flex-direction: column;
   border-left: 1px solid var(--border-strong);
   background: var(--surface-1);
+  box-shadow: -12px 0 32px rgb(0 0 0 / 60%);
 }
 .drawer-head {
   display: flex;
@@ -483,26 +495,81 @@ kbd {
 }
 .dialog {
   position: fixed;
-  top: 18vh;
+  top: 50%;
   left: 50%;
   z-index: 41;
-  width: min(480px, calc(100vw - 32px));
-  transform: translateX(-50%);
+  width: min(500px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--surface-1);
+  border-radius: 12px;
+  background: rgb(14 15 16 / 95%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 5%),
+    0 24px 60px -12px rgb(0 0 0 / 85%),
+    0 12px 28px -6px rgb(0 0 0 / 60%);
+  animation: dialog-pop 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+@keyframes dialog-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 6px)) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .dialog {
+    animation: none;
+  }
+}
+.dialog .panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgb(255 255 255 / 2%);
+}
+.dialog .panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 .dialog-body {
   display: grid;
-  gap: 14px;
-  padding: 16px;
+  gap: 16px;
+  padding: 18px 20px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.dialog-body .muted {
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.dialog-body .input,
+.dialog-body .select,
+.dialog-body .textarea {
+  background: var(--surface-2);
 }
 .dialog-foot {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 14px 20px;
   border-top: 1px solid var(--border);
+  background: var(--surface-2);
 }
 .toasts {
   position: fixed;
