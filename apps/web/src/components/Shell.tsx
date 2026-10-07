@@ -12,7 +12,17 @@ import {
   useMe,
   useWorkspace,
 } from '../lib/queries';
-import { Badge, Dialog, Field, Icon, type IconName, Logo, useEscape, useToast } from './ui';
+import {
+  Badge,
+  Dialog,
+  Field,
+  Icon,
+  type IconName,
+  Logo,
+  StateBadge,
+  useEscape,
+  useToast,
+} from './ui';
 
 interface NavEntry {
   to: string;
@@ -459,6 +469,14 @@ function Topbar({
             <Badge tone={audit.data.ok ? 'ok' : 'bad'}>
               {audit.data.ok ? 'Audit chain verified' : 'Audit chain broken'}
             </Badge>
+          )}
+          {mandate ? (
+            <span className="topbar-mandate-wrap">
+              <span className="faint">Mandate</span>
+              <StateBadge state={mandate.status} />
+            </span>
+          ) : (
+            <Badge>No mandate</Badge>
           )}
         </div>
         <span className="topbar-divider" />
