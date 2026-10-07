@@ -1,5 +1,5 @@
 import { actionIdFromTag, sha256Hex, verifyProvenanceTag } from '@bursar/crypto';
-import { actions, executions, incidents, paypalEvents, webhookInbox } from '@bursar/db';
+import { actions, envelopes, executions, incidents, paypalEvents, webhookInbox } from '@bursar/db';
 import { fromPayPalAmount } from '@bursar/money';
 import { PayPalError } from '@bursar/paypal';
 import { type JsonObject, newId, type OrganizationId } from '@bursar/schemas';
@@ -326,26 +326,16 @@ export async function pollSubmitted(
   const cutoff = new Date(deps.now().getTime() - olderThanMs);
   return deps.db.transaction(async (tx) => {
     const waiting = await tx
-      .select()
+      .select({ action: actions, authorizationId: envelopes.paypalAuthorizationId })
       .from(actions)
+      .leftJoin(envelopes, eq(envelopes.missionId, actions.missionId))
       .where(
         and(eq(actions.orgId, orgId), eq(actions.state, 'SUBMITTED'), eq(actions.type, 'CAPTURE')),
       );
     let confirmed = 0;
-    for (const action of waiting.filter((a) => a.updatedAt <= cutoff)) {
-      const [auth] = await tx
-        .select()
-        .from(executions)
-        .where(
-          and(
-            eq(executions.orgId, orgId),
-            eq(executions.step, 'authorize'),
-            eq(executions.status, 'SUCCEEDED'),
-          ),
-        );
-      const found = auth?.paypalResourceId;
-      if (found === undefined || found === null) continue;
-      const status = await deps.paypal.payments.getAuthorization(found).then(
+    for (const { action, authorizationId } of waiting) {
+      if (action.updatedAt > cutoff || !authorizationId) continue;
+      const status = await deps.paypal.payments.getAuthorization(authorizationId).then(
         (a) => a.status,
         (e: unknown) => (e instanceof PayPalError ? e.kind : 'error'),
       );

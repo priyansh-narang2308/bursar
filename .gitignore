@@ -36,3 +36,5 @@ spikes/results/*.local.json
 
 # Sealed sandbox buyer tokens for the demo (pnpm dev:payer)
 .bursar/
+
+.claude/worktrees/

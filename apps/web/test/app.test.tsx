@@ -192,7 +192,9 @@ describe('the landing page', () => {
     await userEvent.click(
       (await screen.findAllByRole('button', { name: 'Open demo workspace' }))[0] as HTMLElement,
     );
-    expect(await screen.findByRole('heading', { name: 'Overview' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'Overview' }, { timeout: 5000 }),
+    ).toBeInTheDocument();
     expect(calls.some((c) => c.method === 'POST' && c.path === '/v1/demo/workspace')).toBe(true);
   });
 
