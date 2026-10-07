@@ -140,10 +140,10 @@ const paypal = createPayPalClient(
 const vaultKeys = parseKeyring(
   sandbox ? need('VAULT_ENC_KEY') : Buffer.from(bytes(1)).toString('hex'),
 );
-/** How far the clock has been moved on for the lab. It is put back after every run. */
+/** How far the lab's clock has been moved on. It is put back after every run. */
 let labSkewMs = 0;
 const book = policyBook(standardPolicy());
-const core = createCore({
+const coreOptions = {
   db,
   paypal,
   vaultKeys,
@@ -157,10 +157,13 @@ const core = createCore({
   webhookId: sandbox ? (process.env['PAYPAL_WEBHOOK_ID'] ?? 'unset') : 'WH-0001',
   // A pooled buyer's token is shared by every workspace, so one workspace revoking must not delete it.
   keepVaultTokens: sandbox,
-  // The Policy Lab runs scenarios in a made-up future (a day's limit has to mean a day), in organisations of its own.
-  now: () => new Date(Date.now() + labSkewMs),
   policyFor: book.policyFor as never,
-});
+};
+const core = createCore(coreOptions);
+// The Policy Lab runs scenarios in a made-up future (a day's limit has to mean a day), in organisations of its own,
+// on a core with its own clock: a visitor approving a purchase while the lab runs must not be stamped in that future
+// (the database refuses it, and the approval failed).
+const labCore = createCore({ ...coreOptions, now: () => new Date(Date.now() + labSkewMs) });
 if (fake !== undefined)
   await paypal.webhooks.register({
     requestId: 'hook',
@@ -461,7 +464,7 @@ const LAB_POLICIES: Record<'standard' | 'no-velocity', PolicyConfig> = {
   'no-velocity': { without: ['R-NEW-VENDOR', 'R-VELOCITY'], overrides: {} },
 };
 const labEnv = createCoreLab({
-  core,
+  core: labCore,
   db,
   book,
   advance: (minutes) => {
