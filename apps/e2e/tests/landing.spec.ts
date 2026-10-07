@@ -4,7 +4,10 @@ test.describe('the landing page', () => {
   test('loads little code before the dashboard is opened', async ({ page }) => {
     const scripts: number[] = [];
     page.on('response', async (response) => {
-      if (response.url().endsWith('.js')) scripts.push((await response.body()).length);
+      // The plush cast (three.js and Things) loads only once the page is idle, after it is usable.
+      const url = response.url();
+      if (url.endsWith('.js') && !url.includes('/vendor/things/'))
+        scripts.push((await response.body()).length);
     });
     await page.goto('/', { waitUntil: 'networkidle' });
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Smart agents');

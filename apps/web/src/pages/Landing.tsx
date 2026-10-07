@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuroraBackground } from '../components/AuroraBackground';
+import { Mascots } from '../components/Mascots';
 import { PrimaryAction, REPO_URL, Reveal, SiteFooter, SiteNav } from '../components/Site';
 import { Badge, StateLadder } from '../components/ui';
 
@@ -180,42 +181,47 @@ export function Landing() {
       <SiteNav />
       <main>
         <section className="lp-hero lp-wrap">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
-          >
-            Smart agents. Safe spending. Total control.
-          </motion.h1>
-          <motion.p
-            className="lp-lede"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-          >
-            Bursar sits between your AI agents and PayPal. Agents propose, a deterministic policy
-            decides, and every cent is confirmed independently and written to a receipt you can
-            replay.
-          </motion.p>
-          <motion.div
-            className="lp-actions"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-          >
-            <PrimaryAction />
-            <a href="#how" className="btn btn-lg">
-              How it works
-            </a>
-          </motion.div>
-          <motion.p
-            className="lp-note"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
-          >
-            No sign-up. A populated workspace opens in a second, on PayPal's sandbox.
-          </motion.p>
+          <div className="lp-hero-top">
+            <div className="lp-hero-copy">
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: 'easeOut' }}
+              >
+                Smart agents. Safe spending. Total control.
+              </motion.h1>
+              <motion.p
+                className="lp-lede"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+              >
+                Bursar sits between your AI agents and PayPal. Agents propose, a deterministic
+                policy decides, and every cent is confirmed independently and written to a receipt
+                you can replay.
+              </motion.p>
+              <motion.div
+                className="lp-actions"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+              >
+                <PrimaryAction />
+                <a href="#how" className="btn btn-lg">
+                  How it works
+                </a>
+              </motion.div>
+              <motion.p
+                className="lp-note"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+              >
+                No sign-up. A populated workspace opens in a second, on PayPal's sandbox.
+              </motion.p>
+            </div>
+            <Mascots />
+          </div>
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}

@@ -13,3 +13,9 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Things by Rothenhall, and three.js
+
+The plush characters beside the landing hero are drawn by [Things](https://github.com/Rothenhall/Things) (`apps/web/public/vendor/things/things.umd.js`) on a pinned copy of [three.js](https://threejs.org) r128 (`apps/web/public/vendor/things/three.min.js`, its license header inside the file). Both are MIT licensed and served unmodified from our own origin; the Things license is `apps/web/public/vendor/things/LICENSE`.
+
+MIT License, Copyright (c) Rothenhall. MIT License, Copyright 2010-2021 Three.js Authors.

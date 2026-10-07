@@ -11,6 +11,8 @@
       "!**/dist",
       "!**/__snapshots__",
       "!packages/schemas/json-schema",
+      // Third-party files served as published (three.js, Things); never reformatted.
+      "!apps/web/public/vendor",
       "!**/.claude"
     ]
   },
