@@ -470,28 +470,53 @@ kbd {
   right: 0;
   bottom: 0;
   z-index: 41;
-  width: min(520px, 100vw);
+  width: min(720px, 100vw);
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--border-strong);
-  background: var(--surface-1);
-  box-shadow: -12px 0 32px rgb(0 0 0 / 60%);
+  background: rgb(14 15 17 / 96%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    -1px 0 0 0 rgb(255 255 255 / 6%),
+    -24px 0 60px -12px rgb(0 0 0 / 85%),
+    -12px 0 28px -6px rgb(0 0 0 / 60%);
+  animation: drawer-slide 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+@keyframes drawer-slide {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 .drawer-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 48px;
-  padding: 0 16px;
+  min-height: 52px;
+  padding: 0 22px;
   border-bottom: 1px solid var(--border);
+  background: rgb(255 255 255 / 2%);
 }
 .drawer-body {
   flex: 1;
-  overflow: auto;
-  padding: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 22px;
   display: grid;
-  gap: 18px;
+  gap: 20px;
   align-content: start;
+}
+.drawer-body table {
+  width: 100%;
+}
+.drawer-body td,
+.drawer-body th {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .dialog {
   position: fixed;
@@ -527,7 +552,8 @@ kbd {
 }
 @media (prefers-reduced-motion: reduce) {
   .scrim,
-  .dialog {
+  .dialog,
+  .drawer {
     animation: none;
   }
 }
