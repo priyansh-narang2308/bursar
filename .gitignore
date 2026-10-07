@@ -38,3 +38,6 @@ spikes/results/*.local.json
 .bursar/
 
 .claude/worktrees/
+
+# Finished videos are uploaded to YouTube, not kept in git
+*.mp4
