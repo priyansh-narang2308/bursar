@@ -7,6 +7,7 @@ Bursar is a policy-enforced, PayPal-verified control plane that lets an AI agent
 Built for the PayPal AI Hackathon (October to November 2026). Everything runs against the PayPal **sandbox**; live mode is refused at startup.
 
 - **Live demo:** <https://bursar-demo.onrender.com> (real PayPal sandbox, no sign-up)
+- **Demo video (2:49):** <https://youtu.be/aMtzavsN-k0>
 - **Architecture decisions:** [docs/decisions](docs/decisions/README.md)
 - **How the AI tooling was used and verified:** [docs/development-with-ai.md](docs/development-with-ai.md)
 
@@ -18,16 +19,17 @@ Built for the PayPal AI Hackathon (October to November 2026). Everything runs ag
 2. [The four locks](#the-four-locks)
 3. [How a purchase flows](#how-a-purchase-flows)
 4. [What is in the product](#what-is-in-the-product)
-5. [Try it](#try-it)
-6. [Run it locally](#run-it-locally)
-7. [Configuration](#configuration)
-8. [API overview](#api-overview)
-9. [Security model](#security-model)
-10. [Quality gates](#quality-gates)
-11. [Deployment on Render](#deployment-on-render)
-12. [Repository layout](#repository-layout)
-13. [Scope and known limits](#scope-and-known-limits)
-14. [License](#license)
+5. [PayPal, AI and sponsor tools](#paypal-ai-and-sponsor-tools)
+6. [Try it](#try-it)
+7. [Run it locally](#run-it-locally)
+8. [Configuration](#configuration)
+9. [API overview](#api-overview)
+10. [Security model](#security-model)
+11. [Quality gates](#quality-gates)
+12. [Deployment on Render](#deployment-on-render)
+13. [Repository layout](#repository-layout)
+14. [Scope and known limits](#scope-and-known-limits)
+15. [License](#license)
 
 ## The problem
 
@@ -90,6 +92,39 @@ Bursar is the missing layer between an agent and the money. It does not try to m
 **Operations**
 - A token-guarded `POST /internal/jobs` door that reconciles, expires approvals and mandates, and polls submitted captures. A Render cron service calls it every 15 minutes.
 - A Render Workflow that fans a mission out into parallel tasks, each retried independently. Tasks only propose; they never execute, approve or pay.
+
+## PayPal, AI and sponsor tools
+
+### PayPal developer platform (sandbox)
+
+Every call goes through `@bursar/paypal`, a thin typed REST client with explicit timeouts and retries ([ADR-0008](docs/decisions/0008-api-and-paypal-client.md)).
+
+| PayPal tool | What it does in Bursar |
+| --- | --- |
+| Vault (payment method tokens v3) | The spending mandate is a vaulted token the buyer approves once on PayPal. Revoking the mandate deletes the token. |
+| Orders v2 (`AUTHORIZE`) | Each purchase is an order paid from the vaulted token, so PayPal itself holds the exact cart's amount. |
+| Payments v2 | Capture (including partial), void, reauthorize and refund. The kill switch voids holds and refunds unexplained captures. |
+| Webhooks and signature verification | Every event is verified with PayPal, de-duplicated by event id and matched to an approved action through a tag in `custom_id`; anything unexplained opens an incident. |
+| `PayPal-Request-Id` | Derived from each action, so a retry cannot pay twice. |
+| `PayPal-Mock-Response` | Forces declines in the checks. |
+| Agent Toolkit and MCP | Bursar's MCP gateway catalogues every tool in `@paypal/agent-toolkit` and blocks the money-moving ones by default. |
+
+Eighteen behaviours were checked against the live sandbox. The results, including what could not be checked, are in [docs/validation](docs/validation/README.md).
+
+### AI
+
+- **Agents on Claude.** A Planner, a Researcher per need and a Buyer work through tools that cannot name an amount, payee or currency (a test fails the build otherwise). The client for Anthropic's Messages API (`@bursar/llm`) has budgets and record and replay. **The public demo runs the same agents on a deterministic scripted model**, so every visit behaves the same and costs nothing; the tools, the policy and the PayPal calls are real.
+- **The Treasurer.** An assistant inside the AG Studio cockpit, on AG Studio's AI harness, that answers in plain words and builds charts with read-only tools only.
+- **Model Context Protocol.** Agents reach tools through `@bursar/mcp-gateway`.
+- **The Policy Lab.** An automated adversary that attacks the policy, shrinks each hole to its smallest case and proposes the fix.
+- The video's narration is Kokoro, an open-source neural voice, and the project was built with Claude Code ([how, and what it got wrong](docs/development-with-ai.md)).
+
+### Sponsor tools
+
+- **AG Grid (AG Studio):** the cockpit, with six custom widgets and the Treasurer ([ADR-0017](docs/decisions/0017-ag-studio-cockpit.md), [ADR-0018](docs/decisions/0018-the-treasurer.md)).
+- **Bryntum Gantt:** the delivery schedule and its critical path; a replanned recovery is only ever a proposal ([ADR-0015](docs/decisions/0015-bryntum-gantt.md)).
+- **Channel3:** live product search, re-quoted before every purchase (`packages/channel3`).
+- **Render:** the web service, Postgres, a reconciliation cron every 15 minutes and a Workflow that fans a mission out ([ADR-0016](docs/decisions/0016-scheduled-jobs-and-the-render-workflow.md), `render.yaml`).
 
 ## Try it
 
