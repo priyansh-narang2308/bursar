@@ -26,6 +26,8 @@ export interface Shot {
   readonly size: Size;
   readonly spot: boolean;
   readonly box?: Box;
+  /** When the subject moved or went away; its spotlight ends there. */
+  readonly untilMs?: number;
 }
 export interface View {
   readonly cx: number;
@@ -39,6 +41,7 @@ export interface Key {
   readonly view: View;
   readonly moveMs: number;
   readonly spot?: Box;
+  readonly spotUntil?: number;
   readonly name: string;
 }
 
@@ -113,6 +116,7 @@ export function keys(shots: readonly Shot[], skipBeats: readonly string[] = []):
       moveMs,
       name: shot.name,
       ...(shot.spot && shot.box !== undefined ? { spot: shot.box } : {}),
+      ...(shot.untilMs !== undefined ? { spotUntil: shot.untilMs } : {}),
     };
     out.push(key);
     noted.push(shot.atMs);
@@ -190,7 +194,10 @@ export function spotAt(list: readonly Key[], ms: number): { box: Box; opacity: n
     if (key.spot === undefined) return null;
     const next = list[i + 1];
     const rise = clamp((ms - key.atMs - key.moveMs * 0.55) / 350, 0, 1);
-    const fall = next === undefined ? 1 : clamp((next.atMs - ms) / 250, 0, 1);
+    const fall = Math.min(
+      next === undefined ? 1 : clamp((next.atMs - ms) / 250, 0, 1),
+      key.spotUntil === undefined ? 1 : clamp((key.spotUntil - ms) / 200, 0, 1),
+    );
     const opacity = Math.min(rise, fall);
     return opacity > 0 ? { box: key.spot, opacity } : null;
   }
