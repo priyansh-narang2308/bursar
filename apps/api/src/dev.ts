@@ -24,6 +24,7 @@ import {
 import { type Actor, CoreError, createCore, WEBHOOK_EVENT_TYPES } from '@bursar/core';
 import { decodeKey, decryptSecret, parseKeyring } from '@bursar/crypto';
 import {
+  actions,
   cartLines,
   carts,
   createDb,
@@ -59,7 +60,7 @@ import { type MissionId, newId, type OrganizationId } from '@bursar/schemas';
 import { createWorkflows, recoveryFor } from '@bursar/workflows';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
-import { and, desc, eq, inArray, isNotNull } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, isNotNull, lte } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import { Hono } from 'hono';
@@ -770,21 +771,47 @@ async function runScheduledJobs() {
         error: error instanceof Error ? error.message.slice(0, 160) : 'failed',
       }),
     );
-  const orgs = await db.select({ id: organizations.id }).from(organizations);
-  const sweep = async (work: (id: OrganizationId) => Promise<number>) => {
-    let total = 0;
-    for (const { id } of orgs) total += await work(id).catch(() => 0);
-    return total;
+  // Cross-tenant on purpose (this is the job runner): it reads as the database owner, which row-level security
+  // does not restrict. Only workspaces with something due are visited, one at a time: demo workspaces pile up by
+  // the hundred, and sweeping them all outran the scheduler's wait.
+  const [total] = await db.select({ n: count() }).from(organizations);
+  const due = async (rows: Promise<{ id: string }[]>) =>
+    (await rows).map((r) => r.id as OrganizationId);
+  const sweep = async (ids: OrganizationId[], work: (id: OrganizationId) => Promise<number>) => {
+    let done = 0;
+    for (const id of ids) done += await work(id).catch(() => 0);
+    return done;
   };
+  const awaiting = await due(
+    db
+      .selectDistinct({ id: actions.orgId })
+      .from(actions)
+      .where(eq(actions.state, 'AWAITING_APPROVAL')),
+  );
+  const lapsed = await due(
+    db
+      .selectDistinct({ id: mandates.orgId })
+      .from(mandates)
+      .where(and(eq(mandates.status, 'ACTIVE'), lte(mandates.validTo, new Date()))),
+  );
+  const submitted = await due(
+    db
+      .selectDistinct({ id: actions.orgId })
+      .from(actions)
+      .where(and(eq(actions.state, 'SUBMITTED'), eq(actions.type, 'CAPTURE'))),
+  );
   return {
-    organisations: orgs.length,
+    organisations: total?.n ?? 0,
+    visited: { approvals: awaiting.length, mandates: lapsed.length, captures: submitted.length },
     reconcile: await step(async () => {
       const report = await core.incidents.reconcile();
       return { checked: report.checked, gaps: report.gaps.length };
     }),
-    expiredApprovals: await step(() => sweep((id) => core.actions.expireApprovals(id))),
-    expiredMandates: await step(() => sweep((id) => core.mandates.expire(id))),
-    confirmedCaptures: await step(() => sweep((id) => core.webhooks.pollSubmitted(id, 60_000))),
+    expiredApprovals: await step(() => sweep(awaiting, (id) => core.actions.expireApprovals(id))),
+    expiredMandates: await step(() => sweep(lapsed, (id) => core.mandates.expire(id))),
+    confirmedCaptures: await step(() =>
+      sweep(submitted, (id) => core.webhooks.pollSubmitted(id, 60_000)),
+    ),
   };
 }
 
