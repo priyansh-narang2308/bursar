@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 
 interface Avatar {
   setState(state: string): void;
+  setConfig(partial: Record<string, unknown>): void;
   poke(): void;
   destroy(): void;
 }
@@ -20,20 +21,29 @@ declare global {
   }
 }
 
+// Three colours that stand apart, every one awake: wide open eyes, no sleepy or closed-eye looks.
 const CAST = [
   {
     preset: 'plum',
-    state: 'thinking',
-    label: 'Plum, thinking',
+    state: 'excited',
+    look: { eyes: 'safety', glasses: 'none' },
+    label: 'Plum, excited',
     className: 'lp-mascot lp-mascot-back',
   },
   {
     preset: 'mallow',
     state: 'waving',
+    look: { eyes: 'safety' },
     label: 'Mallow, waving',
     className: 'lp-mascot lp-mascot-lead',
   },
-  { preset: 'dew', state: 'excited', label: 'Dew, excited', className: 'lp-mascot lp-mascot-side' },
+  {
+    preset: 'dew',
+    state: 'talking',
+    look: { eyes: 'safety' },
+    label: 'Dew, talking',
+    className: 'lp-mascot lp-mascot-side',
+  },
 ] as const;
 
 let loading: Promise<ThingsKit | null> | undefined;
@@ -78,7 +88,13 @@ export function Mascots() {
         avatars = CAST.flatMap((c, i) => {
           const el = slots.current[i];
           if (!el) return [];
-          return [kit.mount(el, c.preset, { state: c.state, quality: 'medium', distance: 6.2 })];
+          const avatar = kit.mount(el, c.preset, {
+            state: c.state,
+            quality: 'medium',
+            distance: 6.2,
+          });
+          avatar.setConfig(c.look);
+          return [avatar];
         });
       });
     const idle = window.requestIdleCallback ?? ((f: () => void) => window.setTimeout(f, 600));
