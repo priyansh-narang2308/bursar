@@ -4,13 +4,50 @@ import { afterEach } from 'vitest';
 
 afterEach(() => cleanup());
 
-// Mock IntersectionObserver for Framer Motion
-global.IntersectionObserver = class IntersectionObserver {
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: mock
-  observe() {}
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: mock
-  unobserve() {}
-  // biome-ignore lint/suspicious/noEmptyBlockStatements: mock
-  disconnect() {}
+// Mock framer-motion to prevent jsdom crashes on CI
+import React from 'react';
+import { vi } from 'vitest';
+
+vi.mock('framer-motion', async (importOriginal) => {
   // biome-ignore lint/suspicious/noExplicitAny: mock
-} as any;
+  const actual = await importOriginal<any>();
+  return {
+    ...actual,
+    motion: new Proxy(
+      {},
+      {
+        get: (_, key) => {
+          // Return a proxy component that strips animation props
+          // biome-ignore lint/suspicious/noExplicitAny: mock
+          return React.forwardRef((props: any, ref) => {
+            const {
+              initial,
+              animate,
+              exit,
+              transition,
+              whileHover,
+              whileTap,
+              whileFocus,
+              whileDrag,
+              whileInView,
+              viewport,
+              variants,
+              custom,
+              layout,
+              layoutId,
+              onAnimationStart,
+              onAnimationComplete,
+              onUpdate,
+              onDragStart,
+              onDrag,
+              onDragEnd,
+              onDirectionLock,
+              ...validProps
+            } = props;
+            return React.createElement(key as string, { ...validProps, ref });
+          });
+        },
+      },
+    ),
+  };
+});
