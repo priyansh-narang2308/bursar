@@ -22,18 +22,18 @@ declare global {
 
 const CAST = [
   {
-    preset: 'dew',
+    preset: 'plum',
     state: 'thinking',
-    label: 'Dew, thinking',
+    label: 'Plum, thinking',
     className: 'lp-mascot lp-mascot-back',
   },
-  { preset: 'mint', state: 'waving', label: 'Mint, waving', className: 'lp-mascot lp-mascot-lead' },
   {
-    preset: 'cosmo',
-    state: 'excited',
-    label: 'Cosmo, excited',
-    className: 'lp-mascot lp-mascot-side',
+    preset: 'mallow',
+    state: 'waving',
+    label: 'Mallow, waving',
+    className: 'lp-mascot lp-mascot-lead',
   },
+  { preset: 'dew', state: 'excited', label: 'Dew, excited', className: 'lp-mascot lp-mascot-side' },
 ] as const;
 
 let loading: Promise<ThingsKit | null> | undefined;
