@@ -10,6 +10,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { formatMoney, humanize, shortId } from '../lib/format';
 
 // ---------------------------------------------------------------------------------------------------
@@ -309,7 +310,7 @@ export function Field({
 // Overlays
 // ---------------------------------------------------------------------------------------------------
 
-function useEscape(onClose: () => void) {
+export function useEscape(onClose: () => void) {
   useEffect(() => {
     const handler = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
     document.addEventListener('keydown', handler);
@@ -366,7 +367,9 @@ export function Dialog({
   footer: ReactNode;
 }) {
   useEscape(onClose);
-  return (
+  // On the page body, not in place: an ancestor with a backdrop filter (the top bar) would otherwise become the
+  // box a fixed dialog centres in, and push it off the top of the screen.
+  return createPortal(
     <>
       <button
         type="button"
@@ -390,7 +393,8 @@ export function Dialog({
         <div className="dialog-body">{children}</div>
         <footer className="dialog-foot">{footer}</footer>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
 

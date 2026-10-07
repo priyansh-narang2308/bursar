@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import {
@@ -11,7 +12,17 @@ import {
   useMe,
   useWorkspace,
 } from '../lib/queries';
-import { Badge, Dialog, Field, Icon, type IconName, Logo, StateBadge, useToast } from './ui';
+import {
+  Badge,
+  Dialog,
+  Field,
+  Icon,
+  type IconName,
+  Logo,
+  StateBadge,
+  useEscape,
+  useToast,
+} from './ui';
 
 interface NavEntry {
   to: string;
@@ -232,6 +243,7 @@ function RoleSwitch({ role }: { role: string }) {
 }
 
 function Palette({ onClose }: { onClose: () => void }) {
+  useEscape(onClose);
   const [query, setQuery] = useState('');
   const [index, setIndex] = useState(0);
   const navigate = useNavigate();
@@ -244,7 +256,8 @@ function Palette({ onClose }: { onClose: () => void }) {
     onClose();
     navigate(to);
   };
-  return (
+  // On the page body: the top bar has a backdrop filter, which would trap a fixed dialog inside its 60 px.
+  return createPortal(
     <>
       <button
         type="button"
@@ -302,7 +315,8 @@ function Palette({ onClose }: { onClose: () => void }) {
           ))}
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
 
