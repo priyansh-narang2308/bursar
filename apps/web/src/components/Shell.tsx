@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
@@ -211,7 +211,16 @@ function FreezeControl({ mandateId, frozen }: { mandateId: string; frozen: boole
   );
 }
 
+const ROLE_DETAILS: Record<string, { label: string; desc: string }> = {
+  OWNER: { label: 'Owner', desc: 'Full controls & mandate' },
+  APPROVER: { label: 'Approver', desc: 'Review & approve spending' },
+  OPERATOR: { label: 'Operator', desc: 'Launch agent missions' },
+  AUDITOR: { label: 'Auditor', desc: 'Read-only audit verification' },
+};
+
 function RoleSwitch({ role }: { role: string }) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const client = useQueryClient();
   const toast = useToast();
   const change = useMutation({
@@ -222,23 +231,101 @@ function RoleSwitch({ role }: { role: string }) {
     },
     onError: (error: Error) => toast('bad', error.message),
   });
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open]);
+
+  const selectRole = (next: string) => {
+    setOpen(false);
+    if (next !== role) {
+      change.mutate(next);
+    }
+  };
+
+  const activeRole = ROLE_DETAILS[role] ?? {
+    label: role.charAt(0) + role.slice(1).toLowerCase(),
+    desc: 'Workspace role',
+  };
+
   return (
-    <label className="row" style={{ gap: 6 }}>
-      <span className="sr-only">View as</span>
+    <div className="topbar-dropdown" ref={containerRef}>
       <select
-        className="select"
-        style={{ width: 118, minHeight: 28, padding: '2px 8px' }}
+        className="sr-only"
         value={role}
         onChange={(e) => change.mutate(e.target.value)}
         aria-label="View as role"
       >
         {ROLES.map((r) => (
           <option key={r} value={r}>
-            {r.charAt(0) + r.slice(1).toLowerCase()}
+            {ROLE_DETAILS[r]?.label ?? r}
           </option>
         ))}
       </select>
-    </label>
+
+      <button
+        type="button"
+        className={`topbar-dropdown-btn ${open ? 'open' : ''}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((prev) => !prev)}
+        title="Switch simulated role"
+      >
+        <span className="topbar-role-icon">
+          <Icon name="user" size={13} />
+        </span>
+        <span className="topbar-role-name">{activeRole.label}</span>
+        <span className={`topbar-dropdown-chevron ${open ? 'rotated' : ''}`}>
+          <Icon name="chevron" size={11} />
+        </span>
+      </button>
+
+      {open && (
+        <div className="topbar-dropdown-menu" role="listbox" aria-label="Select role">
+          <div className="topbar-dropdown-heading">SIMULATE ROLE</div>
+          <div className="topbar-dropdown-items">
+            {ROLES.map((r) => {
+              const info = ROLE_DETAILS[r] ?? { label: r, desc: '' };
+              const active = r === role;
+              return (
+                <button
+                  key={r}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  className={`topbar-dropdown-item ${active ? 'active' : ''}`}
+                  onClick={() => selectRole(r)}
+                >
+                  <div className="topbar-dropdown-item-text">
+                    <span className="topbar-dropdown-item-title">{info.label}</span>
+                    <span className="topbar-dropdown-item-desc">{info.desc}</span>
+                  </div>
+                  {active && (
+                    <span className="topbar-dropdown-item-icon">
+                      <Icon name="check" size={13} />
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -347,7 +434,7 @@ function Topbar({
   const canFreeze = me.data?.role === 'OWNER';
   return (
     <header className="topbar">
-      <span className="topbar-left">
+      <div className="topbar-left">
         <button
           type="button"
           className="btn btn-ghost btn-sm btn-icon"
@@ -359,29 +446,46 @@ function Topbar({
         >
           <Icon name="sidebar" />
         </button>
-        <span className="muted">{title}</span>
-      </span>
-      <div className="topbar-right">
-        <button type="button" className="btn btn-ghost btn-sm" onClick={() => setPalette(true)}>
-          <Icon name="search" /> Go to <kbd>⌘K</kbd>
-        </button>
-        {audit.data && (
-          <Badge tone={audit.data.ok ? 'ok' : 'bad'}>
-            {audit.data.ok ? 'Audit chain verified' : 'Audit chain broken'}
-          </Badge>
-        )}
-        {mandate ? (
-          <span className="row" style={{ gap: 6 }}>
-            <span className="faint">Mandate</span>
-            <StateBadge state={mandate.status} />
+        <span className="topbar-title-text">{title}</span>
+      </div>
+      <div className="topbar-search-wrap">
+        <button
+          type="button"
+          className="topbar-search-btn"
+          onClick={() => setPalette(true)}
+          aria-label="Go to (⌘K)"
+          title="Search or go to… (⌘K)"
+        >
+          <span className="topbar-search-btn-left">
+            <Icon name="search" size={13} />
+            <span className="topbar-search-btn-placeholder">Search or jump to…</span>
           </span>
-        ) : (
-          <Badge>No mandate</Badge>
-        )}
-        {mandate && canFreeze && (mandate.status === 'ACTIVE' || mandate.status === 'FROZEN') && (
-          <FreezeControl mandateId={mandate.id} frozen={mandate.status === 'FROZEN'} />
-        )}
-        {me.data && <RoleSwitch role={me.data.role} />}
+          <kbd className="topbar-search-kbd">⌘K</kbd>
+        </button>
+      </div>
+      <div className="topbar-right">
+        <div className="topbar-status-group">
+          {audit.data && (
+            <Badge tone={audit.data.ok ? 'ok' : 'bad'}>
+              {audit.data.ok ? 'Audit chain verified' : 'Audit chain broken'}
+            </Badge>
+          )}
+          {mandate ? (
+            <span className="topbar-mandate-wrap">
+              <span className="faint">Mandate</span>
+              <StateBadge state={mandate.status} />
+            </span>
+          ) : (
+            <Badge>No mandate</Badge>
+          )}
+        </div>
+        <span className="topbar-divider" />
+        <div className="topbar-actions-group">
+          {mandate && canFreeze && (mandate.status === 'ACTIVE' || mandate.status === 'FROZEN') && (
+            <FreezeControl mandateId={mandate.id} frozen={mandate.status === 'FROZEN'} />
+          )}
+          {me.data && <RoleSwitch role={me.data.role} />}
+        </div>
       </div>
       {palette && <Palette onClose={() => setPalette(false)} />}
     </header>
