@@ -122,4 +122,11 @@ describe('spotAt', () => {
     expect(spotAt(list, 4900)?.opacity ?? 0).toBeLessThan(1);
     expect(spotAt(list, 5200)).toBeNull();
   });
+
+  it('lets go as soon as the subject moved or went away', () => {
+    const list = keys([shot(1000, { untilMs: 2600 }), shot(5000, { size: 'wide', spot: false })]);
+    expect(spotAt(list, 2200)?.opacity).toBe(1);
+    expect(spotAt(list, 2500)?.opacity ?? 0).toBeLessThan(1);
+    expect(spotAt(list, 2700)).toBeNull();
+  });
 });

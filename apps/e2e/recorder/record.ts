@@ -61,8 +61,17 @@ interface Box {
   readonly w: number;
   readonly h: number;
 }
-const shots: { beat: string; name: string; atMs: number; size: Size; spot: boolean; box?: Box }[] =
-  [];
+interface Shot {
+  readonly beat: string;
+  readonly name: string;
+  readonly atMs: number;
+  readonly size: Size;
+  readonly spot: boolean;
+  readonly box?: Box;
+  /** When the subject moved or went away, so its spotlight ends there instead of framing empty space. */
+  untilMs?: number;
+}
+const shots: Shot[] = [];
 const events: { atMs: number; kind: string; x?: number; y?: number; n?: number; every?: number }[] =
   [];
 let current = '';
@@ -148,13 +157,54 @@ const round = (b: { x: number; y: number; width: number; height: number }): Box 
   w: Math.round(b.width),
   h: Math.round(b.height),
 });
+const near = (a: Box, b: Box) =>
+  Math.abs(a.x - b.x) <= 4 &&
+  Math.abs(a.y - b.y) <= 4 &&
+  Math.abs(a.w - b.w) <= 6 &&
+  Math.abs(a.h - b.h) <= 6;
+
+/** Where something sits once it has stopped moving (a scroll or an entrance may still be under way), or null. */
+async function settled(locator: Locator): Promise<Box | null> {
+  let last: Box | null = null;
+  for (let i = 0; i < 15; i++) {
+    const found = await locator.boundingBox({ timeout: i === 0 ? 2500 : 500 }).catch(() => null);
+    if (found === null) return null;
+    const box = round(found);
+    if (last !== null && near(last, box)) return box;
+    last = box;
+    await sleep(120);
+  }
+  return last;
+}
+
+/**
+ * Keeps watching a lit subject while the camera holds on it, and ends its spotlight the moment it moves or goes
+ * away (a row approved and removed, a toast fading, content pushed down), so a box only ever frames what is there.
+ */
+function follow(shot: Shot, locator: Locator) {
+  const box = shot.box;
+  if (box === undefined) return;
+  void (async () => {
+    while (shots.at(-1) === shot) {
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      if (shots.at(-1) !== shot) return;
+      const found = await locator.boundingBox({ timeout: 300 }).catch(() => null);
+      if (found === null || !near(round(found), box)) {
+        shot.untilMs = cnow() - 150;
+        return;
+      }
+    }
+  })();
+}
+
 /** Points the video's camera at something on screen now. A target that is not there is skipped, never fatal. */
 async function mark(name: string, locator: Locator, size: Size = 'medium', spot = false) {
-  const box = await locator
-    .first()
-    .boundingBox({ timeout: 2500 })
-    .catch(() => null);
-  if (box !== null) shots.push({ beat: current, name, atMs: cnow(), size, spot, box: round(box) });
+  const target = locator.first();
+  const box = await settled(target);
+  if (box === null) return;
+  const shot: Shot = { beat: current, name, atMs: cnow(), size, spot, box };
+  shots.push(shot);
+  if (spot) follow(shot, target);
 }
 /** Pulls the camera back to show the whole screen. */
 const wide = (name = 'wide') =>
@@ -201,8 +251,11 @@ async function press(locator: Locator, pause = 350, name?: string, size: Size = 
   await locator.scrollIntoViewIfNeeded();
   const box = await locator.boundingBox();
   if (box === null) throw new Error('Nothing to click.');
-  if (name !== undefined)
-    shots.push({ beat: current, name, atMs: cnow(), size, spot: true, box: round(box) });
+  if (name !== undefined) {
+    const shot: Shot = { beat: current, name, atMs: cnow(), size, spot: true, box: round(box) };
+    shots.push(shot);
+    follow(shot, locator);
+  }
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 28 });
   await sleep(pause);
   events.push({
