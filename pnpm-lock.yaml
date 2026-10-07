@@ -358,6 +358,12 @@ importers:
 
   apps/video:
     dependencies:
+      '@fontsource-variable/inter':
+        specifier: 'catalog:'
+        version: 5.3.0
+      '@fontsource-variable/jetbrains-mono':
+        specifier: 'catalog:'
+        version: 5.3.0
       '@remotion/bundler':
         specifier: 'catalog:'
         version: 4.0.533(postcss@8.5.28)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -4882,7 +4888,7 @@ snapshots:
       react-refresh: 0.18.0
       remotion: 4.0.533(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       style-loader: 4.0.0(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.28))
-      webpack: 5.105.0(esbuild@0.28.2)(postcss@8.5.28)
+      webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.28)
     transitivePeerDependencies:
       - '@minify-html/node'
       - '@remotion/video-matting'
@@ -5674,7 +5680,7 @@ snapshots:
       semver: 7.8.5
     optionalDependencies:
       '@rspack/core': 1.7.11
-      webpack: 5.105.0(esbuild@0.28.2)(postcss@8.5.28)
+      webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.28)
 
   css-tree@3.2.1:
     dependencies:
@@ -6721,7 +6727,7 @@ snapshots:
 
   style-loader@4.0.0(webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.28)):
     dependencies:
-      webpack: 5.105.0(esbuild@0.28.2)(postcss@8.5.28)
+      webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.28)
 
   supports-color@8.1.1:
     dependencies:
@@ -6735,7 +6741,7 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 4.5.0
       terser: 5.51.2
-      webpack: 5.105.0(esbuild@0.28.2)(postcss@8.5.28)
+      webpack: 5.105.0(esbuild@0.28.1)(postcss@8.5.28)
     optionalDependencies:
       esbuild: 0.28.1
       postcss: 8.5.28
@@ -6884,7 +6890,7 @@ snapshots:
 
   webpack-sources@3.6.0: {}
 
-  webpack@5.105.0(esbuild@0.28.2)(postcss@8.5.28):
+  webpack@5.105.0(esbuild@0.28.1)(postcss@8.5.28):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.9

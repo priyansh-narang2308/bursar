@@ -4,9 +4,21 @@ import { Demo, type DemoProps } from './Video';
 
 export const FPS = 30;
 
-const empty: DemoProps = { videoSrc: '', durationMs: 1000, audio: [], cues: [] };
+const empty: DemoProps = {
+  videoSrc: '',
+  soundDir: '',
+  site: '',
+  durationMs: 1000,
+  beats: [],
+  narration: [],
+  spans: {},
+  audio: [],
+  cues: [],
+  shots: [],
+  events: [],
+};
 
-/** One composition: the screen recording, the voice for each beat, and captions, 1920 by 1080. */
+/** One composition: the directed product film, with its voice, music, effects and captions, 1920 by 1080. */
 export function Root() {
   return (
     <Composition

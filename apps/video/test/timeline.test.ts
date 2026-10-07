@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { cuesFor, fadeRange, framesFor, plan, TAIL_MS, VOICE_DELAY_MS } from '../src/timeline';
+import {
+  cuesFor,
+  framesFor,
+  musicLevel,
+  plan,
+  sentencesOf,
+  TAIL_MS,
+  VOICE_DELAY_MS,
+  wordMs,
+} from '../src/timeline';
 
 describe('cuesFor', () => {
   it('gives each sentence a share of the speech by its words, covering it exactly once', () => {
@@ -67,17 +76,54 @@ describe('framesFor', () => {
   });
 });
 
-describe('fadeRange', () => {
-  it('always increases, however short the caption, and skips the fade when there is no room', () => {
-    for (let frames = 1; frames < 40; frames += 1) {
-      const range = fadeRange(frames);
-      if (range === null) continue;
-      expect(range[0]).toBeLessThan(range[1]);
-      expect(range[1]).toBeLessThan(range[2]);
-      expect(range[2]).toBeLessThan(range[3]);
-    }
-    expect(fadeRange(60)).toEqual([0, 6, 54, 60]);
-    expect(fadeRange(12)).toEqual([0, 5, 7, 12]);
-    expect(fadeRange(2)).toBeNull();
+describe('sentence timing', () => {
+  const beats = [{ id: 'a', atMs: 1000, endMs: 9000 }];
+  const narration = [{ id: 'a', text: 'A cap of $10,000.00, a limit. Then it holds.' }];
+  const spans = {
+    a: [
+      [0, 2000],
+      [2300, 4000],
+    ] as [number, number][],
+  };
+
+  it('splits where the voice breathes, not inside an amount', () => {
+    expect(sentencesOf(narration[0]?.text ?? '')).toEqual([
+      'A cap of $10,000.00, a limit.',
+      'Then it holds.',
+    ]);
+  });
+
+  it("times captions to the narrator's real sentences when it has them", () => {
+    const { cues } = plan({ beats, narration, durationsMs: { a: 4000 }, spans });
+    const at = 1000 + VOICE_DELAY_MS;
+    expect(cues).toEqual([
+      { startMs: at, endMs: at + 2000, text: 'A cap of $10,000.00, a limit.' },
+      { startMs: at + 2300, endMs: at + 4000, text: 'Then it holds.' },
+    ]);
+  });
+
+  it('finds when a word is said, and falls back to the sentence start', () => {
+    const at = 1000 + VOICE_DELAY_MS;
+    expect(wordMs(beats[0] as never, narration[0]?.text ?? '', spans, 1)).toBe(at + 2300);
+    expect(wordMs(beats[0] as never, narration[0]?.text ?? '', spans, 1, 'holds')).toBeCloseTo(
+      at + 2300 + (1700 * 2) / 3,
+    );
+    expect(wordMs(beats[0] as never, '', {}, 0)).toBe(at);
+  });
+});
+
+describe('musicLevel', () => {
+  const voice = [{ id: 'a', startMs: 1000, durationMs: 2000 }];
+
+  it('sits low under the voice and full in the gaps, easing between', () => {
+    expect(musicLevel(0, voice)).toBe(0.5);
+    expect(musicLevel(2000, voice)).toBeCloseTo(0.17);
+    expect(musicLevel(5000, voice)).toBe(0.5);
+    const before = musicLevel(850, voice);
+    expect(before).toBeLessThan(0.5);
+    expect(before).toBeGreaterThan(0.17);
+    const after = musicLevel(3350, voice);
+    expect(after).toBeLessThan(0.5);
+    expect(after).toBeGreaterThan(0.17);
   });
 });

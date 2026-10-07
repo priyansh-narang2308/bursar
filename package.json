@@ -19,7 +19,7 @@
     "test:e2e": "pnpm --filter @bursar/e2e test:e2e",
     "demo:record": "pnpm --filter @bursar/e2e demo:record",
     "demo:narrate": "MODE=live pnpm --filter @bursar/e2e demo:narration && MODE=live .demo/voice/venv/bin/python apps/e2e/recorder/narrate.py",
-    "demo:video": "pnpm --filter @bursar/video render",
+    "demo:video": "MODE=${MODE:-live} .demo/voice/venv/bin/python apps/video/scripts/sound.py && pnpm --filter @bursar/video render",
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "db:up": "docker compose up -d --wait postgres",
     "db:down": "docker compose down",

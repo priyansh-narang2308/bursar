@@ -111,6 +111,12 @@ export const BEATS: readonly Beat[] = [
   },
 ];
 
+/** Sentences, split where the voice breathes. The narrator and the captions both use this, so they line up. */
+export const sentencesOf = (text: string) =>
+  text
+    .trim()
+    .split(/(?<=[.!?])\s+/)
+    .filter(Boolean);
 export const wordsOf = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 export const narrationMs = (text: string) =>
   Math.round((wordsOf(text) / WORDS_PER_MINUTE) * 60_000);

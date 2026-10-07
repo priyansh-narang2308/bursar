@@ -11,6 +11,8 @@
     "render": "node --import tsx scripts/render.ts"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "catalog:",
+    "@fontsource-variable/jetbrains-mono": "catalog:",
     "@remotion/bundler": "catalog:",
     "@remotion/renderer": "catalog:",
     "react": "catalog:",
