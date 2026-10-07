@@ -7,6 +7,9 @@ catalog:
   '@renderinc/sdk': ^1.2.0 # Render Workflows: define tasks, and start them from the API
   '@axe-core/playwright': 4.13.0 # accessibility checks inside the browser tests
   '@playwright/test': 1.63.0 # browser tests of the whole product
+  '@remotion/bundler': 4.0.533 # renders the demo video: the composition and its bundle
+  '@remotion/renderer': 4.0.533 # renders the demo video: frames to MP4
+  remotion: 4.0.533 # the demo video as a React composition
   ag-studio: 3.0.0
   ag-studio-react: 3.0.0
   '@bryntum/gantt': npm:@bryntum/gantt-trial@7.3.7 # Bryntum Gantt, the public trial build (swap for the licensed package with a token)

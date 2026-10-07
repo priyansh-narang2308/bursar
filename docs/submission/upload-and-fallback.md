@@ -12,8 +12,8 @@
 ## The finished video
 
 - [ ] Runtime 2:58 or less. Resolution 1920 by 1080.
-- [ ] A voice-over, a single clear take per beat, about 155 words a minute. Music, if any, under minus 24 LUFS.
-- [ ] Captions from `captions-live.srt` (uploaded, or burned in).
+- [ ] The generated woman's voice-over is clear and correctly pronounced throughout (listen to the whole video once). If a word is wrong, spell it out in `narration-live.json`'s `speech` field or change `VOICE`, run `pnpm demo:narrate`, and render again.
+- [ ] Captions: they are already burned into `final.mp4`; upload `captions-live.srt` too so YouTube can offer them as a track.
 - [ ] "Sandbox" and "SIM" badges are visible on screen. Nothing shows a key, a token or real personal data.
 - [ ] Watch it once on a phone.
 

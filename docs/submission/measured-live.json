@@ -1,20 +1,20 @@
 {
   "mode": "live",
   "base": "https://bursar-demo.onrender.com",
-  "at": "2026-10-06T18:43:29.720Z",
-  "runtimeMs": 171158,
-  "runtime": "2:51",
-  "wallMs": 245592,
+  "at": "2026-10-06T19:12:22.333Z",
+  "runtimeMs": 174656,
+  "runtime": "2:54",
+  "wallMs": 328120,
   "values": {
     "cap": "$10,000.00",
     "budget": "$1,000.00",
-    "runMs": "2972",
+    "runMs": "2471",
     "needs": "4",
     "cart": "$251.96",
     "calls": "6",
-    "toolMs": "2063",
+    "toolMs": "1785",
     "rules": "17",
-    "approveMs": "6530",
+    "approveMs": "11562",
     "payloads": "27",
     "naive": "24",
     "guarded": "0",
@@ -23,86 +23,81 @@
     "leakOrders": "8",
     "treasurer": "25% of the ceiling is in use. Ceiling $1,000.00, held $251.96, captured $0.00, refunded $0.00.",
     "late": "3 days",
-    "containMs": "18402",
-    "contain": "18 seconds"
+    "containMs": "21436",
+    "contain": "thirty seconds"
   },
   "beats": [
     {
       "id": "title",
-      "atMs": 13,
-      "endMs": 10592
+      "atMs": 4,
+      "endMs": 8507
     },
     {
       "id": "mandate",
-      "atMs": 10592,
-      "endMs": 26978
+      "atMs": 8507,
+      "endMs": 23454
     },
     {
       "id": "plan",
-      "atMs": 26978,
-      "endMs": 48009
+      "atMs": 23454,
+      "endMs": 45612
     },
     {
       "id": "approve",
-      "atMs": 48009,
-      "endMs": 66718
+      "atMs": 45612,
+      "endMs": 62461
     },
     {
       "id": "receipt",
-      "atMs": 66718,
-      "endMs": 79620
+      "atMs": 62461,
+      "endMs": 74266
     },
     {
       "id": "attack",
-      "atMs": 79620,
-      "endMs": 97553
+      "atMs": 74266,
+      "endMs": 92928
     },
     {
       "id": "lab",
-      "atMs": 97553,
-      "endMs": 114326
+      "atMs": 92928,
+      "endMs": 116838
     },
     {
       "id": "studio",
-      "atMs": 114326,
-      "endMs": 131873
+      "atMs": 116838,
+      "endMs": 133705
     },
     {
       "id": "schedule",
-      "atMs": 131874,
-      "endMs": 145164
+      "atMs": 133705,
+      "endMs": 146200
     },
     {
       "id": "rogue",
-      "atMs": 145164,
-      "endMs": 161177
+      "atMs": 146200,
+      "endMs": 162805
     },
     {
       "id": "close",
-      "atMs": 161177,
-      "endMs": 170982
+      "atMs": 162805,
+      "endMs": 174462
     }
   ],
   "spedUp": [
     {
-      "at": "0:56",
-      "realMs": 5338,
+      "at": "0:54",
+      "realMs": 10373,
       "shownMs": 1500
     },
     {
       "at": "1:45",
-      "realMs": 58932,
-      "shownMs": 5893
+      "realMs": 140145,
+      "shownMs": 14015
     },
     {
-      "at": "3:14",
-      "realMs": 3328,
-      "shownMs": 1500
-    },
-    {
-      "at": "3:27",
-      "realMs": 17407,
-      "shownMs": 1741
+      "at": "4:44",
+      "realMs": 20430,
+      "shownMs": 2043
     }
   ]
 }

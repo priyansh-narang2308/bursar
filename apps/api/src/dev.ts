@@ -459,6 +459,24 @@ const labEnv = createCoreLab({
   },
 });
 let labBusy = false;
+/*
+ * The lab is deterministic (a fixed seed, the same pipeline), so the same question always has the same answer. Each
+ * answer is worked out once and kept, and the two a visitor is most likely to ask are worked out at boot: on a small
+ * instance a cold run takes minutes, and a judge should not wait for it.
+ */
+const labAnswers = new Map<string, Promise<unknown>>();
+function remembered<T>(key: string, work: () => Promise<T>): Promise<T> {
+  let answer = labAnswers.get(key) as Promise<T> | undefined;
+  if (answer === undefined) {
+    answer = work().catch((error: unknown) => {
+      labAnswers.delete(key);
+      throw error;
+    });
+    labAnswers.set(key, answer);
+  }
+  return answer;
+}
+
 /** One lab run at a time, and the clock put back afterwards, so a visitor cannot pile them up. */
 async function withLab<T>(work: () => Promise<T>): Promise<T> {
   if (labBusy)
@@ -674,48 +692,52 @@ const demo: DemoHooks = {
   },
 
   labRun: ({ policy, count }) =>
-    withLab(async () => {
-      const config = LAB_POLICIES[policy];
-      const report = await runLab(
-        (scenario) => labEnv(config, scenario),
-        await generate({ seed: 2026, count }),
-        invariants(),
-      );
-      const brokenByFamily: Record<string, number> = {};
-      for (const f of report.findings)
-        brokenByFamily[f.scenario.family] = (brokenByFamily[f.scenario.family] ?? 0) + 1;
-      return {
-        policy,
-        total: report.total,
-        byFamily: report.byFamily,
-        brokenByFamily,
-        broken: report.findings.length,
-        findings: report.findings.slice(0, 8),
-      };
-    }),
+    remembered(`run:${policy}:${count}`, () =>
+      withLab(async () => {
+        const config = LAB_POLICIES[policy];
+        const report = await runLab(
+          (scenario) => labEnv(config, scenario),
+          await generate({ seed: 2026, count }),
+          invariants(),
+        );
+        const brokenByFamily: Record<string, number> = {};
+        for (const f of report.findings)
+          brokenByFamily[f.scenario.family] = (brokenByFamily[f.scenario.family] ?? 0) + 1;
+        return {
+          policy,
+          total: report.total,
+          byFamily: report.byFamily,
+          brokenByFamily,
+          broken: report.findings.length,
+          findings: report.findings.slice(0, 8),
+        };
+      }),
+    ),
 
   labFix: ({ policy, scenario }) =>
-    withLab(async () => {
-      const config = LAB_POLICIES[policy];
-      const rules = invariants();
-      const broken = async (s: Scenario) =>
-        (await judge(await labEnv(config, s), s, rules)).length > 0;
-      const found = scenario as Scenario;
-      if (!(await broken(found)))
-        throw new CoreError('VALIDATION_FAILED', 'That scenario does not break this policy.');
-      const minimal = await minimize(found, broken);
-      const [violation] = await judge(await labEnv(config, minimal), minimal, rules);
-      const [patch] = violation ? proposePatches(violation, config, DEFAULT_LIMITS) : [];
-      const cleanAfter = patch
-        ? (await judge(await labEnv(patch.apply(config), minimal), minimal, rules)).length === 0
-        : false;
-      return {
-        minimal,
-        violation: violation ?? null,
-        patch: patch?.description ?? null,
-        cleanAfter,
-      };
-    }),
+    remembered(`fix:${policy}:${JSON.stringify(scenario)}`, () =>
+      withLab(async () => {
+        const config = LAB_POLICIES[policy];
+        const rules = invariants();
+        const broken = async (s: Scenario) =>
+          (await judge(await labEnv(config, s), s, rules)).length > 0;
+        const found = scenario as Scenario;
+        if (!(await broken(found)))
+          throw new CoreError('VALIDATION_FAILED', 'That scenario does not break this policy.');
+        const minimal = await minimize(found, broken);
+        const [violation] = await judge(await labEnv(config, minimal), minimal, rules);
+        const [patch] = violation ? proposePatches(violation, config, DEFAULT_LIMITS) : [];
+        const cleanAfter = patch
+          ? (await judge(await labEnv(patch.apply(config), minimal), minimal, rules)).length === 0
+          : false;
+        return {
+          minimal,
+          violation: violation ?? null,
+          patch: patch?.description ?? null,
+          cleanAfter,
+        };
+      }),
+    ),
 
   gauntlet: runGauntlet,
 };
@@ -810,6 +832,18 @@ if (hasWeb) {
 }
 server.route('/', app);
 serve({ fetch: server.fetch, port: config.port });
+// Work out the lab's two usual answers in the background, one after the other, while nobody is waiting.
+setTimeout(() => {
+  void (async () => {
+    for (const policy of ['standard', 'no-velocity'] as const) {
+      const run = await demo.labRun({ policy, count: 24 }).catch(() => undefined);
+      const first = (run as { findings?: { scenario: unknown }[] } | undefined)?.findings?.[0]
+        ?.scenario;
+      if (first !== undefined)
+        await demo.labFix({ policy, scenario: first }).catch(() => undefined);
+    }
+  })();
+}, 5_000);
 logger.info(
   { port: config.port, web: hasWeb, paypal: sandbox ? 'sandbox' : 'fake' },
   'demo listening (in-memory data)',

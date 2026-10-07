@@ -1,0 +1,30 @@
+{
+  "name": "@bursar/video",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Assembles the demo video: the recorded screen, a woman's voice-over for each beat, and captions, as a Remotion composition rendered to MP4.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "render": "node --import tsx scripts/render.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "catalog:",
+    "@fontsource-variable/jetbrains-mono": "catalog:",
+    "@remotion/bundler": "catalog:",
+    "@remotion/renderer": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "remotion": "catalog:"
+  },
+  "devDependencies": {
+    "@bursar/tooling": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

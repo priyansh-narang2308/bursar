@@ -4,7 +4,7 @@ Everything for the demo video and the Devpost page, and the scripts that produce
 
 | File | What it is |
 | --- | --- |
-| [video-script-live.md](video-script-live.md) | The script, beat by beat, with the numbers measured against the deployed site. **Record the voice-over from this.** |
+| [video-script-live.md](video-script-live.md) | The script, beat by beat, with the numbers measured against the deployed site. The voice-over is generated from it. |
 | [captions-live.srt](captions-live.srt) | Captions timed to the finished video. Upload to YouTube, or burn them in. |
 | [measured-live.json](measured-live.json) | Every measured number, when each beat starts, and which waits were sped up. |
 | `*-local.*` | The same three files from the rehearsal against the local demo server. |
@@ -15,12 +15,25 @@ Everything for the demo video and the Devpost page, and the scripts that produce
 
 ## How the video is made
 
-1. **Rehearse.** Start the demo server (`pnpm --filter @bursar/web build`, then `PORT=8790 pnpm start:demo`) and run `pnpm demo:record`. It drives every beat from a brand-new workspace, in order, and fails if the take runs over 2:58.
-2. **Record the real take.** `BASE_URL=https://bursar-demo.onrender.com pnpm demo:record`. This runs against the deployed site and PayPal's sandbox, and writes `.demo/live/demo.mp4`, a 1920 by 1080 screen track with the cursor visible, and the measured numbers above.
-3. **Add the voice.** Read the voice-over in [video-script-live.md](video-script-live.md), one beat at a time, at about 155 words a minute, and lay it on the screen track. Each beat on screen lasts at least as long as its narration. Keep any music under minus 24 LUFS.
-4. **Add the captions** from [captions-live.srt](captions-live.srt).
+The video is produced end to end by scripts, including a woman's voice-over, so nobody has to record audio.
 
-The screen track is silent on purpose: a human voice reads better than a synthetic one, and it is the one part a script cannot do for you.
+1. **Rehearse.** Start the demo server (`pnpm --filter @bursar/web build`, then `PORT=8790 pnpm start:demo`) and run `pnpm demo:record`. It drives every beat from a brand-new workspace and fails if the take runs over 2:58.
+2. **Record the real take.** `BASE_URL=https://bursar-demo.onrender.com pnpm demo:record`. This runs against the deployed site and PayPal's sandbox, and writes `.demo/live/demo.mp4`, a 1920 by 1080 screen track with a visible cursor, and the measured numbers above.
+3. **Generate the voice.** `pnpm demo:narrate` writes the narration from the numbers the take measured, then speaks each beat with Kokoro, an open-source neural voice (the American woman's voice "Heart"). It runs on your Mac, with no account or key, and notes when every sentence starts. Run `pnpm demo:record` once more afterwards: this time each click lands on the sentence that describes it, every beat is held for as long as its audio runs, the take notes where the camera should look (`shots-<mode>.json`), and it checks that its numbers still match what was said.
+4. **Render.** `pnpm demo:video` directs the take with Remotion into `.demo/live/final.mp4`: a virtual camera moves wide, medium and close over the real product to what the voice is describing, dims the rest, and marks each click; the opening and closing are set in type; an original music bed (synthesised by `apps/video/scripts/sound.py`, nothing to license) sits under the voice and ducks while it speaks, with quiet sounds for clicks and reveals. It uses the Chrome you already have. `STILLS=30,90 pnpm demo:video` renders single frames to check a shot quickly.
+5. **Upload** `final.mp4` and `captions-live.srt` as the upload checklist says.
+
+**One-time setup for the voice** (about 120 MB, kept in the git-ignored `.demo/voice`):
+
+```bash
+mkdir -p .demo/voice && cd .demo/voice
+uv venv --python 3.12 venv
+uv pip install --python venv/bin/python kokoro-onnx soundfile
+curl -L -O https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.int8.onnx
+curl -L -O https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+```
+
+A different voice or pace is one variable: `VOICE=af_bella SPEED=0.95 pnpm demo:narrate`.
 
 ## What the take does, and what it measured
 
