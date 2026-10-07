@@ -214,14 +214,24 @@ setInterval(() => {
     for (const { headers, event } of fake.events.splice(0))
       void core.webhooks.ingest(JSON.stringify(event), headers).catch(() => undefined);
 }, 400).unref();
+// Each poll holds a database connection while it asks PayPal, so workspaces are polled one at a time and a sweep
+// never starts while the last one runs: polling them all at once took every connection in the pool as workspaces
+// accumulated, and every request then waited for one.
+let sweeping = false;
 if (sandbox)
   setInterval(() => {
+    if (sweeping) return;
+    sweeping = true;
     void db
-      .select()
+      .select({ id: organizations.id })
       .from(organizations)
-      .then((orgs) =>
-        Promise.all(orgs.map((o) => core.webhooks.pollSubmitted(o.id, 4_000).catch(() => 0))),
-      );
+      .then(async (orgs) => {
+        for (const o of orgs) await core.webhooks.pollSubmitted(o.id, 4_000).catch(() => 0);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        sweeping = false;
+      });
   }, 5_000).unref();
 
 const owner = (id: string): Actor => ({ kind: 'USER', id });
