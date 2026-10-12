@@ -133,8 +133,8 @@ catalogs:
       specifier: ^7.18.0
       version: 7.18.4
     remotion:
-      specifier: 4.0.533
-      version: 4.0.533
+      specifier: 4.0.534
+      version: 4.0.534
     tsx:
       specifier: ^4.23.0
       version: 4.23.15
@@ -378,7 +378,7 @@ importers:
         version: 19.3.0(react@19.3.0)
       remotion:
         specifier: 'catalog:'
-        version: 4.0.533(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 4.0.534(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
     devDependencies:
       '@bursar/tooling':
         specifier: workspace:*
@@ -3848,6 +3848,12 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
+  remotion@4.0.534:
+    resolution: {integrity: sha512-gSfMreFJgncWEHGsIWksicmEGsTrGMIAgZ87WS4e+bIB+nVsAN67UXWbQ88xGwUONm3xzwu9Ty786kFDcgZoaQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
@@ -6569,6 +6575,11 @@ snapshots:
       - '@opentelemetry/api'
 
   remotion@4.0.533(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+    dependencies:
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+
+  remotion@4.0.534(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)

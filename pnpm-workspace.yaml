@@ -9,7 +9,7 @@ catalog:
   '@playwright/test': 1.63.0 # browser tests of the whole product
   '@remotion/bundler': 4.0.533 # renders the demo video: the composition and its bundle
   '@remotion/renderer': 4.0.533 # renders the demo video: frames to MP4
-  remotion: 4.0.533 # the demo video as a React composition
+  remotion: 4.0.534 # the demo video as a React composition
   ag-studio: 3.0.0
   ag-studio-react: 3.0.0
   '@bryntum/gantt': npm:@bryntum/gantt-trial@7.3.7 # Bryntum Gantt, the public trial build (swap for the licensed package with a token)
