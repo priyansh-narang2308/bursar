@@ -23,7 +23,7 @@ catalog:
   '@testing-library/user-event': ^14.6.0
   '@types/react': ^19.3.0
   '@types/react-dom': ^19.3.0
-  '@vitejs/plugin-react': ^6.1.0
+  '@vitejs/plugin-react': ^6.1.2
   jsdom: ^30.1.0 # a DOM for component tests
   react: ^19.3.0
   react-dom: ^19.3.0
