@@ -32,11 +32,11 @@ catalog:
   clsx: ^2.1.1
   framer-motion: ^12.4.0
   lucide-react: ^1.52.0
-  '@biomejs/biome': ^2.5.0
+  '@biomejs/biome': ^2.6.2
   '@modelcontextprotocol/sdk': ^1.32.1
-  '@types/node': ^24.0.0 # matches the oldest supported runtime (Node 24 LTS)
+  '@types/node': ^26.6.5 # matches the oldest supported runtime (Node 24 LTS)
   '@types/pg': ^8.23.1
-  '@vitest/coverage-v8': ^5.0.0
+  '@vitest/coverage-v8': ^5.0.5
   ajv: ^8.20.0 # validates the exported JSON Schemas against real documents in @bursar/schemas tests
   ajv-formats: ^3.0.1 # the date-time and uri formats those schemas use
   drizzle-kit: ^0.31.11 # generates the SQL migrations for @bursar/db from its schema
@@ -46,11 +46,11 @@ catalog:
   hono: ^4.13.0 # the HTTP framework for the API: small, typed and runs on Node and the edge
   '@hono/node-server': ^2.1.0 # serves the Hono app on Node
   pino: ^10.4.0 # structured logging with built-in redaction
-  lefthook: ^2.1.0
+  lefthook: ^2.2.2
   pg: ^8.23.1 # the node-postgres driver the API and workers connect with
   tsx: ^4.23.0
   typescript: ^7.0.0
-  vitest: ^5.0.0
+  vitest: ^5.0.5
   zod: ^4.6.0 # runtime validation and JSON Schema for @bursar/schemas
 
 # Supply-chain hygiene: lifecycle scripts are denied unless a package is listed here.
